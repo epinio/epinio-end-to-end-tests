@@ -1,6 +1,10 @@
 build-image: ## Build the e2e_image with latest tests version
 	docker build -t e2e_image .
 
+cypress-gui: ## Start Cypress in GUI mode, need graphical environment
+	yarn --pure-lockfile install
+	yarn cypress open
+
 e2e-tests: ## Build e2e_image and fire all the tests
 	make build-image fire-tests
 
