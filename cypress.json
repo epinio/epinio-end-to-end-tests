@@ -1,0 +1,17 @@
+{
+  "experimentalSessionSupport": true,
+  "testFiles":"*.spec.ts",
+  "defaultCommandTimeout": 6000,
+  "clientCertificates": [
+    {
+      "url": "https://your_url",
+      "ca": [],
+      "certs": [
+        {
+          "cert": "cypress/fixtures/epinio-private-cert-pem.file",
+          "key": "cypress/fixtures/epinio-private-key-pem.file"
+        }
+      ]
+    }
+  ]
+}
