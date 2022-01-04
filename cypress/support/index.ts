@@ -1,5 +1,4 @@
-
-import './commands';
+import './functions';
 
 declare global {
   // eslint-disable-next-line no-unused-vars
