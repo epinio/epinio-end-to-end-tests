@@ -1,5 +1,5 @@
-import { TopLevelMenu } from '~/cypress/integration/util/toplevelmenu';
-import { Epinio } from '~/cypress/integration/util/epinio';
+import { Epinio } from '~/cypress/support/epinio';
+import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
 Cypress.config();
 describe('Namespace testing', () => {
@@ -22,8 +22,8 @@ describe('Namespace testing', () => {
     cy.createNamespace(nameSpace);
   });
 
-  it('Push an app into the created namespace', () => {
-    cy.createApp(appName);
+  it('Push and check an application into the created namespace', () => {
+    cy.createApp(appName, 'sample-app.tar.gz');
     cy.checkApp(appName, nameSpace);
   });
 
