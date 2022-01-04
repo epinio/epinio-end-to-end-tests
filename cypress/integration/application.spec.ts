@@ -1,5 +1,5 @@
-import { TopLevelMenu } from '~/cypress/integration/util/toplevelmenu';
-import { Epinio } from '~/cypress/integration/util/epinio';
+import { Epinio } from '~/cypress/support/epinio';
+import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
 Cypress.config();
 describe('Application testing', () => {
@@ -17,8 +17,8 @@ describe('Application testing', () => {
     epinio.checkEpinioNav();
   });
 
-  it('Push an application into default namespace', () => {
-    cy.createApp(appName);
+  it('Push and check an application into default namespace', () => {
+    cy.createApp(appName, 'sample-app.tar.gz');
     cy.checkApp(appName);
   });
 
