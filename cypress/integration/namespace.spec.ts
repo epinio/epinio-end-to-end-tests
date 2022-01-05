@@ -12,10 +12,7 @@ describe('Namespace testing', () => {
     cy.login();
     cy.visit('/home');
     topLevelMenu.openIfClosed();
-    epinio.epinioIcon().should('exist');
     epinio.accessEpinioMenu(Cypress.env('cluster'));
-    // Make sure the Epinio nav menu is correct
-    epinio.checkEpinioNav();
   });
   
   it('Create namespace', () => {
