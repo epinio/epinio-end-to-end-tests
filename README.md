@@ -16,6 +16,7 @@ Some environment variables must be set before running the test, mainly to target
 | `RANCHER_URL`  | Rancher dashboard URL | `http://localhost:8005` |
 | `CLUSTER_NAME`  | Cluster where you want Epinio installed | `local` |
 | `SYSTEM_DOMAIN`  | Domain name for Epinio | X |
+| `CACHE_SESSION`  | Enable/Disable cache session | `false` |
 
 
 `make e2e-tests`
