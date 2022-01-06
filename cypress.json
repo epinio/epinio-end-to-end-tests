@@ -4,7 +4,7 @@
   "defaultCommandTimeout": 6000,
   "clientCertificates": [
     {
-      "url": "https://your_url",
+      "url": "https://*",
       "ca": [],
       "certs": [
         {
