@@ -32,50 +32,68 @@ Cypress.Commands.add('byLabel', (label) => {
   cy.get('.labeled-input').contains(label).siblings('input');
 });
 
+// Search button by label
+Cypress.Commands.add('clickButton', (label) => {
+  cy.get('.btn').contains(label).click();
+});
+
 // Ensure that we are in the desired menu
-Cypress.Commands.add('checkMenu', (name) => {
-  cy.contains(name).click();
-  cy.get('.m-0').should('contain', name);
+Cypress.Commands.add('clickMenu', (name) => {
+  cy.get('.label').contains(name).click();
+  cy.get('header').should('contain', name);
+});
+
+Cypress.Commands.add('confirmDelete', (nameSpace?:string) => {
+  if (nameSpace) {
+    cy.get('#confirm').type(nameSpace);
+  }
+  cy.get('.card-actions').contains('Delete').click();
 });
 
 // Check the status of the running stage
-Cypress.Commands.add('checkStageStatus', (numIndex:string, timeout:number=6000, status?:string='Success') => {
-  var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter';
-  cy.get(getScope, {timeout:timeout}).should('contain', status).should('be.visible');
+Cypress.Commands.add('checkStageStatus', (numIndex, timeout:number=6000, status?:string='Success') => {
+  var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter > .status > .badge';
+  cy.get(getScope, {timeout:timeout}).contains(status).should('be.visible');
+});
+
+// Insert a value in a field *BUT* force a clear before!
+Cypress.Commands.add('typeValue', (label, value) => {
+  cy.byLabel(label).focus().clear().type(value);
 });
 
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', (appName:string, archiveName:string) => {
-  cy.checkMenu('Applications');
-  cy.get('.outlet').contains('Create').click();
-  cy.get('.input-string > .labeled-input').type(appName);
-  cy.get('.controls-row').contains('Next').click();
+Cypress.Commands.add('createApp', (appName:string, archiveName:string, instanceNum?:number=1) => {
+  cy.clickMenu('Applications');
+  cy.clickButton('Create');
+  cy.typeValue('Name', appName);
+  cy.typeValue('Instances', instanceNum);
+  cy.clickButton('Next');
 
   // Upload the test application
   cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
-  cy.contains('Next').click();
+  cy.clickButton('Next');
 
   // Start application creation
-  cy.get('.controls-row').contains('Create').click();
+  cy.clickButton('Create');
 
   // Check that each steps are succesfully done
-  cy.checkStageStatus('1');
-  cy.checkStageStatus('2');
-  cy.checkStageStatus('3', 240000);
-  cy.checkStageStatus('4', 120000);
+  cy.checkStageStatus(1);
+  cy.checkStageStatus(2);
+  cy.checkStageStatus(3, 240000);
+  cy.checkStageStatus(4, 120000);
 
   // Application is created!
-  cy.get('.controls-row').contains('Done').click();
+  cy.clickButton('Done');
 });
 
 // Ensure that the application is up and running
 Cypress.Commands.add('checkApp', (appName:string, nameSpace:string) => {
-  cy.checkMenu('Applications');
+  cy.clickMenu('Applications');
 
   // Go to application details
-  cy.get('.col-link-detail').should('contain', appName).click();
+  cy.get('.col-link-detail').contains(appName).click();
 
   // Make sure the application is in running state
   cy.get('.primaryheader', {timeout: 5000}).should('contain', appName).and('contain', 'Running');
@@ -105,10 +123,12 @@ Cypress.Commands.add('checkApp', (appName:string, nameSpace:string) => {
 
 // Delete an Epinio application
 Cypress.Commands.add('deleteApp', (appName:string, state:string='Running') => {
-  cy.checkMenu('Applications');
+  cy.clickMenu('Applications');
   cy.contains(state + ' ' + appName).click('left');
-  cy.contains('Delete').click();
-  cy.get('.card-container').contains('Delete').click();
+  cy.clickButton('Delete');
+  cy.confirmDelete();
+
+  // Check that the application has effectively been destroyed
   cy.contains(appName, {timeout: 60000}).should('not.exist');
 });
 
@@ -116,25 +136,28 @@ Cypress.Commands.add('deleteApp', (appName:string, state:string='Running') => {
 
 // Create an Epinio namespace
 Cypress.Commands.add('createNamespace', (nameSpace:string) => {
-  cy.checkMenu('Namespaces');
-  cy.contains('Create', {timeout: 4000}).click();
-  cy.get('.labeled-input.create').type(nameSpace);
-  cy.get('.card-actions .role-primary').click();
+  cy.clickMenu('Namespaces');
+  cy.clickButton('Create');
+  cy.typeValue('Name', nameSpace);
+  cy.clickButton('Create');
+
+  // Check that the namespace has effectively been created
   cy.contains(nameSpace).should('be.visible');
 });
 
 // Delete an Epinio namespace
-Cypress.Commands.add('deleteNamespace', (nameSpace:string, appName:string) => {
-  cy.checkMenu('Namespaces');
-  cy.contains(nameSpace).click();
-  cy.contains('Delete').click();
-  cy.get('#confirm').type(nameSpace);
-  cy.get('.card-container').contains('Delete').click();
+Cypress.Commands.add('deleteNamespace', (nameSpace:string, appName?:string) => {
+  cy.clickMenu('Namespaces');
+  cy.get('[data-title="Name"]').contains(nameSpace).click();
+  cy.clickButton('Delete');
+  cy.confirmDelete(nameSpace);
+
+  // Check that the namespace has effectively been destroyed
   cy.contains(nameSpace, {timeout: 60000}).should('not.exist');
 
   // If needed, make sure the application is also deleted
   if (appName) {
-    cy.contains('Applications').click();
+    cy.clickMenu('Applications');
     cy.contains(appName).should('not.exist');
   }
 });

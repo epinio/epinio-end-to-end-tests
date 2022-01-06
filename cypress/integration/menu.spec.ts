@@ -15,8 +15,10 @@ describe('Menu testing', () => {
   it('Check Epinio menu', () => {
     // Epinio's icon should appear in the side menu
     epinio.epinioIcon().should('exist');
+
     // Click on the Epinio's logo as well as your Epinio instance 
     epinio.accessEpinioMenu(Cypress.env('cluster'));
+
     // Check Epinio's side menu
     epinio.checkEpinioNav();
   });
