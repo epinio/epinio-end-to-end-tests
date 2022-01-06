@@ -11,14 +11,11 @@ describe('Application testing', () => {
     cy.login();
     cy.visit('/home');
     topLevelMenu.openIfClosed();
-    epinio.epinioIcon().should('exist');
     epinio.accessEpinioMenu(Cypress.env('cluster'));
-    // Make sure the Epinio nav menu is correct
-    epinio.checkEpinioNav();
   });
 
-  it('Push and check an application into default namespace', () => {
-    cy.createApp(appName, 'sample-app.tar.gz');
+  it('Push a 5 instances application into default namespace and check it', () => {
+    cy.createApp(appName, 'sample-app.tar.gz', 5);
     cy.checkApp(appName);
   });
 
