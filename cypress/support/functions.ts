@@ -3,7 +3,7 @@ import 'cypress-file-upload';
 // Generic functions
 
 // Log into Rancher
-Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cypress.env('password'), cacheSession = false) => {
+Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cypress.env('password'), cacheSession = Cypress.env('cache_session')) => {
   const login = () => {
     cy.intercept('POST', '/v3-public/localProviders/local*').as('loginReq');
     cy.visit('/auth/login');
