@@ -6,9 +6,16 @@ declare global {
     interface Chainable {
       login(username?: string, password?: string, cacheSession?: boolean): Chainable<Element>;
       byLabel(label: string,): Chainable<Element>;
-      createApp(appName: string,): Chainable<Element>;
-      checkApp(appName: string,): Chainable<Element>;
-
+      clickButton(label: string,): Chainable<Element>;
+      clickMenu(label: string,): Chainable<Element>;
+      confirmDelete(namespace?: string,): Chainable<Element>;
+      checkStageStatus(numIndex: number, timeout?: number, status?: string,): Chainable<Element>;
+      typeValue(label: string, value,): Chainable<Element>;
+      createApp(appName: string, archiveName: string, instanceNum?: number, shouldBeDisabled?: boolean,): Chainable<Element>;
+      checkApp(appName: string, namespace: string,): Chainable<Element>;
+      deleteApp(appName: string, state?: string,): Chainable<Element>;
+      createNamespace(namespace: string,): Chainable<Element>;
+      deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
     }
 }}
 
