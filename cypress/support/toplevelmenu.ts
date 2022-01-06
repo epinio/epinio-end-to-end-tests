@@ -12,18 +12,18 @@ export class TopLevelMenu {
   }
 
   categories() {
-    return cy.get('.side-menu .body .category');
+    cy.get('.side-menu .body .category');
   }
 
   links() {
-    return cy.get('.side-menu .option');
+    cy.get('.side-menu .option');
   }
 
   clusters() {
-    return cy.get('.clusters .cluster.selector.option');
+    cy.get('.clusters .cluster.selector.option');
   }
 
   localization() {
-    return cy.get('.locale-chooser');
+    cy.get('.locale-chooser');
   }
 }
