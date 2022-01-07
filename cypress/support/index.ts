@@ -10,9 +10,9 @@ declare global {
       clickMenu(label: string,): Chainable<Element>;
       confirmDelete(namespace?: string,): Chainable<Element>;
       checkStageStatus(numIndex: number, timeout?: number, status?: string,): Chainable<Element>;
-      typeValue(label: string, value,): Chainable<Element>;
-      createApp(appName: string, archiveName: string, instanceNum?: number, shouldBeDisabled?: boolean,): Chainable<Element>;
-      checkApp(appName: string, namespace: string,): Chainable<Element>;
+      typeValue(label: string, value: string, noLabel?: boolean,): Chainable<Element>;
+      createApp(appName: string, archiveName: string, route?: string, addVar?:boolean, instanceNum?: number, shouldBeDisabled?: boolean,): Chainable<Element>;
+      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
