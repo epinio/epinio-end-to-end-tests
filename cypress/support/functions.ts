@@ -3,7 +3,7 @@ import 'cypress-file-upload';
 // Generic functions
 
 // Log into Rancher
-Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cypress.env('password'), cacheSession = false) => {
+Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cypress.env('password'), cacheSession = Cypress.env('cache_session')) => {
   const login = () => {
     cy.intercept('POST', '/v3-public/localProviders/local*').as('loginReq');
     cy.visit('/auth/login');
@@ -38,20 +38,21 @@ Cypress.Commands.add('clickButton', (label) => {
 });
 
 // Ensure that we are in the desired menu
-Cypress.Commands.add('clickMenu', (name) => {
-  cy.get('.label').contains(name).click();
-  cy.get('header').should('contain', name);
+Cypress.Commands.add('clickMenu', (label) => {
+  cy.get('.label').contains(label).click();
+  cy.get('header').should('contain', label);
 });
 
-Cypress.Commands.add('confirmDelete', (nameSpace?:string) => {
-  if (nameSpace) {
-    cy.get('#confirm').type(nameSpace);
+// Confirm the delete operation
+Cypress.Commands.add('confirmDelete', (namespace?) => {
+  if (namespace) {
+    cy.get('#confirm').type(namespace);
   }
   cy.get('.card-actions').contains('Delete').click();
 });
 
 // Check the status of the running stage
-Cypress.Commands.add('checkStageStatus', (numIndex, timeout:number=6000, status?:string='Success') => {
+Cypress.Commands.add('checkStageStatus', ({numIndex, timeout=6000, status='Success'}) => {
   var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter > .status > .badge';
   cy.get(getScope, {timeout:timeout}).contains(status).should('be.visible');
 });
@@ -64,14 +65,20 @@ Cypress.Commands.add('typeValue', (label, value) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', (appName:string, archiveName:string, instanceNum?:number=1) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, instanceNum=1, shouldBeDisabled=false}) => {
   cy.clickMenu('Applications');
   cy.clickButton('Create');
   cy.typeValue('Name', appName);
   cy.typeValue('Instances', instanceNum);
-  cy.clickButton('Next');
+
+  // Only if we want to check that 'Next' button is disabled
+  if (shouldBeDisabled) {
+    cy.get('.btn').should('contain', 'Next').and('be.disabled');
+    return;  // Of course, in that case the test is done if button is disabled
+  }
 
   // Upload the test application
+  cy.clickButton('Next');
   cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
   cy.clickButton('Next');
 
@@ -79,17 +86,17 @@ Cypress.Commands.add('createApp', (appName:string, archiveName:string, instanceN
   cy.clickButton('Create');
 
   // Check that each steps are succesfully done
-  cy.checkStageStatus(1);
-  cy.checkStageStatus(2);
-  cy.checkStageStatus(3, 240000);
-  cy.checkStageStatus(4, 120000);
+  cy.checkStageStatus({numIndex: 1});
+  cy.checkStageStatus({numIndex: 2});
+  cy.checkStageStatus({numIndex: 3, timeout: 240000});
+  cy.checkStageStatus({numIndex: 4, timeout: 120000});
 
   // Application is created!
   cy.clickButton('Done');
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', (appName:string, nameSpace:string) => {
+Cypress.Commands.add('checkApp', ({appName, namespace}) => {
   cy.clickMenu('Applications');
 
   // Go to application details
@@ -102,8 +109,8 @@ Cypress.Commands.add('checkApp', (appName:string, nameSpace:string) => {
   cy.get('.numbers', {timeout: 120000}).should('contain', '100%');
 
   // If needed. check that the correct namespace has been used
-  if (nameSpace) {
-    cy.contains('Namespace: ' + nameSpace).should('be.visible');
+  if (namespace) {
+    cy.contains('Namespace: ' + namespace).should('be.visible');
   }
 
   // Check the application route
@@ -122,7 +129,7 @@ Cypress.Commands.add('checkApp', (appName:string, nameSpace:string) => {
 });
 
 // Delete an Epinio application
-Cypress.Commands.add('deleteApp', (appName:string, state:string='Running') => {
+Cypress.Commands.add('deleteApp', ({appName, state='Running'}) => {
   cy.clickMenu('Applications');
   cy.contains(state + ' ' + appName).click('left');
   cy.clickButton('Delete');
@@ -135,25 +142,25 @@ Cypress.Commands.add('deleteApp', (appName:string, state:string='Running') => {
 // Namespace functions
 
 // Create an Epinio namespace
-Cypress.Commands.add('createNamespace', (nameSpace:string) => {
+Cypress.Commands.add('createNamespace', (namespace) => {
   cy.clickMenu('Namespaces');
   cy.clickButton('Create');
-  cy.typeValue('Name', nameSpace);
+  cy.typeValue('Name', namespace);
   cy.clickButton('Create');
 
   // Check that the namespace has effectively been created
-  cy.contains(nameSpace).should('be.visible');
+  cy.contains(namespace).should('be.visible');
 });
 
 // Delete an Epinio namespace
-Cypress.Commands.add('deleteNamespace', (nameSpace:string, appName?:string) => {
+Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
   cy.clickMenu('Namespaces');
-  cy.get('[data-title="Name"]').contains(nameSpace).click();
+  cy.get('[data-title="Name"]').contains(namespace).click();
   cy.clickButton('Delete');
-  cy.confirmDelete(nameSpace);
+  cy.confirmDelete(namespace);
 
   // Check that the namespace has effectively been destroyed
-  cy.contains(nameSpace, {timeout: 60000}).should('not.exist');
+  cy.contains(namespace, {timeout: 60000}).should('not.exist');
 
   // If needed, make sure the application is also deleted
   if (appName) {
