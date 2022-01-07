@@ -15,11 +15,11 @@ describe('Application testing', () => {
   });
 
   it('Push a 5 instances application into default namespace and check it', () => {
-    cy.createApp(appName, 'sample-app.tar.gz', 5);
-    cy.checkApp(appName);
+    cy.createApp({appName: appName, archiveName: 'sample-app.tar.gz', instanceNum: 5});
+    cy.checkApp({appName: appName});
   });
 
   it('Delete the pushed application', () => {
-    cy.deleteApp(appName);
+    cy.deleteApp({appName: appName});
   });
 });
