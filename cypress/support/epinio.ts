@@ -17,4 +17,12 @@ export class Epinio {
       cy.contains('Epinio instances', {timeout: 5000}).should('be.visible') && cy.contains('Available').should('be.visible');
       cy.contains(cluster).click();
     }
+
+    firstLogin() {
+      cy.get('input').type(Cypress.env('password'));
+      cy.clickButton('Log in with Local User');
+      cy.contains('I agree').click('left');
+      cy.clickButton('Continue');
+      cy.contains("Getting Started", {timeout: 10000});
+    }
 }
