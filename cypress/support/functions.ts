@@ -208,7 +208,7 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
   cy.clickButton('Create');
   cy.contains('Repository: Create').should('be.visible');
   cy.typeValue({label: 'Name', value: repoName});
-  cy.typeValue({label: 'Index URL', label: repoUrl});
+  cy.typeValue({label: 'Index URL', value: repoUrl});
   cy.clickButton('Create');
 });
 
@@ -228,7 +228,7 @@ Cypress.Commands.add('epinioInstall', () => {
     cy.typeValue({label: 'Domain', value: Cypress.env('system_domain')});
 
     // Configure cors setting
-    cy.typeValue({label: 'Access control allow origin', label: Cypress.env('cors')});
+    cy.typeValue({label: 'Access control allow origin', value: Cypress.env('cors')});
 
     // Cert Manager and ingress controler already installed by Rancher
     cy.contains('CertManager').click();
