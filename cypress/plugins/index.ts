@@ -16,6 +16,7 @@ module.exports = (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions)
   config.env.password = process.env.RANCHER_PASSWORD;
   config.env.cluster = process.env.CLUSTER_NAME;
   config.env.system_domain = process.env.SYSTEM_DOMAIN;
+  config.env.cors = process.env.CORS;
   config.env.cache_session = process.env.CACHE_SESSION || false;
 
   return config;
