@@ -168,3 +168,53 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
     cy.contains(appName).should('not.exist');
   }
 });
+
+// Epinio installation functions
+
+// Add the Epinio Helm repo
+Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
+  cy.get('.nav').contains('Apps & Marketplace').click();
+  cy.get('.nav').contains('Repositories').click();
+
+  // Make sure we are in Repositories page and we can see the Create button
+  cy.get('h1').contains('Repositories');
+  cy.contains('Create').should('be.visible');
+
+  cy.clickButton('Create');
+  cy.contains('Repository: Create').should('be.visible');
+  cy.typeValue('Name', repoName);
+  cy.typeValue('Index URL', repoUrl);
+  cy.clickButton('Create');
+});
+
+// Install Epinio via Helm
+Cypress.Commands.add('epinioInstall', ({domain, cors}) => {
+    cy.get('.nav').contains('Apps & Marketplace').click();
+    cy.get('.nav').contains('Charts').click();
+    cy.contains('epinio-installer').click();
+    cy.contains('Charts: epinio-installer').should('be.visible');
+    cy.clickButton('Install');
+
+    // Namespace where installation will happen
+    cy.typeValue('Name', 'mynamespace');
+    cy.clickButton('Next');
+    
+    // Configure custom domain if asked
+    if (domain) {
+      cy.typeValue('Domain', Cypress.env('system_domain'));
+    }
+
+    // Configure cors settings if asked
+    if (cors) {
+      cy.typeValue('Access control allow origin', Cypress.env('cors'));
+    }
+
+    // Cert Manager and ingress controler already installed by Rancher
+    cy.contains('CertManager').click();
+    cy.contains('ingress controller').click();
+
+    // Install and check we get successfull installation message with a timeout long enough
+    cy.clickButton('Install');
+    cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
+    cy.get('.tab > .closer').click();
+});
