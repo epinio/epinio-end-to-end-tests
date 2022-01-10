@@ -16,6 +16,8 @@ declare global {
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
+      addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
+      epinioInstall(domain: boolean, cors: boolean,): Chainable<Element>;
     }
 }}
 
