@@ -18,6 +18,6 @@ describe('Epinio installation testing', () => {
   });
 
   it('Install Epinio', () => {
-    cy.epinioInstall({domain: true, cors: true});
+    cy.epinioInstall();
   });
 });
