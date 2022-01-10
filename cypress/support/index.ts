@@ -1,9 +1,11 @@
 import './functions';
+import './tests';
 
 declare global {
   // eslint-disable-next-line no-unused-vars
   namespace Cypress {
     interface Chainable {
+      // Functions declared in functions.ts
       login(username?: string, password?: string, cacheSession?: boolean): Chainable<Element>;
       byLabel(label: string,): Chainable<Element>;
       clickButton(label: string,): Chainable<Element>;
@@ -18,6 +20,10 @@ declare global {
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
       epinioInstall(): Chainable<Element>;
+
+      // Functions declared in tests.ts
+      runAppTest(testName: string,): Chainable<Element>;
+      runNamespaceTest(testName: string,): Chainable<Element>;
     }
 }}
 
