@@ -54,31 +54,52 @@ Cypress.Commands.add('confirmDelete', (namespace?) => {
 // Check the status of the running stage
 Cypress.Commands.add('checkStageStatus', ({numIndex, timeout=6000, status='Success'}) => {
   var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter > .status > .badge';
-  cy.get(getScope, {timeout:timeout}).contains(status).should('be.visible');
+  cy.get(getScope, {timeout: timeout}).contains(status).should('be.visible');
 });
 
 // Insert a value in a field *BUT* force a clear before!
-Cypress.Commands.add('typeValue', (label, value) => {
-  cy.byLabel(label).focus().clear().type(value);
+Cypress.Commands.add('typeValue', ({label, value, noLabel=false}) => {
+  if (noLabel) {
+    cy.get(label).focus().clear().type(value);
+  } else {
+    cy.byLabel(label).focus().clear().type(value);
+  }
 });
 
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, instanceNum=1, shouldBeDisabled=false}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar=false, instanceNum=1, shouldBeDisabled=false}) => {
   cy.clickMenu('Applications');
   cy.clickButton('Create');
-  cy.typeValue('Name', appName);
-  cy.typeValue('Instances', instanceNum);
+  cy.typeValue({label: 'Name', value: appName});
 
   // Only if we want to check that 'Next' button is disabled
+  // This could happen only if there is no namespace defined
   if (shouldBeDisabled) {
     cy.get('.btn').should('contain', 'Next').and('be.disabled');
     return;  // Of course, in that case the test is done if button is disabled
   }
 
-  // Upload the test application
+  // Change default route if needed
+  if (route) {
+    cy.get('.btn').contains('Add').click();
+    cy.typeValue({label: '.value > input', value: route, noLabel: true});
+  }
+
+  // Add an environment variable
+  if (addVar) {
+    cy.get('.key-value > .footer > .add').click();
+    cy.typeValue({label: '.key > input', value: 'test_var', noLabel: true});
+    // '.no-resize' sounds weird, but it's the name of the field...
+    cy.typeValue({label: '.no-resize', value: 'test_value', noLabel: true});
+  }
+
+  // Set the desired number of instances
+  cy.typeValue({label: 'Instances', value: instanceNum});
   cy.clickButton('Next');
+
+  // Upload the test application
   cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
   cy.clickButton('Next');
 
@@ -96,7 +117,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, instanceNum=1, shouldB
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace, route, checkVar=false}) => {
   cy.clickMenu('Applications');
 
   // Go to application details
@@ -113,8 +134,12 @@ Cypress.Commands.add('checkApp', ({appName, namespace}) => {
     cy.contains('Namespace: ' + namespace).should('be.visible');
   }
 
+  // If needed, check that there is one environment variable
+  if (checkVar) cy.contains('1 Environment Vars').should('be.visible');
+
   // Check the application route
   var appRoute = 'https://' + appName + '.' + Cypress.env('system_domain');
+  if (route) appRoute = route;  // Supersede the app route if needed
   cy.contains(appRoute).should('be.visible');
 
   // Check that the application website is responding
@@ -145,7 +170,7 @@ Cypress.Commands.add('deleteApp', ({appName, state='Running'}) => {
 Cypress.Commands.add('createNamespace', (namespace) => {
   cy.clickMenu('Namespaces');
   cy.clickButton('Create');
-  cy.typeValue('Name', namespace);
+  cy.typeValue({label: 'Name', value: namespace});
   cy.clickButton('Create');
 
   // Check that the namespace has effectively been created
@@ -182,13 +207,13 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
 
   cy.clickButton('Create');
   cy.contains('Repository: Create').should('be.visible');
-  cy.typeValue('Name', repoName);
-  cy.typeValue('Index URL', repoUrl);
+  cy.typeValue({label: 'Name', value: repoName});
+  cy.typeValue({label: 'Index URL', label: repoUrl});
   cy.clickButton('Create');
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', ({domain, cors}) => {
+Cypress.Commands.add('epinioInstall', () => {
     cy.get('.nav').contains('Apps & Marketplace').click();
     cy.get('.nav').contains('Charts').click();
     cy.contains('epinio-installer').click();
@@ -196,18 +221,14 @@ Cypress.Commands.add('epinioInstall', ({domain, cors}) => {
     cy.clickButton('Install');
 
     // Namespace where installation will happen
-    cy.typeValue('Name', 'mynamespace');
+    cy.typeValue({label: 'Name', value: 'epinio-install'});
     cy.clickButton('Next');
     
-    // Configure custom domain if asked
-    if (domain) {
-      cy.typeValue('Domain', Cypress.env('system_domain'));
-    }
+    // Configure custom domain
+    cy.typeValue({label: 'Domain', value: Cypress.env('system_domain')});
 
-    // Configure cors settings if asked
-    if (cors) {
-      cy.typeValue('Access control allow origin', Cypress.env('cors'));
-    }
+    // Configure cors setting
+    cy.typeValue({label: 'Access control allow origin', label: Cypress.env('cors')});
 
     // Cert Manager and ingress controler already installed by Rancher
     cy.contains('CertManager').click();
