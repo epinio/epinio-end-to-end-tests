@@ -1,6 +1,5 @@
 {
   "experimentalSessionSupport": true,
-  "testFiles":"*.spec.ts",
   "defaultCommandTimeout": 6000,
   "clientCertificates": [
     {
@@ -13,5 +12,12 @@
         }
       ]
     }
+  ],
+  "testFiles": [
+    "first_connexion.spec.ts",
+    "installation.spec.ts",
+    "menu.spec.ts",
+    "namespaces.spec.ts",
+    "applications.spec.ts"
   ]
 }
