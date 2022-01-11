@@ -10,6 +10,7 @@ declare global {
       byLabel(label: string,): Chainable<Element>;
       clickButton(label: string,): Chainable<Element>;
       clickMenu(label: string,): Chainable<Element>;
+      clickClusterMenu(listLabel: string[],): Chainable<Element>;
       confirmDelete(namespace?: string,): Chainable<Element>;
       checkStageStatus(numIndex: number, timeout?: number, status?: string,): Chainable<Element>;
       typeValue(label: string, value: string, noLabel?: boolean,): Chainable<Element>;
@@ -19,7 +20,9 @@ declare global {
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
+      removeHelmRepo(): Chainable<Element>;
       epinioInstall(): Chainable<Element>;
+      epinioUninstall(): Chainable<Element>;
 
       // Functions declared in tests.ts
       runAppTest(testName: string,): Chainable<Element>;
