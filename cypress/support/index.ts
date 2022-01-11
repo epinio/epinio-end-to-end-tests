@@ -19,7 +19,9 @@ declare global {
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
+      removeHelmRepo(repoName: string,): Chainable<Element>;
       epinioInstall(): Chainable<Element>;
+      epinioUninstall(): Chainable<Element>;
 
       // Functions declared in tests.ts
       runAppTest(testName: string,): Chainable<Element>;

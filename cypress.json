@@ -18,6 +18,7 @@
     "installation.spec.ts",
     "menu.spec.ts",
     "namespaces.spec.ts",
-    "applications.spec.ts"
+    "applications.spec.ts",
+    "uninstall.spec.ts"
   ]
 }
