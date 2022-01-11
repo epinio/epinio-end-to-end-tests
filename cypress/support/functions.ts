@@ -66,6 +66,13 @@ Cypress.Commands.add('typeValue', ({label, value, noLabel=false}) => {
   }
 });
 
+// Make sure we are in the desired menu inside a cluster (local by default)
+// You can access submenu by giving submenu name in the array
+// ex:  cy.clickClusterMenu(['Menu', 'Submenu'])
+Cypress.Commands.add('clickClusterMenu', (listLabel: string[]) => {
+  listLabel.forEach(label => cy.get('nav').contains(label).click());
+});
+
 // Application functions
 
 // Create an Epinio application
@@ -198,8 +205,7 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
 
 // Add the Epinio Helm repo
 Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
-  cy.get('.nav').contains('Apps & Marketplace').click();
-  cy.get('.nav').contains('Repositories').click();
+  cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
 
   // Make sure we are in Repositories page and we can see the Create button
   cy.get('h1').contains('Repositories');
@@ -214,28 +220,48 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
 
 // Install Epinio via Helm
 Cypress.Commands.add('epinioInstall', () => {
-    cy.get('.nav').contains('Apps & Marketplace').click();
-    cy.get('.nav').contains('Charts').click();
-    cy.contains('epinio-installer').click();
-    cy.contains('Charts: epinio-installer').should('be.visible');
-    cy.clickButton('Install');
+  cy.clickClusterMenu(['Apps & Marketplace', 'Charts'])
+  cy.contains('epinio-installer').click();
+  cy.contains('Charts: epinio-installer').should('be.visible');
+  cy.clickButton('Install');
 
-    // Namespace where installation will happen
-    cy.typeValue({label: 'Name', value: 'epinio-install'});
-    cy.clickButton('Next');
-    
-    // Configure custom domain
-    cy.typeValue({label: 'Domain', value: Cypress.env('system_domain')});
+  // Namespace where installation will happen
+  cy.typeValue({label: 'Name', value: 'epinio-install'});
+  cy.clickButton('Next');
+  
+  // Configure custom domain
+  cy.typeValue({label: 'Domain', value: Cypress.env('system_domain')});
 
-    // Configure cors setting
-    cy.typeValue({label: 'Access control allow origin', value: Cypress.env('cors')});
+  // Configure cors setting
+  cy.typeValue({label: 'Access control allow origin', value: Cypress.env('cors')});
 
-    // Cert Manager and ingress controler already installed by Rancher
-    cy.contains('CertManager').click();
-    cy.contains('ingress controller').click();
+  // Cert Manager and ingress controler already installed by Rancher
+  cy.contains('CertManager').click();
+  cy.contains('ingress controller').click();
 
-    // Install and check we get successfull installation message with a timeout long enough
-    cy.clickButton('Install');
-    cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
-    cy.get('.tab > .closer').click();
+  // Install and check we get successfull installation message with a timeout long enough
+  cy.clickButton('Install');
+  cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
+  cy.get('.tab > .closer').click();
+});
+
+// Uninstall Epinio via Helm
+Cypress.Commands.add('epinioUninstall', () => {
+  cy.clickClusterMenu(['Apps & Marketplace', 'Installed Apps'])
+  cy.contains('epinio-installer:').click();
+  cy.clickButton('Delete');
+  cy.confirmDelete();
+  cy.contains('SUCCESS: helm uninstall', { timeout: 300000 }).should('be.visible');
+});
+
+// Remove the Epinio Helm repo
+Cypress.Commands.add('removeHelmRepo', () => {
+  cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
+  cy.contains('epinio-repo').click();
+  // Using three dots menu to delete the repo
+  // TODO: Check if we can click checkbox instead
+  cy.contains('Repository: epinio-repo').should('be.visible');
+  cy.get('.role-multi-action').click();
+  cy.contains('Delete').click();
+  cy.confirmDelete();
 });
