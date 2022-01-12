@@ -219,8 +219,8 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', () => {
-  cy.clickClusterMenu(['Apps & Marketplace', 'Charts'])
+Cypress.Commands.add('epinioInstall', ({s3=false, extRegistry=false}) => {
+  cy.clickClusterMenu(['Apps & Marketplace', 'Charts']);
   cy.contains('epinio-installer').click();
   cy.contains('Charts: epinio-installer').should('be.visible');
   cy.clickButton('Install');
@@ -238,6 +238,27 @@ Cypress.Commands.add('epinioInstall', () => {
   // Cert Manager and ingress controler already installed by Rancher
   cy.contains('CertManager').click();
   cy.contains('ingress controller').click();
+
+  // Configure external registry
+  if (extRegistry) {
+    cy.contains('a', 'External registry').click();
+    cy.contains('Use an external registry').click();
+    cy.typeValue({label: 'External registry url', value: 'registry.hub.docker.com'});
+    cy.typeValue({label: 'External registry username', value: Cypress.env('external_reg_username')});
+    cy.typeValue({label: 'External registry password', value: Cypress.env('external_reg_password')});
+    cy.typeValue({label: 'External registry namespace', value: 'juadk'});
+  }
+
+  // Configure s3 storage
+  if (s3) {
+    cy.contains('a', 'External S3 storage').click();
+    cy.contains('Use an external s3 storage').click();
+    cy.typeValue({label: 'S3 Endpoint', value: 's3.amazonaws.com'});
+    cy.typeValue({label: 'S3 access key id', value: Cypress.env('s3_key_id')});
+    cy.typeValue({label: 'S3 access key secret', value: Cypress.env('s3_key_secret')});
+    cy.typeValue({label: 'S3 Bucket', value: 'epinio-ci'});
+    cy.contains('S3 use SSL').click();
+  }
 
   // Install and check we get successfull installation message with a timeout long enough
   cy.clickButton('Install');
