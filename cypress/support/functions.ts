@@ -208,7 +208,8 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
 
   // Make sure we are in Repositories page and we can see the Create button
-  cy.get('h1').contains('Repositories');
+  //cy.location('pathname', { timeout: 8000 }).should('match', /\/catalog.cattle.io.clusterrepo/);
+  cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
   cy.contains('Create').should('be.visible');
 
   cy.clickButton('Create');
