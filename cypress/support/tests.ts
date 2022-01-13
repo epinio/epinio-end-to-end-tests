@@ -27,7 +27,7 @@ Cypress.Commands.add('runAppTest', (testName: string) => {
   }
 
   // Delete the tested application
-  cy.deleteApp({appName: appName})
+  cy.deleteApp({appName: appName});
 });
 
 // Namespaces tests

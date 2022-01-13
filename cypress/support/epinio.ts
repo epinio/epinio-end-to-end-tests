@@ -14,8 +14,8 @@ export class Epinio {
 
   accessEpinioMenu(cluster: string) {
     cy.contains('Epinio').click();
-    cy.contains('Epinio instances', {timeout: 5000}).should('be.visible') && cy.contains('Available').should('be.visible');
-     cy.contains(cluster).click();
+    cy.contains('Epinio instances', {timeout: 8000}).should('be.visible') && cy.contains('Available').should('be.visible');
+    cy.contains(cluster).click();
   }
 
   firstLogin() {

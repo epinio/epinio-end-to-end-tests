@@ -6,7 +6,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       // Functions declared in functions.ts
-      login(username?: string, password?: string, cacheSession?: boolean): Chainable<Element>;
+      login(username?: string, password?: string, cacheSession?: boolean,): Chainable<Element>;
       byLabel(label: string,): Chainable<Element>;
       clickButton(label: string,): Chainable<Element>;
       clickMenu(label: string,): Chainable<Element>;
@@ -14,11 +14,16 @@ declare global {
       confirmDelete(namespace?: string,): Chainable<Element>;
       checkStageStatus(numIndex: number, timeout?: number, status?: string,): Chainable<Element>;
       typeValue(label: string, value: string, noLabel?: boolean,): Chainable<Element>;
-      createApp(appName: string, archiveName: string, route?: string, addVar?:boolean, instanceNum?: number, shouldBeDisabled?: boolean,): Chainable<Element>;
-      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean): Chainable<Element>;
+      typeKeyValue(key: string, value: string,): Chainable<Element>;
+      getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
+      createApp(appName: string, archiveName: string, route?: string, addVar?:boolean, instanceNum?: number, serviceName?: string, shouldBeDisabled?: boolean,): Chainable<Element>;
+      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkService?: boolean): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
+      createService(serviceName: string, namespace?: string,): Chainable<Element>;
+      deleteService(serviceName: string, namespace?: string,): Chainable<Element>;
+      bindService(appName: string, serviceName: string, namespace?: string,): Chainable<Element>;
       addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
       removeHelmRepo(): Chainable<Element>;
       epinioInstall(s3?: boolean, extRegistry?: boolean,): Chainable<Element>;
