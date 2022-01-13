@@ -356,10 +356,10 @@ Cypress.Commands.add('epinioInstall', ({s3=false, extRegistry=false}) => {
   if (s3 === true) {
     cy.contains('a', 'External S3 storage').click();
     cy.contains('Use an external s3 storage').click();
-    cy.typeValue({label: 'S3 Endpoint', value: 's3.amazonaws.com'});
+    cy.typeValue({label: 'S3 endpoint', value: 's3.amazonaws.com'});
     cy.typeValue({label: 'S3 access key id', value: Cypress.env('s3_key_id')});
     cy.typeValue({label: 'S3 access key secret', value: Cypress.env('s3_key_secret')});
-    cy.typeValue({label: 'S3 Bucket', value: 'epinio-ci'});
+    cy.typeValue({label: 'S3 bucket', value: 'epinio-ci'});
     cy.contains('S3 use SSL').click();
   }
 
