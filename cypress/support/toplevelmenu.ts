@@ -19,8 +19,8 @@ export class TopLevelMenu {
     cy.get('.side-menu .option');
   }
 
-  clusters() {
-    cy.get('.clusters .cluster.selector.option');
+  clusters(clusterName: string) {
+    cy.get('.clusters .cluster.selector.option').contains(clusterName).click();
   }
 
   localization() {

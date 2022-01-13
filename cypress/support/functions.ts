@@ -208,7 +208,7 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
 
   // Make sure we are in Repositories page and we can see the Create button
-  cy.get('h1').contains('Repositories');
+  cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
   cy.contains('Create').should('be.visible');
 
   cy.clickButton('Create');
@@ -219,8 +219,13 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', () => {
-  cy.clickClusterMenu(['Apps & Marketplace', 'Charts'])
+Cypress.Commands.add('epinioInstall', ({s3=false, extRegistry=false}) => {
+  cy.clickClusterMenu(['Apps & Marketplace', 'Charts']);
+  
+  // Make sure we are in the chart screen (test failed here before)
+  cy.contains('header', 'Charts', {timeout: 8000}).should('be.visible');
+  
+  // Install epinio-installer chart
   cy.contains('epinio-installer').click();
   cy.contains('Charts: epinio-installer').should('be.visible');
   cy.clickButton('Install');
@@ -239,6 +244,27 @@ Cypress.Commands.add('epinioInstall', () => {
   cy.contains('CertManager').click();
   cy.contains('ingress controller').click();
 
+  // Configure external registry
+  if (extRegistry === true) {
+    cy.contains('a', 'External registry').click();
+    cy.contains('Use an external registry').click();
+    cy.typeValue({label: 'External registry url', value: 'registry.hub.docker.com'});
+    cy.typeValue({label: 'External registry username', value: Cypress.env('external_reg_username')});
+    cy.typeValue({label: 'External registry password', value: Cypress.env('external_reg_password')});
+    cy.typeValue({label: 'External registry namespace', value: 'juadk'});
+  }
+
+  // Configure s3 storage
+  if (s3 === true) {
+    cy.contains('a', 'External S3 storage').click();
+    cy.contains('Use an external s3 storage').click();
+    cy.typeValue({label: 'S3 Endpoint', value: 's3.amazonaws.com'});
+    cy.typeValue({label: 'S3 access key id', value: Cypress.env('s3_key_id')});
+    cy.typeValue({label: 'S3 access key secret', value: Cypress.env('s3_key_secret')});
+    cy.typeValue({label: 'S3 Bucket', value: 'epinio-ci'});
+    cy.contains('S3 use SSL').click();
+  }
+
   // Install and check we get successfull installation message with a timeout long enough
   cy.clickButton('Install');
   cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
@@ -256,7 +282,8 @@ Cypress.Commands.add('epinioUninstall', () => {
 
 // Remove the Epinio Helm repo
 Cypress.Commands.add('removeHelmRepo', () => {
-  cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
+  cy.clickClusterMenu(['Apps & Marketplace', 'Repositories']);
+  cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
   cy.contains('epinio-repo').click();
   // Using three dots menu to delete the repo
   // TODO: Check if we can click checkbox instead

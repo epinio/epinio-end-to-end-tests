@@ -18,6 +18,10 @@ module.exports = (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions)
   config.env.system_domain = process.env.SYSTEM_DOMAIN;
   config.env.cors = process.env.CORS;
   config.env.cache_session = process.env.CACHE_SESSION || false;
+  config.env.external_reg_username = process.env.EXT_REG_USER;
+  config.env.external_reg_password = process.env.EXT_REG_PASSWORD;
+  config.env.s3_key_id = process.env.S3_KEY_ID;
+  config.env.s3_key_secret = process.env.S3_KEY_SECRET;
 
   return config;
 };
