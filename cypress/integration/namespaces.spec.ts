@@ -14,10 +14,10 @@ describe('Namespaces testing', () => {
   });
 
   it('Push and check an application into the created namespace', () => {
-    cy.runNamespaceTest('newNamespace');
+    cy.runNamespacesTest('newNamespace');
   });
 
   it('Try to push an application without any namespace', () => {
-    cy.runNamespaceTest('withoutNamespace');
+    cy.runNamespacesTest('withoutNamespace');
   });
 });

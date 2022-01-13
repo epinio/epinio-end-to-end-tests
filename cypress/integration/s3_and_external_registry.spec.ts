@@ -24,7 +24,7 @@ describe('Epinio installation testing with s3 and external registry configured',
 
   it('Deploy an application to test external registry / s3', () => {
     epinio.accessEpinioMenu(Cypress.env('cluster'));
-    cy.runAppTest('multipleInstance');
+    cy.runApplicationsTest('multipleInstance');
   });
 
   it('Uninstall Epinio', () => {

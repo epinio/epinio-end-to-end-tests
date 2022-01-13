@@ -30,8 +30,9 @@ declare global {
       epinioUninstall(): Chainable<Element>;
 
       // Functions declared in tests.ts
-      runAppTest(testName: string,): Chainable<Element>;
-      runNamespaceTest(testName: string,): Chainable<Element>;
+      runApplicationsTest(testName: string,): Chainable<Element>;
+      runServicesTest(testName: string,): Chainable<Element>;
+      runNamespacesTest(testName: string,): Chainable<Element>;
     }
 }}
 
