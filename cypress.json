@@ -17,8 +17,9 @@
     "first_connexion.spec.ts",
     "installation.spec.ts",
     "menu.spec.ts",
-    "namespaces.spec.ts",
     "applications.spec.ts",
+    "services.spec.ts",
+    "namespaces.spec.ts",
     "uninstall.spec.ts",
     "s3_and_external_registry.spec.ts"
   ]

@@ -44,10 +44,17 @@ Cypress.Commands.add('clickMenu', (label) => {
 });
 
 // Confirm the delete operation
-Cypress.Commands.add('confirmDelete', (namespace?) => {
-  if (namespace) {
-    cy.get('#confirm').type(namespace);
-  }
+Cypress.Commands.add('confirmDelete', (namespace) => {
+  if (namespace) cy.get('#confirm').type(namespace);
+
+  // Always unbind a service before deletion
+  cy.get('.card-body').then(($cardBody) => {
+    if ($cardBody.find('.checkbox-container').length) {
+      cy.contains('Unbind').click();
+    }
+  });
+
+  // Confirm the deletion
   cy.get('.card-actions').contains('Delete').click();
 });
 
@@ -58,8 +65,8 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, timeout=6000, status='Succe
 });
 
 // Insert a value in a field *BUT* force a clear before!
-Cypress.Commands.add('typeValue', ({label, value, noLabel=false}) => {
-  if (noLabel) {
+Cypress.Commands.add('typeValue', ({label, value, noLabel}) => {
+  if (noLabel === true) {
     cy.get(label).focus().clear().type(value);
   } else {
     cy.byLabel(label).focus().clear().type(value);
@@ -73,17 +80,30 @@ Cypress.Commands.add('clickClusterMenu', (listLabel: string[]) => {
   listLabel.forEach(label => cy.get('nav').contains(label).click());
 });
 
+// Insert a key/value pair
+Cypress.Commands.add('typeKeyValue', ({key, value}) => {
+  cy.get(key).clear().type(value);
+});
+
+// Get the detail of an element
+Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
+  var dataNodeId = '[data-node-id="' + type + '/' + namespace + '/' + name + '"]';
+  cy.get(dataNodeId).within(() => {
+    cy.get('td').contains(name).click();
+  });
+});
+
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar=false, instanceNum=1, shouldBeDisabled=false}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar, instanceNum=1, serviceName, shouldBeDisabled}) => {
   cy.clickMenu('Applications');
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: appName});
 
   // Only if we want to check that 'Next' button is disabled
   // This could happen only if there is no namespace defined
-  if (shouldBeDisabled) {
+  if (shouldBeDisabled === true) {
     cy.get('.btn').should('contain', 'Next').and('be.disabled');
     return;  // Of course, in that case the test is done if button is disabled
   }
@@ -95,11 +115,10 @@ Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar=false, i
   }
 
   // Add an environment variable
-  if (addVar) {
+  if (addVar === true) {
     cy.get('.key-value > .footer > .add').click();
-    cy.typeValue({label: '.key > input', value: 'test_var', noLabel: true});
-    // '.no-resize' sounds weird, but it's the name of the field...
-    cy.typeValue({label: '.no-resize', value: 'test_value', noLabel: true});
+    cy.typeKeyValue({key: '.kv-item.key', value: 'test_var'});
+    cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
   }
 
   // Set the desired number of instances
@@ -109,6 +128,13 @@ Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar=false, i
   // Upload the test application
   cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
   cy.clickButton('Next');
+
+  // Bind a service if needed
+  if (serviceName) {
+    cy.wait(300);  // We need to wait a little for the listbox to be updated
+    cy.get('.labeled-select').click();
+    cy.contains(serviceName, {timeout: 120000}).click();
+  }
 
   // Start application creation
   cy.clickButton('Create');
@@ -124,25 +150,28 @@ Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar=false, i
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace, route, checkVar=false}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkService}) => {
   cy.clickMenu('Applications');
 
   // Go to application details
-  cy.get('.col-link-detail').contains(appName).click();
+  cy.getDetail({name: appName, type: 'applications', namespace: namespace});
 
   // Make sure the application is in running state
-  cy.get('.primaryheader', {timeout: 5000}).should('contain', appName).and('contain', 'Running');
+  cy.get('header').should('contain', appName).and('contain', 'Running');
 
   // Make sure all application instances are up
   cy.get('.numbers', {timeout: 120000}).should('contain', '100%');
 
   // If needed. check that the correct namespace has been used
-  if (namespace) {
-    cy.contains('Namespace: ' + namespace).should('be.visible');
-  }
+  if (namespace) cy.contains('Namespace: ' + namespace).should('be.visible');
 
   // If needed, check that there is one environment variable
   if (checkVar) cy.contains('1 Environment Vars').should('be.visible');
+
+  // Check binded services
+  var serviceNum = 0;
+  if (checkService === true) serviceNum = 1;
+  cy.contains(serviceNum + ' Services', {timeout: 24000}).should('be.visible');
 
   // Check the application route
   var appRoute = 'https://' + appName + '.' + Cypress.env('system_domain');
@@ -199,6 +228,75 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
     cy.clickMenu('Applications');
     cy.contains(appName).should('not.exist');
   }
+});
+
+// Services functions
+
+// Create a service
+Cypress.Commands.add('createService', ({serviceName, namespace='workspace'}) => {
+  cy.clickMenu('Services');
+  cy.clickButton('Create');
+
+  // Name of the service
+  cy.typeValue({label: 'Name', value: serviceName});
+
+  // Enter Service Data
+  cy.typeKeyValue({key: '.kv-item.key', value: 'test_data'});
+  cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+
+  // We need this little trick before clicking on 'Create' (why?)
+  cy.wait(300);
+  cy.clickButton('Create');
+
+  // Check that the service has effectively been created
+  cy.contains(serviceName).should('be.visible');
+});
+
+// Delete a service
+Cypress.Commands.add('deleteService', ({serviceName, namespace='workspace'}) => {
+  cy.clickMenu('Services');
+
+  // Search for the correct service (same name can be used on different namespace)
+  cy.getDetail({name: serviceName, type: 'services', namespace: namespace});
+
+  // Make sure we are in the details page
+  cy.get('header').should('contain', 'Services:').and('contain', serviceName);
+
+  // Select the 3dots button and delete the service
+  cy.get('.role-multi-action').click();
+  cy.contains('Delete').click();
+  cy.confirmDelete();
+
+  // Check that the service has effectively been destroyed
+  cy.contains(serviceName).should('not.exist');
+});
+
+// Bind a service to an existing application
+Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace'}) => {
+  cy.clickMenu('Applications');
+
+  // Go to application details
+  cy.getDetail({name: appName, type: 'applications', namespace: namespace});
+
+  // Make sure we are in the details page
+  cy.get('header').should('contain', 'Applications:').and('contain', appName);
+
+  // Select the 3dots button and edit configuration
+  cy.get('.role-multi-action').click();
+  cy.contains('Edit Config').click();
+
+  // Select the Services tab
+  cy.get('#services').click();
+
+  // Select the service
+  cy.wait(300);  // We need to wait a little for the listbox to be updated
+  // 'multiple' and 'force' are needed here
+  // TODO: try to find a better way for this
+  cy.get('.labeled-select').click({multiple: true, force: true});
+  cy.contains(serviceName, {timeout: 120000}).click();
+
+  // And save
+  cy.clickButton('Save');
 });
 
 // Epinio installation functions

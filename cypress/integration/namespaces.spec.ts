@@ -2,7 +2,7 @@ import { Epinio } from '~/cypress/support/epinio';
 import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
 Cypress.config();
-describe('Namespace testing', () => {
+describe('Namespaces testing', () => {
   const topLevelMenu = new TopLevelMenu();
   const epinio = new Epinio();
 
@@ -14,10 +14,10 @@ describe('Namespace testing', () => {
   });
 
   it('Push and check an application into the created namespace', () => {
-    cy.runNamespaceTest('newNamespace');
+    cy.runNamespacesTest('newNamespace');
   });
 
   it('Try to push an application without any namespace', () => {
-    cy.runNamespaceTest('withoutNamespace');
+    cy.runNamespacesTest('withoutNamespace');
   });
 });

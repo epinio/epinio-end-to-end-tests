@@ -1,7 +1,7 @@
 import './functions';
 
 // Applications tests
-Cypress.Commands.add('runAppTest', (testName: string) => {
+Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const appName = 'testapp';
   const archive = 'sample-app.tar.gz';
   const customRoute = 'custom-route-' + appName + '.' + Cypress.env('system_domain');
@@ -27,11 +27,52 @@ Cypress.Commands.add('runAppTest', (testName: string) => {
   }
 
   // Delete the tested application
-  cy.deleteApp({appName: appName})
+  cy.deleteApp({appName: appName});
+});
+
+// Services tests
+Cypress.Commands.add('runServicesTest', (testName: string) => {
+  const appName = 'testapp';
+  const archive = 'sample-app.tar.gz'
+  const service = 'service01';
+
+  switch (testName) {
+    case 'newAppWithService':
+      // Create a new service
+      cy.createService({serviceName: service});
+
+      // Create an application with the newly created service and check it
+      cy.createApp({appName: appName, archiveName: archive, serviceName: service});
+      cy.checkApp({appName: appName, checkService: true});
+
+      // Unbind and delete the created service
+      cy.deleteService({serviceName: service});
+      cy.checkApp({appName: appName});
+
+      // Delete the tested application
+      cy.deleteApp({appName: appName});
+      break;
+    case 'bindServiceOnApp':
+      // Create another new service
+      cy.createService({serviceName: service});
+
+      // Create an application *WITHOUT* any service
+      cy.createApp({appName: appName, archiveName: archive});
+      cy.checkApp({appName: appName});
+
+      // Bind the created service to the application and check it
+      cy.bindService({appName: appName, serviceName: service});
+      cy.checkApp({appName: appName, checkService: true});
+
+      // Delete the tested application and the service
+      cy.deleteApp({appName: appName});
+      cy.deleteService({serviceName: service});
+      break;
+  }
 });
 
 // Namespaces tests
-Cypress.Commands.add('runNamespaceTest', (testName: string) => {
+Cypress.Commands.add('runNamespacesTest', (testName: string) => {
   const appName = 'testapp';
   const archive = 'sample-app.tar.gz';
   const defaultNamespace = 'workspace';

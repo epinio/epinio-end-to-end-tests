@@ -2,7 +2,7 @@ import { Epinio } from '~/cypress/support/epinio';
 import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
 Cypress.config();
-describe('Application testing', () => {
+describe('Applications testing', () => {
   const topLevelMenu = new TopLevelMenu();
   const epinio = new Epinio();
 
@@ -14,18 +14,18 @@ describe('Application testing', () => {
   });
 
   it('Push a 5 instances application into default namespace and check it', () => {
-    cy.runAppTest('multipleInstance');
+    cy.runApplicationsTest('multipleInstance');
   });
 
   it('Push application with custom route into default namespace and check it', () => {
-    cy.runAppTest('customRoute');
+    cy.runApplicationsTest('customRoute');
   });
 
   it('Push application with env vars into default namespace and check it', () => {
-    cy.runAppTest('envVars');
+    cy.runApplicationsTest('envVars');
   });
 
   it('Push a 5 instances application with custom route and env vars into default namespace and check it', () => {
-    cy.runAppTest('allTests');
+    cy.runApplicationsTest('allTests');
   });
 });
