@@ -5,9 +5,6 @@ Cypress.config();
 describe('Services testing', () => {
   const topLevelMenu = new TopLevelMenu();
   const epinio = new Epinio();
-  const appName = 'testapp';
-  const archive = 'sample-app.tar.gz';
-  const service = 'service01';
 
   beforeEach(() => {
     cy.login();
