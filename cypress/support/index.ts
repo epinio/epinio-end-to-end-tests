@@ -33,6 +33,7 @@ declare global {
       runApplicationsTest(testName: string,): Chainable<Element>;
       runServicesTest(testName: string,): Chainable<Element>;
       runNamespacesTest(testName: string,): Chainable<Element>;
+      runFirstConnexionTest(): Chainable<Element>;
     }
 }}
 

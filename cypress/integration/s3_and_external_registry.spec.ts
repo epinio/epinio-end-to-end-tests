@@ -2,10 +2,16 @@ import { Epinio } from '~/cypress/support/epinio';
 import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
 Cypress.config();
-describe('Epinio installation testing with s3 and external registry configured', () => {
-  const topLevelMenu = new TopLevelMenu();
-  const epinio = new Epinio();
+const epinio = new Epinio();
+const topLevelMenu = new TopLevelMenu();
 
+describe('First login on Rancher', () => {
+  it('Log in and accept terms and conditions', () => {
+    cy.runFirstConnexionTest();
+  });
+});
+
+describe('Epinio installation testing with s3 and external registry configured', () => {
   beforeEach(() => {
     cy.login();
     cy.visit('/home');

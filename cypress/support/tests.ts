@@ -1,4 +1,21 @@
+import cypress from 'cypress';
+import { Epinio } from '~/cypress/support/epinio';
 import './functions';
+
+// First connexion test
+Cypress.Commands.add('runFirstConnexionTest', () => {
+  const epinio = new Epinio();
+
+  cy.visit('/auth/login');
+  cy.get("span").then($text => {
+    if ($text.text().includes('your first time visiting Rancher')) {
+      epinio.firstLogin();
+    }
+    else {
+      cy.log('Rancher already initialized, no need to handle first login.');
+    };
+  });
+});
 
 // Applications tests
 Cypress.Commands.add('runApplicationsTest', (testName: string) => {
