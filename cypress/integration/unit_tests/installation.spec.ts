@@ -18,6 +18,7 @@ describe('Epinio installation testing', () => {
   });
 
   it('Install Epinio', () => {
-    cy.epinioInstall();
+    // Boolean must be forced to false otherwise code is failing
+    cy.epinioInstall({s3: false, extRegistry: false});
   });
 });

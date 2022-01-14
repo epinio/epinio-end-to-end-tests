@@ -25,6 +25,7 @@ describe('Epinio installation with default options', () => {
 
   it('Install Epinio', () => {
     topLevelMenu.clusters('local');
+    // Boolean must be forced to false otherwise code is failing
     cy.epinioInstall({s3: false, extRegistry: false});
   });
 });
