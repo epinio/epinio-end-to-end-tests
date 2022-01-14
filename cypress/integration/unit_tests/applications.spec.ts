@@ -13,19 +13,19 @@ describe('Applications testing', () => {
     epinio.accessEpinioMenu(Cypress.env('cluster'));
   });
 
-  it('Push a 5 instances application into default namespace and check it', () => {
-    cy.runApplicationsTest('multipleInstance');
+  it('Push a 5 instances application with a container image into default namespace and check it', () => {
+    cy.runApplicationsTest('multipleInstanceAndContainer');
   });
 
   it('Push application with custom route into default namespace and check it', () => {
     cy.runApplicationsTest('customRoute');
   });
 
-  it('Push application with env vars into default namespace and check it', () => {
-    cy.runApplicationsTest('envVars');
+  it('Push application with env vars and Git URL into default namespace and check it', () => {
+    cy.runApplicationsTest('envVarsAndGitUrl');
   });
 
-  it('Push a 5 instances application with custom route and env vars into default namespace and check it', () => {
+  it('Push a 5 instances application with mixed options into default namespace and check it', () => {
     cy.runApplicationsTest('allTests');
   });
 });
