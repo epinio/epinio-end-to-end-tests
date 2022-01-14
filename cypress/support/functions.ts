@@ -96,7 +96,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar, instanceNum=1, serviceName, shouldBeDisabled}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, serviceName, shouldBeDisabled}) => {
   cy.clickMenu('Applications');
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: appName});
@@ -117,16 +117,35 @@ Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar, instanc
   // Add an environment variable
   if (addVar === true) {
     cy.get('.key-value > .footer > .add').click();
-    cy.typeKeyValue({key: '.kv-item.key', value: 'test_var'});
-    cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+    cy.typeKeyValue({key: '.kv-item.key', value: 'PORT'});
+    cy.typeKeyValue({key: '.kv-item.value', value: '8080'});
   }
 
   // Set the desired number of instances
   cy.typeValue({label: 'Instances', value: instanceNum});
   cy.clickButton('Next');
 
-  // Upload the test application
-  cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
+  // Select the Source Type if needed
+  if (sourceType) {
+    cy.get('.labeled-select').click();
+    cy.contains(sourceType, {timeout: 120000}).click();
+    if (sourceType === 'Container Image') cy.typeValue({label: 'Image', value: archiveName});
+    if (sourceType === 'Git URL') {
+      cy.typeValue({label: 'URL', value: archiveName});
+      cy.typeValue({label: 'Branch', value: 'main'});
+    }
+  } else {
+    // Use the default one and upload the test application
+    cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
+  }
+
+  // Use a custom Paketo Build Image if needed
+  if (customPaketoImage) {
+    cy.contains('Custom Image').click();
+    cy.typeValue({label: '.no-label', value: customPaketoImage, noLabel: true});
+  }
+
+  // Continue with the next screen
   cy.clickButton('Next');
 
   // Bind a service if needed
@@ -142,15 +161,17 @@ Cypress.Commands.add('createApp', ({appName, archiveName, route, addVar, instanc
   // Check that each steps are succesfully done
   cy.checkStageStatus({numIndex: 1});
   cy.checkStageStatus({numIndex: 2});
-  cy.checkStageStatus({numIndex: 3, timeout: 240000});
-  cy.checkStageStatus({numIndex: 4, timeout: 120000});
+  if (sourceType !== 'Container Image') {
+    cy.checkStageStatus({numIndex: 3, timeout: 240000});
+    cy.checkStageStatus({numIndex: 4, timeout: 120000});
+  }
 
   // Application is created!
   cy.clickButton('Done');
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkService}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkService, dontCheckRouteAccess}) => {
   cy.clickMenu('Applications');
 
   // Go to application details
@@ -178,15 +199,17 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
   if (route) appRoute = route;  // Supersede the app route if needed
   cy.contains(appRoute).should('be.visible');
 
-  // Check that the application website is responding
-  cy.contains(appRoute).invoke('attr', 'href').then(appLink => {
-    cy.request({
-      url: appLink,
-    }).then(httpAnswer => {
-      // Answer status code should be 200
-      expect(httpAnswer.status).to.eq(200);
+  // Check that the application website is responding if needed
+  if (dontCheckRouteAccess === false) {
+    cy.contains(appRoute).invoke('attr', 'href').then(appLink => {
+      cy.request({
+        url: appLink,
+      }).then(httpAnswer => {
+        // Answer status code should be 200
+        expect(httpAnswer.status).to.eq(200);
+      });
     });
-  });
+  }
 });
 
 // Delete an Epinio application

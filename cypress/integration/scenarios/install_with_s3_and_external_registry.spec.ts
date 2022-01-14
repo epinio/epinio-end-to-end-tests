@@ -57,7 +57,7 @@ describe('Applications testing', () => {
   });
 
   it('Deploy an application to test external registry / s3', () => {
-    cy.runApplicationsTest('multipleInstance');
+    cy.runApplicationsTest('multipleInstanceAndContainer');
   });
 });
 

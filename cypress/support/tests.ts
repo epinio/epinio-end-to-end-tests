@@ -22,23 +22,25 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const appName = 'testapp';
   const archive = 'sample-app.tar.gz';
   const customRoute = 'custom-route-' + appName + '.' + Cypress.env('system_domain');
+  const paketobuild = 'paketobuildpacks/builder:tiny';
+  const gitUrl = 'https://github.com/epinio/git-url-app-test';
 
   // Create an application on default namespace and check it
   switch (testName) {
-    case 'multipleInstance':
-      cy.createApp({appName: appName, archiveName: archive, instanceNum: 5});
-      cy.checkApp({appName: appName});
+    case 'multipleInstanceAndContainer':
+      cy.createApp({appName: appName, archiveName: 'httpd:latest', instanceNum: 5, sourceType: 'Container Image'});
+      cy.checkApp({appName: appName, dontCheckRouteAccess: true});
       break;
     case 'customRoute':
       cy.createApp({appName: appName, archiveName: archive, route: customRoute});
       cy.checkApp({appName: appName, route: customRoute});
       break;
-    case 'envVars':
-      cy.createApp({appName: appName, archiveName: archive, addVar: true});
+    case 'envVarsAndGitUrl':
+      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: true, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true});
       break;
     case 'allTests':
-      cy.createApp({appName: appName, archiveName: archive, instanceNum: 5, addVar: true, route: customRoute});
+      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: true, route: customRoute, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
       break;
   }
