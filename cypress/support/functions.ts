@@ -160,7 +160,7 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
   cy.get('header').should('contain', appName).and('contain', 'Running');
 
   // Make sure all application instances are up
-  cy.get('.numbers', {timeout: 120000}).should('contain', '100%');
+  cy.get('.numbers', {timeout: 160000}).should('contain', '100%');
 
   // If needed. check that the correct namespace has been used
   if (namespace) cy.contains('Namespace: ' + namespace).should('be.visible');
@@ -317,7 +317,7 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', ({s3=false, extRegistry=false}) => {
+Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Charts']);
   
   // Make sure we are in the chart screen (test failed here before)

@@ -3,7 +3,7 @@ import { Epinio } from '~/cypress/support/epinio';
 import './functions';
 
 // First connexion test
-Cypress.Commands.add('runFirstConnexionTest', () => {
+Cypress.Commands.add('runFirstConnectionTest', () => {
   const epinio = new Epinio();
 
   cy.visit('/auth/login');
