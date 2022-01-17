@@ -98,6 +98,8 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 
 // Create an Epinio application
 Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, serviceName, shouldBeDisabled}) => {
+  var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
+
   cy.clickMenu('Applications');
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: appName});
@@ -116,10 +118,16 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   }
 
   // Add an environment variable
-  if (addVar === true) {
+  if (addVar === 'ui') {
     cy.get('.key-value > .footer > .add').click();
     cy.typeKeyValue({key: '.kv-item.key', value: 'PORT'});
     cy.typeKeyValue({key: '.kv-item.value', value: '8080'});
+  } else if (addVar === 'file') {
+    cy.get('input[type="file"]').attachFile({filePath: envFile});
+
+    // Check the entered values
+    cy.get('.key > input').should('have.value', 'PORT');
+    cy.get('.no-resize').should('have.value', '8080');
   }
 
   // Set the desired number of instances
@@ -151,7 +159,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Bind a service if needed
   if (serviceName) {
-    cy.wait(300);  // We need to wait a little for the listbox to be updated
+    cy.wait(500);  // We need to wait a little for the listbox to be updated
     cy.get('.labeled-select').click();
     cy.contains(serviceName, {timeout: 120000}).click();
   }
@@ -257,7 +265,9 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
 // Services functions
 
 // Create a service
-Cypress.Commands.add('createService', ({serviceName, namespace='workspace'}) => {
+Cypress.Commands.add('createService', ({serviceName, fromFile, namespace='workspace'}) => {
+  var serviceFile = 'read_from_file.service';  // File to use for the "Read from File" test
+
   cy.clickMenu('Services');
   cy.clickButton('Create');
 
@@ -265,11 +275,20 @@ Cypress.Commands.add('createService', ({serviceName, namespace='workspace'}) => 
   cy.typeValue({label: 'Name', value: serviceName});
 
   // Enter Service Data
-  cy.typeKeyValue({key: '.kv-item.key', value: 'test_data'});
-  cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+  if (fromFile === true) {
+    cy.clickButton('Remove');
+    cy.get('input[type="file"]').attachFile({filePath: serviceFile});
+
+    // Check the entered values
+    cy.get('.key > input').should('have.value', 'service_var');
+    cy.get('.no-resize').should('have.value', 'service_value');
+  } else {
+    cy.typeKeyValue({key: '.kv-item.key', value: 'test_data'});
+    cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+  }
 
   // We need this little trick before clicking on 'Create' (why?)
-  cy.wait(300);
+  cy.wait(500);
   cy.clickButton('Create');
 
   // Check that the service has effectively been created
@@ -313,7 +332,7 @@ Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace
   cy.get('#services').click();
 
   // Select the service
-  cy.wait(300);  // We need to wait a little for the listbox to be updated
+  cy.wait(500);  // We need to wait a little for the listbox to be updated
   // 'multiple' and 'force' are needed here
   // TODO: try to find a better way for this
   cy.get('.labeled-select').click({multiple: true, force: true});

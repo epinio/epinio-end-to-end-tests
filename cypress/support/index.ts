@@ -16,12 +16,12 @@ declare global {
       typeValue(label: string, value: string, noLabel?: boolean,): Chainable<Element>;
       typeKeyValue(key: string, value: string,): Chainable<Element>;
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
-      createApp(appName: string, archiveName: string, sourceType?: string, customPaketoImage?: string, route?: string, addVar?:boolean, instanceNum?: number, serviceName?: string, shouldBeDisabled?: boolean,): Chainable<Element>;
+      createApp(appName: string, archiveName: string, sourceType?: string, customPaketoImage?: string, route?: string, addVar?: string, instanceNum?: number, serviceName?: string, shouldBeDisabled?: boolean,): Chainable<Element>;
       checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkService?: boolean, dontCheckRouteAccess?: boolean): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
-      createService(serviceName: string, namespace?: string,): Chainable<Element>;
+      createService(serviceName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteService(serviceName: string, namespace?: string,): Chainable<Element>;
       bindService(appName: string, serviceName: string, namespace?: string,): Chainable<Element>;
       addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;

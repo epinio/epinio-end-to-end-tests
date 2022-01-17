@@ -36,11 +36,11 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, route: customRoute});
       break;
     case 'envVarsAndGitUrl':
-      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: true, sourceType: 'Git URL'});
+      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'ui', sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true});
       break;
     case 'allTests':
-      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: true, route: customRoute, sourceType: 'Git URL'});
+      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
       break;
   }
@@ -73,15 +73,15 @@ Cypress.Commands.add('runServicesTest', (testName: string) => {
       break;
     case 'bindServiceOnApp':
       // Create another new service
-      cy.createService({serviceName: service});
+      cy.createService({serviceName: service, fromFile: true});
 
       // Create an application *WITHOUT* any service
-      cy.createApp({appName: appName, archiveName: archive});
+      cy.createApp({appName: appName, archiveName: archive, addVar: 'file'});
       cy.checkApp({appName: appName});
 
       // Bind the created service to the application and check it
       cy.bindService({appName: appName, serviceName: service});
-      cy.checkApp({appName: appName, checkService: true});
+      cy.checkApp({appName: appName, checkService: true, checkVar: true});
 
       // Delete the tested application and the service
       cy.deleteApp({appName: appName});
