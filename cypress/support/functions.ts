@@ -321,6 +321,9 @@ Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace
 
   // And save
   cy.clickButton('Save');
+  // Strange sporadic issues happen here
+  // The wait call seems to improve test realibility
+  cy.wait(6000);
 });
 
 // Epinio installation functions
