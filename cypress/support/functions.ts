@@ -18,6 +18,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 
     cy.get('button').click();
     cy.wait('@loginReq');
+    cy.contains("Getting Started", {timeout: 10000}).should('be.visible');
   };
 
   if (cacheSession) {
