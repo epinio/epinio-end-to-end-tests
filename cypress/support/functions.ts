@@ -329,7 +329,7 @@ Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace
 Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
 
-  // Make sure we are in Repositories page and we can see the Create button
+  // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
   cy.contains('Create').should('be.visible');
 
@@ -396,15 +396,20 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
 // Uninstall Epinio via Helm
 Cypress.Commands.add('epinioUninstall', () => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Installed Apps'])
+
+  // Make sure we are in the 'Installed Apps' screen (test failed here before)
+  cy.contains('header', 'Installed Apps', {timeout: 8000}).should('be.visible');
   cy.contains('epinio-installer:').click();
   cy.clickButton('Delete');
   cy.confirmDelete();
-  cy.contains('SUCCESS: helm uninstall', { timeout: 300000 }).should('be.visible');
+  cy.contains('SUCCESS: helm uninstall', {timeout: 300000}).should('be.visible');
 });
 
 // Remove the Epinio Helm repo
 Cypress.Commands.add('removeHelmRepo', () => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Repositories']);
+
+  // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
   cy.contains('epinio-repo').click();
   // Using three dots menu to delete the repo
