@@ -1,6 +1,6 @@
 {
   "experimentalSessionSupport": true,
-  "defaultCommandTimeout": 6000,
+  "defaultCommandTimeout": 10000,
   "clientCertificates": [
     {
       "url": "https://*",
