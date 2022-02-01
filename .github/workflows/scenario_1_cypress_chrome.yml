@@ -1,4 +1,5 @@
-name: Scenario_1_cypress_chrome
+# This workflow calls the master UI workflow with custom variables
+name: Scenario 1 Cypress chrome
 
 on:
   workflow_dispatch:
@@ -7,8 +8,8 @@ on:
     - cron: '0 2 * * *'
 
 jobs:
-  call-workflow-passing-data:
-    uses: ./.github/workflows/reusable_ui_workflow.yml
+  call-master-UI-workflow:
+    uses: ./.github/workflows/master_ui_workflow.yml
     with:
       browser: chrome
       cypress_image: cypress/browsers:node16.13.0-chrome95-ff94

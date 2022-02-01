@@ -1,13 +1,30 @@
-name: UI-CI
+# This workflow is a reusable one called by other workflows
+name: Master UI workflow (template)
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 2 * * *'
+  workflow_call:
+  # Variables to set when calling this reusable workflow
+    inputs:
+      browser:
+        description: Web browser to test
+        required: true
+        type: string
+      cypress_image:
+        description: Cypress docker image to use
+        required: true
+        type: string
+      cypress_test:
+        description: Scenario to test
+        required: true
+        type: string
+      runner:
+        description: Runner on which to execute tests
+        required: true
+        type: string
 
 jobs:
   installation:
-    runs-on: ui-e2e-1
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,9 +50,9 @@ jobs:
   cypress-run:
     needs:
       - installation
-    runs-on: ui-e2e-1
+    runs-on: ${{ inputs.runner }}
     container:
-      image: cypress/browsers:node16.13.0-chrome95-ff94
+      image: ${{ inputs.cypress_image }}
       env:
         RANCHER_USER: admin
         RANCHER_PASSWORD: rancherpassword
@@ -54,13 +71,13 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           # Specify Browser since container image is compile with Firefox
-          browser: chrome
-          spec: cypress/integration/scenarios/install_with_default_options.spec.ts
+          browser: ${{ inputs.browser }}
+          spec: cypress/integration/scenarios/${{ inputs.cypress_test }}
 
   delete-cluster:
     if: always()
     needs: [installation, cypress-run]
-    runs-on: ui-e2e-1
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Delete k3s cluster
         run: |
