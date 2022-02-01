@@ -10,7 +10,7 @@ describe('Epinio uninstallation testing', () => {
     cy.login();
     cy.visit('/home');
     topLevelMenu.openIfClosed();
-    cy.get('.clusters').contains('local').click()
+    cy.get('.clusters').contains(Cypress.env('cluster')).click()
   });
 
   it('Uninstall Epinio', () => {
