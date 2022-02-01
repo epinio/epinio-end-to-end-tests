@@ -9,7 +9,7 @@ declare global {
       login(username?: string, password?: string, cacheSession?: boolean,): Chainable<Element>;
       byLabel(label: string,): Chainable<Element>;
       clickButton(label: string,): Chainable<Element>;
-      clickMenu(label: string,): Chainable<Element>;
+      clickEpinioMenu(label: string,): Chainable<Element>;
       clickClusterMenu(listLabel: string[],): Chainable<Element>;
       confirmDelete(namespace?: string,): Chainable<Element>;
       checkStageStatus(numIndex: number, timeout?: number, status?: string,): Chainable<Element>;
