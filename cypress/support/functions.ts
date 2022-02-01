@@ -352,7 +352,7 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
-  cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
+  cy.get('header').contains('Repositories', {timeout: 8000}).should('be.visible');
   cy.contains('Create').should('be.visible');
 
   cy.clickButton('Create');
@@ -432,7 +432,7 @@ Cypress.Commands.add('removeHelmRepo', () => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Repositories']);
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
-  cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
+  cy.get('header').contains('Repositories', {timeout: 8000}).should('be.visible');
   cy.contains('epinio-repo').click();
   // Using three dots menu to delete the repo
   // TODO: Check if we can click checkbox instead
