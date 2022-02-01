@@ -39,7 +39,7 @@ Cypress.Commands.add('clickButton', (label) => {
 });
 
 // Ensure that we are in the desired menu
-Cypress.Commands.add('clickMenu', (label) => {
+Cypress.Commands.add('clickEpinioMenu', (label) => {
   cy.get('.label').contains(label).click();
   cy.get('header').should('contain', label);
 });
@@ -100,7 +100,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, serviceName, shouldBeDisabled}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
-  cy.clickMenu('Applications');
+  cy.clickEpinioMenu('Applications');
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: appName});
 
@@ -181,7 +181,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
 // Ensure that the application is up and running
 Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkService, dontCheckRouteAccess}) => {
-  cy.clickMenu('Applications');
+  cy.clickEpinioMenu('Applications');
 
   // Go to application details
   cy.getDetail({name: appName, type: 'applications', namespace: namespace});
@@ -223,7 +223,7 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
 
 // Delete an Epinio application
 Cypress.Commands.add('deleteApp', ({appName, state='Running'}) => {
-  cy.clickMenu('Applications');
+  cy.clickEpinioMenu('Applications');
   cy.contains(state + ' ' + appName).click('left');
   cy.clickButton('Delete');
   cy.confirmDelete();
@@ -236,7 +236,7 @@ Cypress.Commands.add('deleteApp', ({appName, state='Running'}) => {
 
 // Create an Epinio namespace
 Cypress.Commands.add('createNamespace', (namespace) => {
-  cy.clickMenu('Namespaces');
+  cy.clickEpinioMenu('Namespaces');
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: namespace});
   cy.clickButton('Create');
@@ -247,7 +247,7 @@ Cypress.Commands.add('createNamespace', (namespace) => {
 
 // Delete an Epinio namespace
 Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
-  cy.clickMenu('Namespaces');
+  cy.clickEpinioMenu('Namespaces');
   cy.get('[data-title="Name"]').contains(namespace).click();
   cy.clickButton('Delete');
   cy.confirmDelete(namespace);
@@ -257,7 +257,7 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
 
   // If needed, make sure the application is also deleted
   if (appName) {
-    cy.clickMenu('Applications');
+    cy.clickEpinioMenu('Applications');
     cy.contains(appName).should('not.exist');
   }
 });
@@ -268,7 +268,7 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
 Cypress.Commands.add('createService', ({serviceName, fromFile, namespace='workspace'}) => {
   var serviceFile = 'read_from_file.service';  // File to use for the "Read from File" test
 
-  cy.clickMenu('Services');
+  cy.clickEpinioMenu('Services');
   cy.clickButton('Create');
 
   // Name of the service
@@ -297,7 +297,7 @@ Cypress.Commands.add('createService', ({serviceName, fromFile, namespace='worksp
 
 // Delete a service
 Cypress.Commands.add('deleteService', ({serviceName, namespace='workspace'}) => {
-  cy.clickMenu('Services');
+  cy.clickEpinioMenu('Services');
 
   // Search for the correct service (same name can be used on different namespace)
   cy.getDetail({name: serviceName, type: 'services', namespace: namespace});
@@ -316,7 +316,7 @@ Cypress.Commands.add('deleteService', ({serviceName, namespace='workspace'}) => 
 
 // Bind a service to an existing application
 Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace'}) => {
-  cy.clickMenu('Applications');
+  cy.clickEpinioMenu('Applications');
 
   // Go to application details
   cy.getDetail({name: appName, type: 'applications', namespace: namespace});
