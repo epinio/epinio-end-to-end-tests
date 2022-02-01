@@ -19,12 +19,12 @@ describe('Epinio installation testing with s3 and external registry configured',
   });
 
   it('Add the Epinio helm repo', () => {
-    topLevelMenu.clusters('local');
+    topLevelMenu.clusters(Cypress.env('cluster'));
     cy.addHelmRepo({repoName: 'epinio-repo', repoUrl: 'https://epinio.github.io/helm-charts'});
   });
 
   it('Install Epinio', () => {
-    topLevelMenu.clusters('local');
+    topLevelMenu.clusters(Cypress.env('cluster'));
     cy.epinioInstall({s3: true, extRegistry: true});
   });
 });
@@ -66,7 +66,7 @@ describe('Epinio uninstallation testing', () => {
     cy.login();
     cy.visit('/home');
     topLevelMenu.openIfClosed();
-    cy.get('.clusters').contains('local').click()
+    cy.get('.clusters').contains(Cypress.env('cluster')).click()
   });
 
   it('Uninstall Epinio', () => {
