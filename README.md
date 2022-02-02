@@ -18,7 +18,7 @@ For now, both scenarios are executed on Chrome. </br>
 Later, we will execute Scenario 2 on Firefox instead.
 ## Running the tests
 
-__Attention__, Epinio is using Rancher UI but Epinio will get its own UI in the coming days.
+__Attention__, Epinio is using Rancher UI but Epinio will get its own UI in the coming weeks.
 It is not worth it to write documentation that will be quickly become out-of-date.
 
 We will provide an update on how to locally execute the tests later.
