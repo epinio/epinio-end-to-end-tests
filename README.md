@@ -11,7 +11,7 @@ In this first scenario, Epinio is deployed with default options. </br>
 You can check all the things we test directly in the [file](./cypress/integration/scenarios/install_with_default_options.spec.ts).
 
 ### Scenario 2
-Second scenario tests Epinio installation with s3 and external registry configured. </br>
+Second scenario tests Epinio installation with S3 and external registry configured. </br>
 Contrary to the first scenario, we only play a small bunch of [tests](./cypress/integration/scenarios/install_with_s3_and_external_registry.spec.ts).
 
 At the moment, both scenarios are executed on Chrome. </br>
