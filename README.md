@@ -1,27 +1,24 @@
+[![Scenario 1](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml/badge.svg)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml)
+[![Scenario 2](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_chrome.yml/badge.svg)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_chrome.yml)
 # epinio-end-to-end-tests
 This repository contains all the files necessary to run Epinio end-to-end tests.
 
-In the cypress directory are stored the tests written using the [Cypress](https://www.cypress.io/) testing framework. 
+In the cypress directory are stored the tests written using the [Cypress](https://www.cypress.io/) testing framework.
 
+Tests are executed every night in the CI. For now, two scenarios are tested.
+### Scenario 1
+In this first scenario, Epinio is deployed with default options. </br>
+You can check all the things we test directly in the [file](./cypress/integration/scenarios/install_with_default_options.spec.ts).
+
+### Scenario 2
+Second scenario tests Epinio installation with S3 and external registry configured. </br>
+Unlike the first scenario, we only play a small bunch of [tests](./cypress/integration/scenarios/install_with_s3_and_external_registry.spec.ts).
+
+For now, both scenarios are executed on Chrome. </br>
+Later, we will execute Scenario 2 on Firefox instead.
 ## Running the tests
 
-It's expected that you have a Rancher instance installed and accessible by default.
+__Attention__, Epinio is using Rancher UI but Epinio will get its own UI in the coming weeks.
+It is not worth it to write documentation that will be quickly become out-of-date.
 
-Some environment variables must be set before running the test, mainly to target your Rancher instance:
-
-|  Variable name | Description | Default |
-|--|--|--|
-| `RANCHER_USER`  | Rancher dashboard user | X |
-| `RANCHER_PASSWORD`  | Rancher dashboard password | X |
-| `RANCHER_URL`  | Rancher dashboard URL | `http://localhost:8005` |
-| `CLUSTER_NAME`  | Cluster where you want Epinio installed | `local` |
-| `SYSTEM_DOMAIN`  | Domain name for Epinio | X |
-| `CACHE_SESSION`  | Enable/Disable cache session | `false` |
-
-
-`make e2e-tests`
-
-That's also possible to run Cypress in GUI mode (mandatory for developing new tests).</br>
-As prerequisites, you need nodejs, yarn and a graphical environment.</br>
-You can find more instructions about dependencies on the official [Cypress documentation](https://docs.cypress.io/guides/getting-started/installing-cypress).</br>
-Once requirements meet, run `make cypress-gui`.
+We will provide an update on how to locally execute the tests later.
