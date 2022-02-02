@@ -10,11 +10,11 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 
     cy.byLabel('Username')
       .focus()
-      .type(username);
+      .type(username, {log: false});
 
     cy.byLabel('Password')
       .focus()
-      .type(password);
+      .type(password, {log: false});
 
     cy.get('button').click();
     cy.wait('@loginReq');
@@ -66,11 +66,11 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, timeout=6000, status='Succe
 });
 
 // Insert a value in a field *BUT* force a clear before!
-Cypress.Commands.add('typeValue', ({label, value, noLabel}) => {
+Cypress.Commands.add('typeValue', ({label, value, noLabel, log=true}) => {
   if (noLabel === true) {
-    cy.get(label).focus().clear().type(value);
+    cy.get(label).focus().clear().type(value, {log: log});
   } else {
-    cy.byLabel(label).focus().clear().type(value);
+    cy.byLabel(label).focus().clear().type(value, {log: log});
   }
 });
 
@@ -393,9 +393,9 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
     cy.contains('a', 'External registry').click();
     cy.contains('Use an external registry').click();
     cy.typeValue({label: 'External registry url', value: 'registry.hub.docker.com'});
-    cy.typeValue({label: 'External registry username', value: Cypress.env('external_reg_username')});
-    cy.typeValue({label: 'External registry password', value: Cypress.env('external_reg_password')});
-    cy.typeValue({label: 'External registry namespace', value: 'juadk'});
+    cy.typeValue({label: 'External registry username', value: Cypress.env('external_reg_username'), log: false});
+    cy.typeValue({label: 'External registry password', value: Cypress.env('external_reg_password'), log: false});
+    cy.typeValue({label: 'External registry namespace', value: Cypress.env('external_reg_username'), log: false});
   }
 
   // Configure s3 storage
@@ -403,8 +403,8 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
     cy.contains('a', 'External S3 storage').click();
     cy.contains('Use an external s3 storage').click();
     cy.typeValue({label: 'S3 endpoint', value: 's3.amazonaws.com'});
-    cy.typeValue({label: 'S3 access key id', value: Cypress.env('s3_key_id')});
-    cy.typeValue({label: 'S3 access key secret', value: Cypress.env('s3_key_secret')});
+    cy.typeValue({label: 'S3 access key id', value: Cypress.env('s3_key_id'), log: false});
+    cy.typeValue({label: 'S3 access key secret', value: Cypress.env('s3_key_secret'), log: false});
     cy.typeValue({label: 'S3 bucket', value: 'epinio-ci'});
     cy.contains('S3 use SSL').click();
   }

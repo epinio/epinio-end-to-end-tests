@@ -19,7 +19,7 @@ export class Epinio {
   }
 
   firstLogin() {
-    cy.get('input').type(Cypress.env('password'));
+    cy.get('input').type(Cypress.env('password'), {log: false});
     cy.clickButton('Log in with Local User');
     cy.contains('I agree').click('left');
     cy.clickButton('Continue');
