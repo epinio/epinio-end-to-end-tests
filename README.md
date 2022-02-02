@@ -14,7 +14,7 @@ You can check all the things we test directly in the [file](./cypress/integratio
 Second scenario tests Epinio installation with S3 and external registry configured. </br>
 Unlike the first scenario, we only play a small bunch of [tests](./cypress/integration/scenarios/install_with_s3_and_external_registry.spec.ts).
 
-At the moment, both scenarios are executed on Chrome. </br>
+For now, both scenarios are executed on Chrome. </br>
 Later, we will execute Scenario 2 on Firefox instead.
 ## Running the tests
 
