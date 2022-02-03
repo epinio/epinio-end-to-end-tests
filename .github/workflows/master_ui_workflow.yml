@@ -68,11 +68,9 @@ jobs:
       image: ${{ inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
         EXT_REG_USER: ${{ secrets.ext_reg_user }}
         EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RANCHER_USER: admin
         RANCHER_PASSWORD: rancherpassword
         RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
@@ -91,8 +89,24 @@ jobs:
         with:
           # Specify Browser since container image is compile with Firefox
           browser: ${{ inputs.browser }}
-          record: true
           spec: cypress/integration/scenarios/${{ inputs.cypress_test }}
+
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          retention-days: 7
+
+      # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          retention-days: 7
 
   delete-cluster:
     if: always()
