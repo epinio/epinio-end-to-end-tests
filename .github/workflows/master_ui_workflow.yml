@@ -85,10 +85,13 @@ jobs:
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         uses: cypress-io/github-action@v2
         with:
           # Specify Browser since container image is compile with Firefox
           browser: ${{ inputs.browser }}
+          record: true
           spec: cypress/integration/scenarios/${{ inputs.cypress_test }}
 
   delete-cluster:
