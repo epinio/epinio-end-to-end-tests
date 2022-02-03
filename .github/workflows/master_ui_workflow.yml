@@ -68,9 +68,11 @@ jobs:
       image: ${{ inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
         EXT_REG_USER: ${{ secrets.ext_reg_user }}
         EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RANCHER_USER: admin
         RANCHER_PASSWORD: rancherpassword
         RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
@@ -85,8 +87,6 @@ jobs:
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         uses: cypress-io/github-action@v2
         with:
           # Specify Browser since container image is compile with Firefox
