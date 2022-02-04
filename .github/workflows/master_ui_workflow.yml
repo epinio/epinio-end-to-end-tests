@@ -89,6 +89,7 @@ jobs:
         with:
           # Specify Browser since container image is compile with Firefox
           browser: ${{ inputs.browser }}
+          headless: true
           spec: cypress/integration/scenarios/${{ inputs.cypress_test }}
 
       - name: Upload Cypress screenshots
