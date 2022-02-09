@@ -45,7 +45,7 @@ jobs:
       - name: Install K3s - Helm - Rancher
         id: installation
         env:
-          DASHBOARD_VERSION: epinio-v0.3.3
+          DASHBOARD_VERSION: epinio-v0.3.6
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
         run: |
@@ -118,5 +118,5 @@ jobs:
         run: |
           sudo /usr/local/bin/k3s-uninstall.sh
           helm repo remove rancher-stable jetstack
-          sudo chown -R sles:users /home/sles/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/cypress/videos
+          sudo chown -R sles:users /home/sles/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/cypress/*
 
