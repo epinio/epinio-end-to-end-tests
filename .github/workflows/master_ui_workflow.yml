@@ -117,7 +117,9 @@ jobs:
     steps:
       - name: Delete k3s cluster
         run: |
-          sudo /usr/local/bin/k3s-uninstall.sh
+          /usr/local/bin/k3s-uninstall.sh
           helm repo remove rancher-stable jetstack
-          sudo chown -R sles:users /home/sles/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/cypress/*
+          LOCAL_USER=$(id -un)
+          LOCAL_GROUP=$(id -gn)
+          sudo chown -R ${LOCAL_USER}:${LOCAL_GROUP} /home/${LOCAL_USER}/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/cypress/*
 
