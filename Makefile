@@ -26,8 +26,7 @@ install-helm: ## Install Helm
 	sudo rm -rf linux-amd64/ helm-*.tar.gz
 
 install-k3s: ## Install k3s with default options
-	curl -sfL https://get.k3s.io | sh -
-	sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+	curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=${K3S_VERSION} sh -s - --write-kubeconfig-mode 644
 	## Wait for k3s to start (could be improved)
 	sleep 120
 

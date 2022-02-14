@@ -48,6 +48,7 @@ jobs:
           DASHBOARD_VERSION: epinio-v0.3.6
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
+          K3S_VERSION: v1.21.9+k3s1
         run: |
           export MY_HOSTNAME=$(hostname)
           make e2e-ci
@@ -116,7 +117,9 @@ jobs:
     steps:
       - name: Delete k3s cluster
         run: |
-          sudo /usr/local/bin/k3s-uninstall.sh
+          /usr/local/bin/k3s-uninstall.sh
           helm repo remove rancher-stable jetstack
-          sudo chown -R sles:users /home/sles/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/cypress/*
+          LOCAL_USER=$(id -un)
+          LOCAL_GROUP=$(id -gn)
+          sudo chown -R ${LOCAL_USER}:${LOCAL_GROUP} /home/${LOCAL_USER}/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/cypress/*
 
