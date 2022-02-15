@@ -30,7 +30,14 @@ install-k3s: ## Install K3s with default options
 	## Wait for K3s to start (could be improved?)
 	timeout 2m bash -c "until ! kubectl get pod -A 2>/dev/null | grep -Eq 'ContainerCreating|CrashLoopBackOff'; do sleep 1; done"
 
-e2e-ci: install-k3s install-helm install-rancher ## Tests
+install-epinio: ## Install Epinio with Helm
+	@./scripts/install_epinio.sh
+
+prepare-e2e-ci: install-k3s install-helm install-rancher install-epinio ## Tests
+
+clean:
+	/usr/local/bin/k3s-uninstall.sh
+	helm repo remove rancher-stable jetstack epinio-chartmuseum chartmuseum
 
 help: ## Show this Makefile's help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
