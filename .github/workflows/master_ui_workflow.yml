@@ -119,7 +119,5 @@ jobs:
         run: |
           /usr/local/bin/k3s-uninstall.sh
           helm repo remove rancher-stable jetstack
-          LOCAL_USER=$(id -un)
-          LOCAL_GROUP=$(id -gn)
-          sudo chown -R ${LOCAL_USER}:${LOCAL_GROUP} /home/${LOCAL_USER}/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/cypress/*
-
+      - name: Clean all
+        uses: colpal/actions-clean@v1
