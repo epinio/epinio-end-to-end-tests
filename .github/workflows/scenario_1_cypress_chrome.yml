@@ -1,5 +1,5 @@
 # This workflow calls the master UI workflow with custom variables
-name: Scenario 1 Cypress chrome
+name: Scenario 1 Cypress Chrome
 
 on:
   workflow_dispatch:
@@ -13,5 +13,5 @@ jobs:
     with:
       browser: chrome
       cypress_image: cypress/browsers:node16.13.0-chrome95-ff94
-      cypress_test: install_with_default_options.spec.ts
+      cypress_test: with_default_options.spec.ts
       runner: ui-e2e-1
