@@ -25,10 +25,10 @@ install-helm: ## Install Helm
 	sudo chown root:root /usr/local/bin/helm
 	sudo rm -rf linux-amd64/ helm-*.tar.gz
 
-install-k3s: ## Install k3s with default options
+install-k3s: ## Install K3s with default options
 	curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=${K3S_VERSION} sh -s - --write-kubeconfig-mode 644
-	## Wait for k3s to start (could be improved)
-	sleep 120
+	## Wait for K3s to start (could be improved?)
+	timeout 2m bash -c "until ! kubectl get pod -A 2>/dev/null | grep -Eq 'ContainerCreating|CrashLoopBackOff'; do sleep 1; done"
 
 e2e-ci: install-k3s install-helm install-rancher ## Tests
 
