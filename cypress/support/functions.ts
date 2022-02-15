@@ -101,6 +101,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
+  cy.wait(500);  // We need to wait a little for the button to appear. TODO: do something more elegant
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: appName});
 
