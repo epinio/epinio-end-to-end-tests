@@ -113,9 +113,6 @@ jobs:
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} ${{ inputs.docker_options }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run

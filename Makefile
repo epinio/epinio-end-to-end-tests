@@ -33,7 +33,10 @@ install-k3s: ## Install K3s with default options
 install-epinio: ## Install Epinio with Helm
 	@./scripts/install_epinio.sh
 
-prepare-e2e-ci: install-k3s install-helm install-rancher install-epinio ## Tests
+get-ca: ## Configure Cypress to use the epinio-ca
+	@./scripts/get_ca.sh
+
+prepare-e2e-ci: install-k3s install-helm install-rancher install-epinio get-ca ## Tests
 
 clean:
 	/usr/local/bin/k3s-uninstall.sh
