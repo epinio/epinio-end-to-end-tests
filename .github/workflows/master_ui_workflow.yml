@@ -141,13 +141,21 @@ jobs:
           retention-days: 7
 
   delete-cluster:
-    if: always()
     needs: [installation, cypress-run]
     runs-on: ${{ inputs.runner }}
     steps:
+      - name: Uninstall Epinio
+        if: always()
+        env:
+          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+        run: |
+          make uninstall-epinio
+
       - name: Delete k3s cluster
+        if: always()
         run: |
           make clean
 
       - name: Clean all
+        if: always()
         uses: colpal/actions-clean@v1
