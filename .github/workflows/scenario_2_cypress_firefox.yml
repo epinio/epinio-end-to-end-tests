@@ -1,5 +1,5 @@
 # This workflow calls the master UI workflow with custom variables
-name: Scenario 2 Cypress firefox
+name: Scenario 2 Cypress Firefox
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ jobs:
     with:
       browser: firefox
       cypress_image: cypress/browsers:node16.13.0-chrome95-ff94
-      cypress_test: install_with_s3_and_external_registry.spec.ts
+      cypress_test: with_s3_and_external_registry.spec.ts
       # Due to security reason, Firefox can't be started as root
       # https://github.com/cypress-io/github-action#firefox
       docker_options: '--user 1000'

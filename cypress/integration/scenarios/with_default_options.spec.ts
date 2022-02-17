@@ -11,25 +11,6 @@ describe('First login on Rancher', () => {
   });
 });
 
-describe('Epinio installation with default options', () => {
-  beforeEach(() => {
-    cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-  });
-
-  it('Add the Epinio helm repo', () => {
-    topLevelMenu.clusters(Cypress.env('cluster'));
-    cy.addHelmRepo({repoName: 'epinio-repo', repoUrl: 'https://epinio.github.io/helm-charts'});
-  });
-
-  it('Install Epinio', () => {
-    topLevelMenu.clusters(Cypress.env('cluster'));
-    // Boolean must be forced to false otherwise code is failing
-    cy.epinioInstall({s3: false, extRegistry: false});
-  });
-});
-
 describe('Menu testing', () => {
   beforeEach(() => {
     cy.login();
@@ -105,22 +86,5 @@ describe('Namespaces testing', () => {
 
   it('Try to push an application without any namespace', () => {
     cy.runNamespacesTest('withoutNamespace');
-  });
-});
-
-describe('Epinio uninstallation testing', () => {
-  beforeEach(() => {
-    cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-    cy.get('.clusters').contains(Cypress.env('cluster')).click()
-  });
-
-  it('Uninstall Epinio', () => {
-    cy.epinioUninstall();
-  });
-
-  it('Remove the Epinio helm repo', () => {
-    cy.removeHelmRepo();
   });
 });

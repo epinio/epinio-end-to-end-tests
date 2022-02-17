@@ -42,21 +42,54 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install K3s - Helm - Rancher
+      - name: Checkout Epinio repository
+        uses: actions/checkout@v2
+        with:
+          repository: epinio/epinio
+          submodules: recursive
+          fetch-depth: 0
+          path: epinio
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        env:
+          SETUP_GO_VERSION: '^1.17.2'
+        with:
+          go-version: ${{ env.SETUP_GO_VERSION }}
+
+      - name: Cache Tools
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/tools
+          key: ${{ runner.os }}-tools
+
+      - name: Add Tools to PATH
+        run: |
+          echo "`pwd`/output/bin" >> $GITHUB_PATH
+
+      - name: Install K3s - Helm - Rancher - Epinio
         id: installation
         env:
           DASHBOARD_VERSION: epinio-v0.3.6
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
           K3S_VERSION: v1.21.9+k3s1
+          EXT_REG_USER: ${{ secrets.ext_reg_user }}
+          EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+          S3_KEY_ID: ${{ secrets.s3_key_id }}
+          S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         run: |
-          export MY_HOSTNAME=$(hostname)
-          make e2e-ci
-
           ## Export information to other jobs
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')
-          echo '::set-output name=MY_IP::'$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
-          echo '::set-output name=MY_HOSTNAME::'$(hostname)
+          MY_IP=$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
+          export MY_HOSTNAME=$(hostname)
+          export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
+          echo '::set-output name=MY_IP::'${MY_IP}
+          echo '::set-output name=MY_HOSTNAME::'${MY_HOSTNAME}
+
+          # Install needed deps
+          make prepare-e2e-ci
+
     outputs:
       MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME}}
       MY_IP: ${{ steps.installation.outputs.MY_IP}}
@@ -80,9 +113,6 @@ jobs:
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} ${{ inputs.docker_options }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
@@ -111,13 +141,21 @@ jobs:
           retention-days: 7
 
   delete-cluster:
-    if: always()
     needs: [installation, cypress-run]
     runs-on: ${{ inputs.runner }}
     steps:
-      - name: Delete k3s cluster
+      - name: Uninstall Epinio
+        if: always()
+        env:
+          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
         run: |
-          /usr/local/bin/k3s-uninstall.sh
-          helm repo remove rancher-stable jetstack
+          make uninstall-epinio
+
+      - name: Delete k3s cluster
+        if: always()
+        run: |
+          make clean
+
       - name: Clean all
+        if: always()
         uses: colpal/actions-clean@v1
