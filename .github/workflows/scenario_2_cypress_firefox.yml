@@ -1,5 +1,5 @@
 # This workflow calls the master UI workflow with custom variables
-name: Scenario 2 Cypress Firefox
+name: UI - Scenario 2 Cypress Firefox
 
 on:
   workflow_dispatch:
