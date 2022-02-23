@@ -24,6 +24,7 @@ declare global {
       createService(serviceName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteService(serviceName: string, namespace?: string,): Chainable<Element>;
       bindService(appName: string, serviceName: string, namespace?: string,): Chainable<Element>;
+      unbindService(appName: string, serviceName: string, namespace?: string,): Chainable<Element>;
       addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
       removeHelmRepo(): Chainable<Element>;
       epinioInstall(s3?: boolean, extRegistry?: boolean,): Chainable<Element>;
