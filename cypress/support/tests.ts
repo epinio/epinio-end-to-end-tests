@@ -64,8 +64,8 @@ Cypress.Commands.add('runServicesTest', (testName: string) => {
       cy.createApp({appName: appName, archiveName: archive, serviceName: service});
       cy.checkApp({appName: appName, checkService: true});
 
-      // Unbind and delete the created service
-      cy.deleteService({serviceName: service});
+      // Unbind the created service
+      cy.unbindService({appName: appName, serviceName: service});
       cy.checkApp({appName: appName});
 
       // Delete the tested application

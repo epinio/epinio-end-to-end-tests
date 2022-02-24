@@ -315,6 +315,34 @@ Cypress.Commands.add('deleteService', ({serviceName, namespace='workspace'}) => 
   cy.contains(serviceName).should('not.exist');
 });
 
+// Unbind a service from an app
+Cypress.Commands.add('unbindService', ({appName, serviceName, namespace='workspace'}) => {
+  cy.clickEpinioMenu('Applications');
+  
+  // Make sure the service is bounded already
+  cy.get('[data-title="Bound Services"]').should('contain', serviceName);
+
+  // Select the 3dots button and edit configuration
+  cy.get('.role-multi-action').click();
+  cy.contains('Edit Config').click();
+
+  // Select the Services tab
+  cy.get('#services').click();
+  cy.get('.tab-container').should('contain', serviceName);
+  
+  // Remove the service
+  cy.get('[aria-label="Deselect service01"]').click();
+
+  // And save
+  cy.clickButton('Save');
+
+  // Make sure the service is not bounded anymore
+  cy.get('[data-title="Bound Services"]').should('not.contain', serviceName);
+
+  // Application status should be equal to 1/1
+  cy.get('[data-title="Status"]', {timeout: 16000}).should('contain', '1/1');
+ });
+
 // Bind a service to an existing application
 Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace'}) => {
   cy.clickEpinioMenu('Applications');
