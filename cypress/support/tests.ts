@@ -70,6 +70,9 @@ Cypress.Commands.add('runServicesTest', (testName: string) => {
 
       // Delete the tested application
       cy.deleteApp({appName: appName});
+      
+      // Delete the created service
+      cy.deleteService({serviceName: service});
       break;
     case 'bindServiceOnApp':
       // Create another new service
