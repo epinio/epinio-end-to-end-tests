@@ -9,44 +9,34 @@ pushd epinio
 make tools-install
 make build
 
-# Add development Epinio Helm chart repo locally
-make setup_chart_museum
-
-# Mandatory! Otherwise Helm repos are not seen...
-helm repo update
-
 # Add options for External Registry if needed
 if [[ -n "${EXT_REG_USER}" && -n "${EXT_REG_PASSWORD}" ]]; then
   INSTALL_OPTIONS+="
-   --set externalRegistryURL=registry.hub.docker.com \
-   --set externalRegistryUsername=${EXT_REG_USER} \
-   --set externalRegistryPassword=${EXT_REG_PASSWORD} \
-   --set externalRegistryNamespace=${EXT_REG_USER} \
+   --set registry.url=registry.hub.docker.com \
+   --set registry.username=${EXT_REG_USER} \
+   --set registry.password=${EXT_REG_PASSWORD} \
+   --set registry.namespace=${EXT_REG_USER} \
   "
 fi
 
 # Add options for S3 Storage if needed
 if [[ -n "${S3_KEY_ID}" && -n "${S3_KEY_SECRET}" ]]; then
   INSTALL_OPTIONS+="
-   --set useS3Storage=true \
-   --set s3UseSSL=true \
-   --set s3Bucket=epinio-ci \
-   --set s3Endpoint=s3.amazonaws.com \
-   --set s3AccessKeyId=${S3_KEY_ID} \
-   --set s3SecretAccessKey=${S3_KEY_SECRET} \
+   --set minio.enabled=false \
+   --set s3.useSSL=true \
+   --set s3.bucket=epinio-ci \
+   --set s3.endpoint=s3.amazonaws.com \
+   --set s3.accessKeyID=${S3_KEY_ID} \
+   --set s3.secretAccessKey=${S3_KEY_SECRET} \
   "
 fi
 
 # Install Epinio
-helm install epinio-installer epinio-chartmuseum/epinio-installer \
- --set domain="${EPINIO_SYSTEM_DOMAIN}" \
- --set accessControlAllowOrigin="https://${MY_HOSTNAME}" \
- --set skipTraefik=true \
- --set skipCertManager=true \
- --set containerRegistryChart="http://chartmuseum.${EPINIO_SYSTEM_DOMAIN}/charts/container-registry-0.1.0.tgz" \
- --set epinioChart="http://chartmuseum.${EPINIO_SYSTEM_DOMAIN}/charts/epinio-0.1.0.tgz" \
- ${INSTALL_OPTIONS} \
- --wait
+helm upgrade --debug --wait --install -n epinio --create-namespace epinio helm-charts/chart/epinio \
+  --set global.domain=${EPINIO_SYSTEM_DOMAIN} \
+  --set server.accessControlAllowOrigin="https://${MY_HOSTNAME}" \
+  ${INSTALL_OPTIONS} \
+  --wait
 
 # Wait for Epinio deployment to be ready
 kubectl rollout status deployment epinio-server -n epinio --timeout=480s
