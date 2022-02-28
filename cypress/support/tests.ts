@@ -58,6 +58,7 @@ Cypress.Commands.add('runServicesTest', (testName: string) => {
   switch (testName) {
     case 'newAppWithService':
       // Create a new service
+      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createService({serviceName: service});
 
       // Create an application with the newly created service and check it
@@ -76,6 +77,7 @@ Cypress.Commands.add('runServicesTest', (testName: string) => {
       break;
     case 'bindServiceOnApp':
       // Create another new service
+      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createService({serviceName: service, fromFile: true});
 
       // Create an application *WITHOUT* any service
@@ -103,6 +105,7 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
   switch (testName) {
     case 'newNamespace':
       // Create a new namespace
+      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createNamespace(namespace);
 
       // Create an application on the new namespace and check it
@@ -114,6 +117,7 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       break;
     case 'withoutNamespace':
       // Delete default namespace
+      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.deleteNamespace({namespace: defaultNamespace});
 
       // Try to create the application
