@@ -12,10 +12,11 @@ make build
 # Add options for External Registry if needed
 if [[ -n "${EXT_REG_USER}" && -n "${EXT_REG_PASSWORD}" ]]; then
   INSTALL_OPTIONS+="
-   --set registry.url=registry.hub.docker.com \
-   --set registry.username=${EXT_REG_USER} \
-   --set registry.password=${EXT_REG_PASSWORD} \
-   --set registry.namespace=${EXT_REG_USER} \
+   --set containerregistry.enabled=false \
+   --set global.registryURL=registry.hub.docker.com \
+   --set global.registryUsername=${EXT_REG_USER} \
+   --set global.registryPassword=${EXT_REG_PASSWORD} \
+   --set global.registryNamespace=${EXT_REG_USER} \
   "
 fi
 
