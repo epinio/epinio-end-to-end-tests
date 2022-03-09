@@ -46,7 +46,7 @@ kubectl rollout status deployment epinio-server -n epinio --timeout=480s
 make patch-epinio-deployment
 
 # Show Epinio info, could be useful for debugging
-dist/epinio-* config update
+dist/epinio-* settings update
 
 # Wait a little before getting informations, otherwise we can have a 502 code
 sleep 20
