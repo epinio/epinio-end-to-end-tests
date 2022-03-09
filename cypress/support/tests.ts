@@ -39,6 +39,12 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'ui', sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true});
       break;
+    case 'restart':
+      cy.createApp({appName: appName, archiveName: archive});
+      cy.checkApp({appName: appName});
+      cy.restartApp({appName: appName});
+      cy.checkApp({appName: appName});
+      break;
     case 'allTests':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
