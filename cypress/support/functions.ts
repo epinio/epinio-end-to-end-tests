@@ -233,6 +233,26 @@ Cypress.Commands.add('deleteApp', ({appName, state='Running'}) => {
   cy.contains(appName, {timeout: 60000}).should('not.exist');
 });
 
+// Restart an Epinio application
+Cypress.Commands.add('restartApp', ({appName, namespace='workspace'}) => {
+  cy.clickEpinioMenu('Applications');
+  
+  // Go to application details
+  cy.getDetail({name: appName, type: 'applications', namespace: namespace});
+
+  // Make sure we are in the details page
+  cy.get('header').should('contain', 'Applications:').and('contain', appName);
+
+  // Select the 3dots button and edit configuration
+  cy.get('.role-multi-action').click();
+  cy.contains('li', 'Restart').click(); 
+
+  // Restart counter is not ready yet so we can not use it for now.
+  // Instead, we check that instances number is not equal to 100% because
+  // it's expected as new instances are popping to replace the olders.
+  cy.get('.numbers', {timeout: 160000}).should('not.contain', '100%'); 
+});
+
 // Namespace functions
 
 // Create an Epinio namespace
