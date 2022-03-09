@@ -253,6 +253,24 @@ Cypress.Commands.add('restartApp', ({appName, namespace='workspace'}) => {
   cy.get('.numbers', {timeout: 160000}).should('not.contain', '100%'); 
 });
 
+Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
+  cy.clickEpinioMenu('Applications');
+  
+  // Go to application details
+  cy.getDetail({name: appName, type: 'applications', namespace: namespace});
+
+  // Make sure we are in the details page
+  cy.get('header').should('contain', 'Applications:').and('contain', appName);
+
+  // Select the 3dots button and edit configuration
+  cy.get('.role-multi-action').click();
+  cy.contains('li', 'Rebuild').click(); 
+
+  // Make sure the app is rebuilding and then, back to running status
+  cy.get('header').should('contain', appName).and('contain', 'Building');
+  cy.get('header', {timeout: 20000}).should('contain', appName).and('contain', 'Running');
+});
+
 // Namespace functions
 
 // Create an Epinio namespace
