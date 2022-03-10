@@ -170,7 +170,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Check that each steps are succesfully done
   cy.checkStageStatus({numIndex: 1});
-  cy.checkStageStatus({numIndex: 2});
+  cy.checkStageStatus({numIndex: 2, timeout: 120000});
   if (sourceType !== 'Container Image') {
     cy.checkStageStatus({numIndex: 3, timeout: 240000});
     cy.checkStageStatus({numIndex: 4, timeout: 120000});
