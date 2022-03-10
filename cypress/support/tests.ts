@@ -40,6 +40,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, checkVar: true});
       break;
     case 'restartAndRebuild':
+      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createApp({appName: appName, archiveName: archive});
       cy.checkApp({appName: appName});
       cy.restartApp({appName: appName});
