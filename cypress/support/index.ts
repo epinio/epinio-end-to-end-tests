@@ -20,6 +20,7 @@ declare global {
       checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkService?: boolean, dontCheckRouteAccess?: boolean): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
+      rebuildApp(appName: string, namespace?: string,): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       createService(serviceName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;

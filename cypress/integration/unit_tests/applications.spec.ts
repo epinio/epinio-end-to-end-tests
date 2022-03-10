@@ -13,8 +13,8 @@ describe('Applications testing', () => {
     epinio.accessEpinioMenu(Cypress.env('cluster'));
   });
 
-  it('Push basic application and check we can restart it', () => {
-    cy.runApplicationsTest('restart');
+  it('Push basic application and check we can restart and rebuild it', () => {
+    cy.runApplicationsTest('restartAndRebuild');
   });
 
   it('Push a 5 instances application with a container image into default namespace and check it', () => {
