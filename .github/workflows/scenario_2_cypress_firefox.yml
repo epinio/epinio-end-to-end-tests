@@ -12,7 +12,7 @@ jobs:
     uses: ./.github/workflows/master_ui_workflow.yml
     with:
       browser: firefox
-      cypress_image: cypress/browsers:node16.13.0-chrome95-ff94
+      cypress_image: cypress/browsers:node16.14.0-slim-chrome99-ff97
       cypress_test: with_s3_and_external_registry.spec.ts
       # Due to security reason, Firefox can't be started as root
       # https://github.com/cypress-io/github-action#firefox
