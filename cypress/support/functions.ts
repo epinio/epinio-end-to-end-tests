@@ -130,6 +130,9 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.get('.key > input').should('have.value', 'PORT');
     cy.get('.no-resize').should('have.value', '8080');
   }
+  // The following wait is mandatory, otherwise, env variables are not seen...
+  // Don't know yet if something more elegant can be done.
+  cy.wait(1000);
 
   // Set the desired number of instances
   cy.typeValue({label: 'Instances', value: instanceNum});
