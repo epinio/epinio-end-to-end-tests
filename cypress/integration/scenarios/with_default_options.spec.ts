@@ -59,7 +59,7 @@ describe('Applications testing', () => {
   });
 });
 
-describe('Services testing', () => {
+describe('Configurations testing', () => {
   beforeEach(() => {
     cy.login();
     cy.visit('/home');
@@ -67,12 +67,12 @@ describe('Services testing', () => {
     epinio.accessEpinioMenu(Cypress.env('cluster'));
   });
 
-  it('Create an application with a service, unbind the service and delete all', () => {
-    cy.runServicesTest('newAppWithService');
+  it('Create an application with a configuration, unbind the configuration and delete all', () => {
+    cy.runConfigurationsTest('newAppWithConfiguration');
   });
 
-  it('Bind a created service to an existing application and delete all', () => {
-    cy.runServicesTest('bindServiceOnApp');
+  it('Bind a created configuration to an existing application and delete all', () => {
+    cy.runConfigurationsTest('bindConfigurationOnApp');
   });
 });
 

@@ -7,7 +7,7 @@ export class Epinio {
     return cy.get('.list-unstyled > li').should(($lis) => {
       expect($lis).to.have.length(3);
       expect($lis.eq(0)).to.contain('Applications');
-      expect($lis.eq(1)).to.contain('Services');
+      expect($lis.eq(1)).to.contain('Configurations');
       expect($lis.eq(2)).to.contain('Namespaces');
     })
   }
