@@ -12,11 +12,12 @@ describe('Applications testing', () => {
     topLevelMenu.openIfClosed();
     epinio.accessEpinioMenu(Cypress.env('cluster'));
   });
-
+// Temporarly removing restart and rebuild test, not enough stable with CI
+/*
   it('Push basic application and check we can restart and rebuild it', () => {
     cy.runApplicationsTest('restartAndRebuild');
   });
-
+*/
   it('Push a 5 instances application with a container image into default namespace and check it', () => {
     cy.runApplicationsTest('multipleInstanceAndContainer');
   });
