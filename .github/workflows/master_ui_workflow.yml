@@ -70,7 +70,7 @@ jobs:
       - name: Install K3s - Helm - Rancher - Epinio
         id: installation
         env:
-          DASHBOARD_VERSION: epinio-dev
+          DASHBOARD_VERSION: epinio-v0.6.0
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
           K3S_VERSION: v1.21.9+k3s1

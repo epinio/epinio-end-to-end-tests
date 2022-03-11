@@ -48,7 +48,7 @@ Cypress.Commands.add('clickEpinioMenu', (label) => {
 Cypress.Commands.add('confirmDelete', (namespace) => {
   if (namespace) cy.get('#confirm').type(namespace);
 
-  // Always unbind a service before deletion
+  // Always unbind a configuration before deletion
   cy.get('.card-body').then(($cardBody) => {
     if ($cardBody.find('.checkbox-container').length) {
       cy.contains('Unbind').click();
@@ -97,11 +97,11 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, serviceName, shouldBeDisabled}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, configurationName, shouldBeDisabled}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
-  cy.wait(500);  // We need to wait a little for the button to appear. TODO: do something more elegant
+  cy.wait(1000);  // We need to wait a little for the button to appear. TODO: do something more elegant
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: appName});
 
@@ -161,11 +161,11 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Continue with the next screen
   cy.clickButton('Next');
 
-  // Bind a service if needed
-  if (serviceName) {
+  // Bind a configuration if needed
+  if (configurationName) {
     cy.wait(500);  // We need to wait a little for the listbox to be updated
     cy.get('.labeled-select').click();
-    cy.contains(serviceName, {timeout: 120000}).click();
+    cy.contains(configurationName, {timeout: 120000}).click();
   }
 
   // Start application creation
@@ -184,7 +184,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkService, dontCheckRouteAccess}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess}) => {
   cy.clickEpinioMenu('Applications');
 
   // Go to application details
@@ -202,10 +202,10 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
   // If needed, check that there is one environment variable
   if (checkVar) cy.contains('1 Environment Vars').should('be.visible');
 
-  // Check binded services
-  var serviceNum = 0;
-  if (checkService === true) serviceNum = 1;
-  cy.contains(serviceNum + ' Services', {timeout: 24000}).should('be.visible');
+  // Check binded configurations
+  var configurationNum = 0;
+  if (checkConfiguration === true) configurationNum = 1;
+  cy.contains(configurationNum + ' Configs', {timeout: 24000}).should('be.visible');
 
   // Check the application route
   var appRoute = 'https://' + appName + '.' + Cypress.env('system_domain');
@@ -304,26 +304,26 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
   }
 });
 
-// Services functions
+// Configurations functions
 
-// Create a service
-Cypress.Commands.add('createService', ({serviceName, fromFile, namespace='workspace'}) => {
-  var serviceFile = 'read_from_file.service';  // File to use for the "Read from File" test
+// Create a configuration
+Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, namespace='workspace'}) => {
+  var configurationFile = 'read_from_file.configuration';  // File to use for the "Read from File" test
 
-  cy.clickEpinioMenu('Services');
+  cy.clickEpinioMenu('Configurations');
   cy.clickButton('Create');
 
-  // Name of the service
-  cy.typeValue({label: 'Name', value: serviceName});
+  // Name of the configuration
+  cy.typeValue({label: 'Name', value: configurationName});
 
-  // Enter Service Data
+  // Enter Configuration Data
   if (fromFile === true) {
     cy.clickButton('Remove');
-    cy.get('input[type="file"]').attachFile({filePath: serviceFile});
+    cy.get('input[type="file"]').attachFile({filePath: configurationFile});
 
     // Check the entered values
-    cy.get('.key > input').should('have.value', 'service_var');
-    cy.get('.no-resize').should('have.value', 'service_value');
+    cy.get('.key > input').should('have.value', 'config_var');
+    cy.get('.no-resize').should('have.value', 'config_value');
   } else {
     cy.typeKeyValue({key: '.kv-item.key', value: 'test_data'});
     cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
@@ -333,59 +333,59 @@ Cypress.Commands.add('createService', ({serviceName, fromFile, namespace='worksp
   cy.wait(500);
   cy.clickButton('Create');
 
-  // Check that the service has effectively been created
-  cy.contains(serviceName).should('be.visible');
+  // Check that the configuration has effectively been created
+  cy.contains(configurationName).should('be.visible');
 });
 
-// Delete a service
-Cypress.Commands.add('deleteService', ({serviceName, namespace='workspace'}) => {
-  cy.clickEpinioMenu('Services');
+// Delete a configuration
+Cypress.Commands.add('deleteConfiguration', ({configurationName, namespace='workspace'}) => {
+  cy.clickEpinioMenu('Configurations');
 
-  // Search for the correct service (same name can be used on different namespace)
-  cy.getDetail({name: serviceName, type: 'services', namespace: namespace});
+  // Search for the correct configuration (same name can be used on different namespace)
+  cy.getDetail({name: configurationName, type: 'configurations', namespace: namespace});
 
   // Make sure we are in the details page
-  cy.get('header').should('contain', 'Services:').and('contain', serviceName);
+  cy.get('header').should('contain', 'Configurations:').and('contain', configurationName);
 
-  // Select the 3dots button and delete the service
+  // Select the 3dots button and delete the configuration
   cy.get('.role-multi-action').click();
   cy.contains('Delete').click();
   cy.confirmDelete();
 
-  // Check that the service has effectively been destroyed
-  cy.contains(serviceName).should('not.exist');
+  // Check that the configuration has effectively been destroyed
+  cy.contains(configurationName).should('not.exist');
 });
 
-// Unbind a service from an app
-Cypress.Commands.add('unbindService', ({appName, serviceName, namespace='workspace'}) => {
+// Unbind a configuration from an app
+Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namespace='workspace'}) => {
   cy.clickEpinioMenu('Applications');
   
-  // Make sure the service is bounded already
-  cy.get('[data-title="Bound Services"]').should('contain', serviceName);
+  // Make sure the configuration is bounded already
+  cy.get('[data-title="Bound Configs"]').should('contain', configurationName);
 
   // Select the 3dots button and edit configuration
   cy.get('.role-multi-action').click();
   cy.contains('Edit Config').click();
 
-  // Select the Services tab
-  cy.get('#services').click();
-  cy.get('.tab-container').should('contain', serviceName);
+  // Select the Configurations tab
+  cy.get('#configurations').click();
+  cy.get('.tab-container').should('contain', configurationName);
   
-  // Remove the service
-  cy.get('[aria-label="Deselect service01"]').click();
+  // Remove the configuration
+  cy.get('[aria-label="Deselect configuration01"]').click();
 
   // And save
   cy.clickButton('Save');
 
-  // Make sure the service is not bounded anymore
-  cy.get('[data-title="Bound Services"]').should('not.contain', serviceName);
+  // Make sure the configuration is not bounded anymore
+  cy.get('[data-title="Bound Configs"]').should('not.contain', configurationName);
 
   // Application status should be equal to 1/1
   cy.get('[data-title="Status"]', {timeout: 16000}).should('contain', '1/1');
  });
 
-// Bind a service to an existing application
-Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace'}) => {
+// Bind a configuration to an existing application
+Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespace='workspace'}) => {
   cy.clickEpinioMenu('Applications');
 
   // Go to application details
@@ -398,15 +398,15 @@ Cypress.Commands.add('bindService', ({appName, serviceName, namespace='workspace
   cy.get('.role-multi-action').click();
   cy.contains('Edit Config').click();
 
-  // Select the Services tab
-  cy.get('#services').click();
+  // Select the Configurations tab
+  cy.get('#configurations').click();
 
-  // Select the service
+  // Select the configuration
   cy.wait(500);  // We need to wait a little for the listbox to be updated
   // 'multiple' and 'force' are needed here
   // TODO: try to find a better way for this
   cy.get('.labeled-select').click({multiple: true, force: true});
-  cy.contains(serviceName, {timeout: 120000}).click();
+  cy.contains(configurationName, {timeout: 120000}).click();
 
   // And save
   cy.clickButton('Save');

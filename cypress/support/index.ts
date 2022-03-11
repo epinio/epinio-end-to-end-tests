@@ -16,17 +16,17 @@ declare global {
       typeValue(label: string, value: string, noLabel?: boolean, log?: boolean): Chainable<Element>;
       typeKeyValue(key: string, value: string,): Chainable<Element>;
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
-      createApp(appName: string, archiveName: string, sourceType?: string, customPaketoImage?: string, route?: string, addVar?: string, instanceNum?: number, serviceName?: string, shouldBeDisabled?: boolean,): Chainable<Element>;
-      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkService?: boolean, dontCheckRouteAccess?: boolean): Chainable<Element>;
+      createApp(appName: string, archiveName: string, sourceType?: string, customPaketoImage?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean,): Chainable<Element>;
+      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
       rebuildApp(appName: string, namespace?: string,): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
-      createService(serviceName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
-      deleteService(serviceName: string, namespace?: string,): Chainable<Element>;
-      bindService(appName: string, serviceName: string, namespace?: string,): Chainable<Element>;
-      unbindService(appName: string, serviceName: string, namespace?: string,): Chainable<Element>;
+      createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
+      deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;
+      bindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
+      unbindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
       addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
       removeHelmRepo(): Chainable<Element>;
       epinioInstall(s3?: boolean, extRegistry?: boolean,): Chainable<Element>;
@@ -34,7 +34,7 @@ declare global {
 
       // Functions declared in tests.ts
       runApplicationsTest(testName: string,): Chainable<Element>;
-      runServicesTest(testName: string,): Chainable<Element>;
+      runConfigurationsTest(testName: string,): Chainable<Element>;
       runNamespacesTest(testName: string,): Chainable<Element>;
       runFirstConnectionTest(): Chainable<Element>;
     }

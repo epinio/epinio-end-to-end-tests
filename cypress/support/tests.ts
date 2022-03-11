@@ -57,48 +57,48 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   cy.deleteApp({appName: appName});
 });
 
-// Services tests
-Cypress.Commands.add('runServicesTest', (testName: string) => {
+// Configurations tests
+Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
   const appName = 'testapp';
   const archive = 'sample-app.tar.gz'
-  const service = 'service01';
+  const configuration = 'configuration01';
 
   switch (testName) {
-    case 'newAppWithService':
-      // Create a new service
+    case 'newAppWithConfiguration':
+      // Create a new configuration
       cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
-      cy.createService({serviceName: service});
+      cy.createConfiguration({configurationName: configuration});
 
-      // Create an application with the newly created service and check it
-      cy.createApp({appName: appName, archiveName: archive, serviceName: service});
-      cy.checkApp({appName: appName, checkService: true});
+      // Create an application with the newly created configuration and check it
+      cy.createApp({appName: appName, archiveName: archive, configurationName: configuration});
+      cy.checkApp({appName: appName, checkConfiguration: true});
 
-      // Unbind the created service
-      cy.unbindService({appName: appName, serviceName: service});
+      // Unbind the created configuration
+      cy.unbindConfiguration({appName: appName, configurationName: configuration});
       cy.checkApp({appName: appName});
 
       // Delete the tested application
       cy.deleteApp({appName: appName});
       
-      // Delete the created service
-      cy.deleteService({serviceName: service});
+      // Delete the created configuration
+      cy.deleteConfiguration({configurationName: configuration});
       break;
-    case 'bindServiceOnApp':
-      // Create another new service
+    case 'bindConfigurationOnApp':
+      // Create another new configuration
       cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
-      cy.createService({serviceName: service, fromFile: true});
+      cy.createConfiguration({configurationName: configuration, fromFile: true});
 
-      // Create an application *WITHOUT* any service
+      // Create an application *WITHOUT* any configuration
       cy.createApp({appName: appName, archiveName: archive, addVar: 'file'});
       cy.checkApp({appName: appName});
 
-      // Bind the created service to the application and check it
-      cy.bindService({appName: appName, serviceName: service});
-      cy.checkApp({appName: appName, checkService: true, checkVar: true});
+      // Bind the created configuration to the application and check it
+      cy.bindConfiguration({appName: appName, configurationName: configuration});
+      cy.checkApp({appName: appName, checkConfiguration: true, checkVar: true});
 
-      // Delete the tested application and the service
+      // Delete the tested application and the configuration
       cy.deleteApp({appName: appName});
-      cy.deleteService({serviceName: service});
+      cy.deleteConfiguration({configurationName: configuration});
       break;
   }
 });
