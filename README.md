@@ -1,5 +1,5 @@
-[![UI-SCENARIO-1-CHROME](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml/badge.svg?event=schedule)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml?query=event%3Aschedule)
-[![UI-SCENARIO-2-FIREFOX](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_firefox.yml/badge.svg?event=schedule)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_firefox.yml?query=event%3Aschedule)
+[![UI-SCENARIO-1-CHROME](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml?query=branch%3Amain)
+[![UI-SCENARIO-2-FIREFOX](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_firefox.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_firefox.yml?query=branch%3Amain)
 # epinio-end-to-end-tests
 This repository contains all the files necessary to run Epinio end-to-end tests.
 
