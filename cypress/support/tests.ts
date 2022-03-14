@@ -29,6 +29,9 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   switch (testName) {
     case 'multipleInstanceAndContainer':
       cy.createApp({appName: appName, archiveName: 'httpd:latest', instanceNum: 5, sourceType: 'Container Image'});
+      // Try to fix flakyness with Firefox test.
+      // At somepoint, we should check how to avoid using wait call. 
+      cy.wait(2000);
       cy.checkApp({appName: appName, dontCheckRouteAccess: true});
       break;
     case 'customRoute':
