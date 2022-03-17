@@ -41,7 +41,8 @@ Cypress.Commands.add('clickButton', (label) => {
 // Ensure that we are in the desired menu
 Cypress.Commands.add('clickEpinioMenu', (label) => {
   cy.get('.label').contains(label).click();
-  cy.get('header').should('contain', label);
+  cy.location('pathname').should('include', '/' + label.toLocaleLowerCase());
+  cy.get('.m-0').should('contain', label);
 });
 
 // Confirm the delete operation
@@ -74,6 +75,12 @@ Cypress.Commands.add('typeValue', ({label, value, noLabel, log=true}) => {
   }
 });
 
+Cypress.Commands.overwrite('type', (originalFn, subject, text, options = {}) => {
+  options.delay = 100;
+
+  return originalFn(subject, text, options);
+})
+
 // Make sure we are in the desired menu inside a cluster (local by default)
 // You can access submenu by giving submenu name in the array
 // ex:  cy.clickClusterMenu(['Menu', 'Submenu'])
@@ -101,7 +108,6 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
-  cy.wait(1000);  // We need to wait a little for the button to appear. TODO: do something more elegant
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: appName});
 
@@ -130,9 +136,6 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.get('.key > input').should('have.value', 'PORT');
     cy.get('.no-resize').should('have.value', '8080');
   }
-  // The following wait is mandatory, otherwise, env variables are not seen...
-  // Don't know yet if something more elegant can be done.
-  cy.wait(1000);
 
   // Set the desired number of instances
   cy.typeValue({label: 'Instances', value: instanceNum});
@@ -181,6 +184,8 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Application is created!
   cy.clickButton('Done');
+  // Give some time to the application to be ready
+  cy.wait(6000);
 });
 
 // Ensure that the application is up and running
@@ -382,6 +387,7 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
 
   // Application status should be equal to 1/1
   cy.get('[data-title="Status"]', {timeout: 16000}).should('contain', '1/1');
+  cy.wait(2000);
  });
 
 // Bind a configuration to an existing application
