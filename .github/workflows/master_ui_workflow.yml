@@ -111,7 +111,7 @@ jobs:
         S3_KEY_ID: ${{ secrets.s3_key_id }}
         S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
-      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} ${{ inputs.docker_options }}
+      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
