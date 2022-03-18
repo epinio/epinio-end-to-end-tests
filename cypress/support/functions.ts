@@ -256,9 +256,9 @@ Cypress.Commands.add('restartApp', ({appName, namespace='workspace'}) => {
   cy.contains('li', 'Restart').click(); 
 
   // Restart counter is not ready yet so we can not use it for now.
-  // Instead, we check that instances number is not equal to 100% because
+  // I tried to check that instances number is not equal to 100% because
   // it's expected as new instances are popping to replace the olders.
-  cy.get('.numbers', {timeout: 160000}).should('not.contain', '100%'); 
+  // But at the end, it adds flakyness, we wait for the restart counter to be ready.
 });
 
 Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
