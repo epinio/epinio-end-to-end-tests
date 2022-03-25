@@ -195,7 +195,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   cy.checkStageStatus({numIndex: 2, timeout: 120000});
   if (sourceType !== 'Container Image') {
     cy.checkStageStatus({numIndex: 3, timeout: 240000});
-    cy.checkStageStatus({numIndex: 4, timeout: 120000});
+    cy.checkStageStatus({numIndex: 4, timeout: 240000});
   }
 
   // Application is created!
@@ -292,7 +292,7 @@ Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
 
   // Make sure the app is rebuilding and then, back to running status
   cy.get('header').should('contain', appName).and('contain', 'Building');
-  cy.get('header', {timeout: 20000}).should('contain', appName).and('contain', 'Running');
+  cy.get('header', {timeout: 60000}).should('contain', appName).and('contain', 'Running');
 });
 
 // Namespace functions
