@@ -356,6 +356,8 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
 
   // Check that the configuration has effectively been created
   cy.contains(configurationName).should('be.visible');
+  // Give some time to the configuration to be ready
+  cy.wait(1000);
 });
 
 // Delete a configuration
@@ -435,6 +437,30 @@ Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespac
   // Strange sporadic issues happen here
   // The wait call seems to improve test realibility
   cy.wait(6000);
+});
+
+// Edit a configuration
+Cypress.Commands.add('editConfiguration', ({configurationName, namespace='workspace'}) => {
+  cy.clickEpinioMenu('Configurations');
+
+  // Go to configuration details
+  cy.getDetail({name: configurationName, type: 'configurations', namespace: namespace});
+  cy.wait(1000);
+
+  // Make sure we are in the details page
+  cy.get('header').should('contain', 'Configurations:').and('contain', configurationName);
+
+  // Select the 3dots button and edit the configuration
+  cy.get('.role-multi-action').click();
+  cy.contains('Edit Config').click();
+  cy.get('.no-resize').type('_add');
+  cy.clickButton('Save'); 
+  cy.get('header').should('contain', 'Configurations:').and('contain', configurationName).and('not.contain', 'Saving');
+
+  // For now, that's not possible to check that the configuration has effectively been changed
+  // because we can't scrap the value in the html page, maybe because the field is grey.
+  // Attach to app might be a solution for checking it but the feature is not yet released.
+  // Otherwise, we can use kubectl command but at the end of Cypress tests.
 });
 
 // Epinio installation functions

@@ -24,6 +24,7 @@ declare global {
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
+      editConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;
       bindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
       unbindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;

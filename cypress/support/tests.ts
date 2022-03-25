@@ -96,6 +96,9 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
       cy.bindConfiguration({appName: appName, configurationName: configuration});
       cy.checkApp({appName: appName, checkConfiguration: true, checkVar: true});
 
+      // Edit the created configuration
+      cy.editConfiguration({configurationName: configuration});
+
       // Delete the tested application and the configuration
       cy.deleteApp({appName: appName});
       cy.deleteConfiguration({configurationName: configuration});

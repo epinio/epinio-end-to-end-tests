@@ -71,7 +71,7 @@ describe('Configurations testing', () => {
     cy.runConfigurationsTest('newAppWithConfiguration');
   });
 
-  it('Bind a created configuration to an existing application and delete all', () => {
+  it('Bind a created configuration to an existing application, edit configuration and delete all', () => {
     cy.runConfigurationsTest('bindConfigurationOnApp');
   });
 });
