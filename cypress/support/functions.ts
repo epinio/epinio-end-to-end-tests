@@ -79,7 +79,23 @@ Cypress.Commands.overwrite('type', (originalFn, subject, text, options = {}) => 
   options.delay = 100;
 
   return originalFn(subject, text, options);
-})
+});
+
+// Add a delay between command without using cy.wait()
+// https://github.com/cypress-io/cypress/issues/249#issuecomment-443021084
+const COMMAND_DELAY = 1000;
+
+for (const command of ['visit', 'click', 'trigger', 'type', 'clear', 'reload', 'contains']) {
+    Cypress.Commands.overwrite(command, (originalFn, ...args) => {
+        const origVal = originalFn(...args);
+
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(origVal);
+            }, COMMAND_DELAY);
+        });
+    });
+}; 
 
 // Make sure we are in the desired menu inside a cluster (local by default)
 // You can access submenu by giving submenu name in the array
