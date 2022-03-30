@@ -1,5 +1,5 @@
 # This workflow calls the master UI workflow with custom variables
-name: Std UI - Scenario 1 Cypress Chrome
+name: Standalone-UI-1-Chrome
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
     - cron: '0 4 * * *'
 
 jobs:
-  call-master-UI-workflow:
+  std-chrome:
     uses: ./.github/workflows/master_std_ui_workflow.yml
     with:
       browser: chrome

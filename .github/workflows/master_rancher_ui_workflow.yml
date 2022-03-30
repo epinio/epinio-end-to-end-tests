@@ -13,6 +13,10 @@ on:
         description: Cypress docker image to use
         required: true
         type: string
+      cypress_install_test:
+        description: Epinio installation test
+        required: true
+        type: string
       cypress_test:
         description: Scenario to test
         required: true
@@ -41,21 +45,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Checkout Epinio repository
-        uses: actions/checkout@v2
-        with:
-          repository: epinio/epinio
-          submodules: recursive
-          fetch-depth: 0
-          path: epinio
-
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        env:
-          SETUP_GO_VERSION: '^1.17.2'
-        with:
-          go-version: ${{ env.SETUP_GO_VERSION }}
 
       - name: Cache Tools
         uses: actions/cache@v2
@@ -86,13 +75,13 @@ jobs:
           export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
           echo '::set-output name=MY_IP::'${MY_IP}
           echo '::set-output name=MY_HOSTNAME::'${MY_HOSTNAME}
-
           make prepare-e2e-ci-rancher
 
     outputs:
       MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME }}
       MY_IP: ${{ steps.installation.outputs.MY_IP }}
  
+  # Use a first Cypress container to install Epinio on Rancher
   cypress-epinio-installation:
     needs:
       - installation
@@ -112,17 +101,16 @@ jobs:
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
+
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          # Specify Browser since container image is compile with Firefox
           browser: ${{ inputs.browser }}
           headless: true
           spec: |
             cypress/integration/unit_tests/first_connexion.spec.ts
-            cypress/integration/scenarios/${{ inputs.cypress_install_test }}
+            cypress/integration/unit_tests/${{ inputs.cypress_install_test }}
+          config-file: cypress-with-epinio-cert.json
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v2
@@ -141,17 +129,95 @@ jobs:
           path: cypress/videos
           retention-days: 7
 
-  delete-cluster:
-    if: always()
-    needs: [installation, cypress-run]
+  # Patch Epinio to use the latest code version (main)
+  # It can only be done with CLI
+  epinio-patching:
+    needs:
+      - cypress-epinio-installation
     runs-on: ${{ inputs.runner }}
     steps:
-      - name: Uninstall Epinio
-        if: always()
+      - name: Checkout Epinio repository
+        uses: actions/checkout@v2
+        with:
+          repository: epinio/epinio
+          submodules: recursive
+          fetch-depth: 0
+          path: epinio
+      
+      - name: Cache Tools
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/tools
+          key: ${{ runner.os }}-tools
+
+      - name: Add Tools to PATH
+        run: |
+          echo "`pwd`/output/bin" >> $GITHUB_PATH
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        env:
+          SETUP_GO_VERSION: '^1.17.2'
+        with:
+          go-version: ${{ env.SETUP_GO_VERSION }}
+
+      - name: Patch epinio-server
         env:
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
         run: |
-          make uninstall-epinio
+          cd epinio
+          make build
+          make patch-epinio-deployment
+
+  # Use a second Cypress container to run all Epinio's tests
+  cypress-epinio-tests:
+    needs:
+      - installation
+      - epinio-patching
+    runs-on: ${{ inputs.runner }}
+    container:
+      image: ${{ inputs.cypress_image }}
+      env:
+        CLUSTER_NAME: local
+        RANCHER_USER: admin
+        RANCHER_PASSWORD: rancherpassword
+        RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
+        SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
+    steps:
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          browser: ${{ inputs.browser }}
+          headless: true
+          spec: |
+            cypress/integration/scenarios/${{ inputs.cypress_test }}
+            cypress/integration/unit_tests/uninstall.spec.ts
+          config-file: cypress-with-epinio-cert.json
+
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots-tests
+          path: cypress/screenshots
+          retention-days: 7
+
+      # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos-tests
+          path: cypress/videos
+          retention-days: 7
+
+  delete-cluster:
+    if: always()
+    needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests]
+    runs-on: ${{ inputs.runner }}
+    steps:
 
       - name: Delete k3s cluster
         if: always()

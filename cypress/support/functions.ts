@@ -466,7 +466,7 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
 // Epinio installation functions
 
 // Add the Epinio Helm repo
-Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
+Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType}) => {
   cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
@@ -476,7 +476,13 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl}) => {
   cy.clickButton('Create');
   cy.contains('Repository: Create').should('be.visible');
   cy.typeValue({label: 'Name', value: repoName});
-  cy.typeValue({label: 'Index URL', value: repoUrl});
+  if (repoType === 'git') {
+    cy.contains('Git repository').click();
+    cy.typeValue({label: 'Git Repo URL', value: repoUrl});
+    cy.typeValue({label: 'Git Branch', value: 'main'});
+  } else {
+    cy.typeValue({label: 'Index URL', value: repoUrl});
+  }
   cy.clickButton('Create');
 });
 
@@ -488,12 +494,13 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
   cy.contains('header', 'Charts', {timeout: 8000}).should('be.visible');
   
   // Install epinio-installer chart
-  cy.contains('epinio-installer').click();
-  cy.contains('Charts: epinio-installer').should('be.visible');
+  cy.contains('install Epinio').click();
+  cy.contains('Charts: epinio').should('be.visible');
   cy.clickButton('Install');
 
   // Namespace where installation will happen
   cy.typeValue({label: 'Name', value: 'epinio-install'});
+  cy.contains('default').type('epinio{enter}');
   cy.clickButton('Next');
   
   // Configure custom domain
@@ -501,10 +508,6 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
 
   // Configure cors setting
   cy.typeValue({label: 'Access control allow origin', value: Cypress.env('cors')});
-
-  // Cert Manager and ingress controler already installed by Rancher
-  cy.contains('CertManager').click();
-  cy.contains('ingress controller').click();
 
   // Configure external registry
   if (extRegistry === true) {
@@ -539,7 +542,7 @@ Cypress.Commands.add('epinioUninstall', () => {
 
   // Make sure we are in the 'Installed Apps' screen (test failed here before)
   cy.contains('header', 'Installed Apps', {timeout: 8000}).should('be.visible');
-  cy.contains('epinio-installer:').click();
+  cy.contains('epinio:').click();
   cy.clickButton('Delete');
   cy.confirmDelete();
   cy.contains('SUCCESS: helm uninstall', {timeout: 300000}).should('be.visible');

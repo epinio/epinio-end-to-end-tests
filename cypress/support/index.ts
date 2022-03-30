@@ -28,7 +28,7 @@ declare global {
       deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;
       bindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
       unbindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
-      addHelmRepo(repoName: string, repoUrl: string,): Chainable<Element>;
+      addHelmRepo(repoName: string, repoUrl: string, repoType?: string,): Chainable<Element>;
       removeHelmRepo(): Chainable<Element>;
       epinioInstall(s3?: boolean, extRegistry?: boolean,): Chainable<Element>;
       epinioUninstall(): Chainable<Element>;
