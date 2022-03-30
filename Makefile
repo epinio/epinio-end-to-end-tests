@@ -44,6 +44,10 @@ get-ca: ## Configure Cypress to use the epinio-ca
 
 prepare-e2e-ci: install-k3s install-helm install-rancher install-epinio get-ca ## Tests
 
+prepare-e2e-ci-rancher: install-k3s install-helm install-rancher get-ca ## Tests
+
+prepare-e2e-ci-standalone: install-k3s install-helm install-rancher install-epinio get-ca ## Tests
+
 clean:
 	/usr/local/bin/k3s-uninstall.sh
 	/usr/local/bin/helm repo remove rancher-stable jetstack

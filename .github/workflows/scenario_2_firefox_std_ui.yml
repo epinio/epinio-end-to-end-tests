@@ -1,15 +1,15 @@
 # This workflow calls the master UI workflow with custom variables
-name: UI - Scenario 2 Cypress Firefox
+name: Std UI - Scenario 2 Cypress Firefox
 
 on:
   workflow_dispatch:
   
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 4 * * *'
 
 jobs:
   call-master-UI-workflow:
-    uses: ./.github/workflows/master_ui_workflow.yml
+    uses: ./.github/workflows/master_std_ui_workflow.yml
     with:
       browser: firefox
       cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
