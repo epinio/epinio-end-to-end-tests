@@ -1,11 +1,11 @@
 # This workflow calls the master UI workflow with custom variables
-name: UI - Scenario 2 Cypress Firefox
+name: Rancher UI - Scenario 2 Cypress Firefox
 
 on:
   workflow_dispatch:
   
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 3 * * *'
 
 jobs:
   call-master-UI-workflow:
@@ -13,6 +13,7 @@ jobs:
     with:
       browser: firefox
       cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
+      cypress_install_test: installation.spec.ts
       cypress_test: with_s3_and_external_registry.spec.ts
       # Due to security reason, Firefox can't be started as root
       # https://github.com/cypress-io/github-action#firefox

@@ -1,0 +1,18 @@
+# This workflow calls the master UI workflow with custom variables
+name: Rancher UI - Scenario 1 Cypress Chrome
+
+on:
+  workflow_dispatch:
+  
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  call-master-UI-workflow:
+    uses: ./.github/workflows/master_ui_workflow.yml
+    with:
+      browser: chrome
+      cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
+      cypress_install_test: installation.spec.ts
+      cypress_test: with_default_options.spec.ts
+      runner: ui-e2e-1

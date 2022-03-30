@@ -1,0 +1,161 @@
+# This workflow is a reusable one called by other workflows
+name: Master STD UI workflow (template)
+
+on:
+  workflow_call:
+  # Variables to set when calling this reusable workflow
+    inputs:
+      browser:
+        description: Web browser to test
+        required: true
+        type: string
+      cypress_image:
+        description: Cypress docker image to use
+        required: true
+        type: string
+      cypress_test:
+        description: Scenario to test
+        required: true
+        type: string
+      docker_options:
+        description: Set other docker options
+        required: false
+        type: string
+      runner:
+        description: Runner on which to execute tests
+        required: true
+        type: string
+    secrets:
+      ext_reg_user:
+        required: false
+      ext_reg_password:
+        required: false
+      s3_key_id:
+        required: false
+      s3_key_secret:
+        required: false
+
+jobs:
+  installation:
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout Epinio repository
+        uses: actions/checkout@v2
+        with:
+          repository: epinio/epinio
+          submodules: recursive
+          fetch-depth: 0
+          path: epinio
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        env:
+          SETUP_GO_VERSION: '^1.17.2'
+        with:
+          go-version: ${{ env.SETUP_GO_VERSION }}
+
+      - name: Cache Tools
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/tools
+          key: ${{ runner.os }}-tools
+
+      - name: Add Tools to PATH
+        run: |
+          echo "`pwd`/output/bin" >> $GITHUB_PATH
+
+      - name: Install K3s / Helm / Rancher / Epinio
+        id: installation
+        env:
+          DASHBOARD_VERSION: epinio-v0.6.0
+          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+          HELM_VERSION: 3.7.0
+          K3S_VERSION: v1.22.7+k3s1
+          EXT_REG_USER: ${{ secrets.ext_reg_user }}
+          EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+          S3_KEY_ID: ${{ secrets.s3_key_id }}
+          S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
+        run: |
+          ## Export information to other jobs
+          ETH_DEV=$(ip route | awk '/default via / { print $5 }')
+          MY_IP=$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
+          export MY_HOSTNAME=$(hostname)
+          export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
+          echo '::set-output name=MY_IP::'${MY_IP}
+          echo '::set-output name=MY_HOSTNAME::'${MY_HOSTNAME}
+
+          make prepare-e2e-ci-standalone
+
+    outputs:
+      MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME }}
+      MY_IP: ${{ steps.installation.outputs.MY_IP }}
+ 
+  cypress-run:
+    needs:
+      - installation
+    runs-on: ${{ inputs.runner }}
+    container:
+      image: ${{ inputs.cypress_image }}
+      env:
+        CLUSTER_NAME: local
+        CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
+        EXT_REG_USER: ${{ secrets.ext_reg_user }}
+        EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+        RANCHER_USER: admin
+        RANCHER_PASSWORD: rancherpassword
+        RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
+        S3_KEY_ID: ${{ secrets.s3_key_id }}
+        S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
+        SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
+    steps:
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          # Specify Browser since container image is compile with Firefox
+          browser: ${{ inputs.browser }}
+          headless: true
+          spec: cypress/integration/scenarios/${{ inputs.cypress_test }}
+
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          retention-days: 7
+
+      # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          retention-days: 7
+
+  delete-cluster:
+    if: always()
+    needs: [installation, cypress-run]
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Uninstall Epinio
+        if: always()
+        env:
+          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+        run: |
+          make uninstall-epinio
+
+      - name: Delete k3s cluster
+        if: always()
+        run: |
+          make clean
+
+      - name: Clean all
+        if: always()
+        uses: colpal/actions-clean@v1
