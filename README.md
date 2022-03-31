@@ -1,5 +1,11 @@
-[![UI-SCENARIO-1-CHROME](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_cypress_chrome.yml?query=branch%3Amain)
-[![UI-SCENARIO-2-FIREFOX](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_firefox.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_cypress_firefox.yml?query=branch%3Amain)
+### Rancher UI E2E tests
+[![Scenario 1 Chrome](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_chrome_rancher_ui.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_chrome_rancher_ui.yml?query=branch%3Amain)
+[![Scenario 2 Firefox](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_firefox_rancher_ui.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_firefox_rancher_ui.yml?query=branch%3Amain)
+
+### Standalone UI E2E tests
+[![Scenario 1 Chrome](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_chrome_std_ui.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_1_chrome_std_ui.yml?query=branch%3Amain)
+[![Scenario 2 Firefox](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_firefox_std_ui.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/scenario_2_firefox_std_ui.yml?query=branch%3Amain)
+
 # epinio-end-to-end-tests
 This repository contains all the files necessary to run Epinio end-to-end tests.
 
