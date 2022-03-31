@@ -86,7 +86,6 @@ jobs:
           export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
           echo '::set-output name=MY_IP::'${MY_IP}
           echo '::set-output name=MY_HOSTNAME::'${MY_HOSTNAME}
-
           make prepare-e2e-ci-standalone
 
     outputs:
@@ -112,12 +111,10 @@ jobs:
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
+
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          # Specify Browser since container image is compile with Firefox
           browser: ${{ inputs.browser }}
           headless: true
           spec: cypress/integration/scenarios/${{ inputs.cypress_test }}
