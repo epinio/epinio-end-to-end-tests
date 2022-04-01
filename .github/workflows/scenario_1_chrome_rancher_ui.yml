@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 2 * * *'
 
 jobs:
   rancher-chrome:
@@ -15,4 +15,4 @@ jobs:
       cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
       cypress_install_test: installation.spec.ts
       cypress_test: with_default_options.spec.ts
-      runner: ui-e2e-1
+      runner: ui-e2e-0
