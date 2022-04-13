@@ -34,6 +34,10 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
     case 'customRoute':
       cy.createApp({appName: appName, archiveName: archive, route: customRoute});
       cy.checkApp({appName: appName, route: customRoute});
+      /* App log and app shell are disabled until https://github.com/epinio/epinio-end-to-end-tests/issues/126 is fixed.
+      cy.showAppLog({appName: appName});
+      cy.showAppShell({appName: appName});
+      */
       break;
     case 'envVarsAndGitUrl':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'ui', sourceType: 'Git URL'});

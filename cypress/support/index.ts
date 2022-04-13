@@ -21,6 +21,8 @@ declare global {
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
       rebuildApp(appName: string, namespace?: string,): Chainable<Element>;
+      showAppLog(appName: string, namespace?: string,): Chainable<Element>;
+      showAppShell(appName: string, namespace?: string,): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
