@@ -295,6 +295,53 @@ Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
   cy.get('header', {timeout: 60000}).should('contain', appName).and('contain', 'Running');
 });
 
+// Check application logs
+Cypress.Commands.add('showAppLog', ({appName, namespace='workspace'}) => {
+  cy.clickEpinioMenu('Applications');
+  
+  // Go to application details
+  cy.getDetail({name: appName, type: 'applications', namespace: namespace});
+
+  // Make sure we are in the details page
+  cy.get('header').should('contain', 'Applications:').and('contain', appName);
+
+  // Select the 3dots button and show logs
+  cy.get('div.actions > .role-multi-action').click();
+  cy.contains('li', 'App Logs').click();
+
+  // A new tab must appear
+  cy.get('.tab-label').should('contain', 'testapp - App Logs');
+  
+  // Web server ready message must appear in the log
+  cy.contains('ready to handle connections');
+  cy.get('.tab > .closer').click();
+});
+
+// Check application shell
+Cypress.Commands.add('showAppShell', ({appName, namespace='workspace'}) => {
+  cy.clickEpinioMenu('Applications');
+  
+  // Go to application details
+  cy.getDetail({name: appName, type: 'applications', namespace: namespace});
+
+  // Make sure we are in the details page
+  cy.get('header').should('contain', 'Applications:').and('contain', appName);
+
+  // Select the 3dots button and show logs
+  cy.get('div.actions > .role-multi-action').click();
+  cy.contains('li', 'App Shell').click();
+
+  // A new tab must appear
+  cy.get('.tab-label').should('contain', 'testapp - App Shell');
+  
+  // Make sure we can run ls command in the shell
+  cy.contains('Connected');
+  cy.get('.terminal').type('ls{enter}');
+  // Record a screenshot and close the tab
+  cy.get('.terminal').screenshot('record_ls_command_output');
+  cy.get('.tab > .closer').click();
+});
+
 // Namespace functions
 
 // Create an Epinio namespace
