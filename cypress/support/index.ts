@@ -12,7 +12,7 @@ declare global {
       clickEpinioMenu(label: string,): Chainable<Element>;
       clickClusterMenu(listLabel: string[],): Chainable<Element>;
       confirmDelete(namespace?: string,): Chainable<Element>;
-      checkStageStatus(numIndex: number, timeout?: number, status?: string,): Chainable<Element>;
+      checkStageStatus(numIndex: number, sourceType: string, timeout?: number, status?: string,): Chainable<Element>;
       typeValue(label: string, value: string, noLabel?: boolean, log?: boolean): Chainable<Element>;
       typeKeyValue(key: string, value: string,): Chainable<Element>;
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;

@@ -61,8 +61,29 @@ Cypress.Commands.add('confirmDelete', (namespace) => {
 });
 
 // Check the status of the running stage
-Cypress.Commands.add('checkStageStatus', ({numIndex, timeout=6000, status='Success'}) => {
+Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, status='Success'}) => {
   var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter > .status > .badge';
+  if (sourceType == 'Container Image') {
+    if (numIndex === 2) {
+      cy.get('.tab-label').should('contain', 'testapp - App Logs');
+      cy.contains('Command line: \'httpd -D FOREGROUND\'', {timeout: timeout});
+      cy.get('.tab > .closer').click(); 
+    }
+  } else {
+      if (numIndex === 3) {
+        cy.get('.tab-label').should('contain', 'testapp - Build');
+        cy.contains('buildpack: _ _ __ ___ _____ Done', {timeout: timeout});
+        cy.get('.tab > .closer').click();
+      
+        /* Ugly thing here...
+        When step 3 (building is done), it automatically opens a new App logs tab
+        and it hides the success badge of step 3...
+        So we have to wait last step done before continuing */
+        cy.get('.tab-label').should('contain', 'testapp - App Logs');
+        if (sourceType != 'Git URL') cy.contains('ready to handle connections', {timeout: timeout});
+        cy.get('.tab > .closer').click();
+      }      
+  }
   cy.get(getScope, {timeout: timeout}).contains(status).should('be.visible');
 });
 
@@ -166,11 +187,11 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         cy.typeValue({label: 'Image', value: archiveName}); 
         break;
       case 'Git URL':
-      cy.typeValue({label: 'URL', value: archiveName});
-      cy.typeValue({label: 'Branch', value: 'main'});
+        cy.typeValue({label: 'URL', value: archiveName});
+        cy.typeValue({label: 'Branch', value: 'main'}); 
         break;
       case 'Archive':
-    cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
+        cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
         break; 
     };
   };
@@ -196,9 +217,9 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Check that each steps are succesfully done
   cy.checkStageStatus({numIndex: 1});
-  cy.checkStageStatus({numIndex: 2, timeout: 120000});
+  cy.checkStageStatus({numIndex: 2, timeout: 240000, sourceType});
   if (sourceType !== 'Container Image') {
-    cy.checkStageStatus({numIndex: 3, timeout: 240000});
+    cy.checkStageStatus({numIndex: 3, timeout: 240000, sourceType});
     cy.checkStageStatus({numIndex: 4, timeout: 240000});
   }
 
@@ -272,13 +293,13 @@ Cypress.Commands.add('restartApp', ({appName, namespace='workspace'}) => {
   cy.get('header').should('contain', 'Applications:').and('contain', appName);
 
   // Select the 3dots button and edit configuration
-  cy.get('.role-multi-action').click();
+  cy.get('div.actions > .role-multi-action').click()
   cy.contains('li', 'Restart').click(); 
 
-  // Restart counter is not ready yet so we can not use it for now.
-  // I tried to check that instances number is not equal to 100% because
-  // it's expected as new instances are popping to replace the olders.
-  // But at the end, it adds flakyness, we wait for the restart counter to be ready.
+  // Handle application log tab
+  cy.get('.tab-label').should('contain', 'testapp - App Logs');
+  cy.contains('ready to handle connections', {timeout: 120000});
+  cy.get('.tab > .closer').click();
 });
 
 Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
@@ -291,11 +312,16 @@ Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
   cy.get('header').should('contain', 'Applications:').and('contain', appName);
 
   // Select the 3dots button and edit configuration
-  cy.get('.role-multi-action').click();
+  cy.get('div.actions > .role-multi-action').click()
   cy.contains('li', 'Rebuild').click(); 
 
   // Make sure the app is rebuilding and then, back to running status
   cy.get('header').should('contain', appName).and('contain', 'Building');
+  
+  cy.get('.tab-label').should('contain', 'testapp - Build');
+  cy.contains('buildpack: Reusing layers from image', {timeout: 120000});
+  cy.get('.tab > .closer').click();
+
   cy.get('header', {timeout: 60000}).should('contain', appName).and('contain', 'Running');
 });
 
@@ -457,7 +483,7 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   // Application status should be equal to 1/1
   cy.get('[data-title="Status"]', {timeout: 16000}).should('contain', '1/1');
   cy.wait(2000);
- });
+});
 
 // Bind a configuration to an existing application
 Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespace='workspace'}) => {
@@ -470,7 +496,7 @@ Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespac
   cy.get('header').should('contain', 'Applications:').and('contain', appName);
 
   // Select the 3dots button and edit configuration
-  cy.get('.role-multi-action').click();
+  cy.get('div.actions > .role-multi-action').click()
   cy.contains('Edit Config').click();
 
   // Select the Configurations tab
