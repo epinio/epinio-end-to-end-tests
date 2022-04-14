@@ -32,7 +32,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, dontCheckRouteAccess: true});
       break;
     case 'customRoute':
-      cy.createApp({appName: appName, archiveName: archive, route: customRoute});
+      cy.createApp({appName: appName, archiveName: archive, route: customRoute, sourceType: 'Archive'});
       cy.checkApp({appName: appName, route: customRoute});
       /* App log and app shell are disabled until https://github.com/epinio/epinio-end-to-end-tests/issues/126 is fixed.
       cy.showAppLog({appName: appName});
@@ -44,7 +44,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, checkVar: true});
       break;
     case 'restartAndRebuild':
-      cy.createApp({appName: appName, archiveName: archive});
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});
       cy.checkApp({appName: appName});
       cy.restartApp({appName: appName});
       cy.checkApp({appName: appName});
@@ -74,7 +74,7 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
       cy.createConfiguration({configurationName: configuration});
 
       // Create an application with the newly created configuration and check it
-      cy.createApp({appName: appName, archiveName: archive, configurationName: configuration});
+      cy.createApp({appName: appName, archiveName: archive, configurationName: configuration, sourceType: 'Archive'});
       cy.checkApp({appName: appName, checkConfiguration: true});
 
       // Unbind the created configuration
@@ -93,7 +93,7 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
       cy.createConfiguration({configurationName: configuration, fromFile: true});
 
       // Create an application *WITHOUT* any configuration
-      cy.createApp({appName: appName, archiveName: archive, addVar: 'file'});
+      cy.createApp({appName: appName, archiveName: archive, addVar: 'file', sourceType: 'Archive'});
       cy.checkApp({appName: appName});
 
       // Bind the created configuration to the application and check it
@@ -124,7 +124,7 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       cy.createNamespace(namespace);
 
       // Create an application on the new namespace and check it
-      cy.createApp({appName: appName, archiveName: archive});
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});
       cy.checkApp({appName: appName, namespace: namespace});
 
       // Delete the namespace

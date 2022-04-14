@@ -161,15 +161,19 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   if (sourceType) {
     cy.get('.labeled-select').click();
     cy.contains(sourceType, {timeout: 120000}).click();
-    if (sourceType === 'Container Image') cy.typeValue({label: 'Image', value: archiveName});
-    if (sourceType === 'Git URL') {
+    switch (sourceType) {
+      case 'Container Image':
+        cy.typeValue({label: 'Image', value: archiveName}); 
+        break;
+      case 'Git URL':
       cy.typeValue({label: 'URL', value: archiveName});
       cy.typeValue({label: 'Branch', value: 'main'});
-    }
-  } else {
-    // Use the default one and upload the test application
+        break;
+      case 'Archive':
     cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
-  }
+        break; 
+    };
+  };
 
   // Use a custom Paketo Build Image if needed
   if (customPaketoImage) {
