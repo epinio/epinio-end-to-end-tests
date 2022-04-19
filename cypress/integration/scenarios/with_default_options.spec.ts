@@ -46,7 +46,7 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('multipleInstanceAndContainer');
   });
 
-  it('Push application with custom route into default namespace and check it', () => {
+  it('Push application with custom route into default namespace and check app log/shell features', () => {
     cy.runApplicationsTest('customRoute');
   });
 
