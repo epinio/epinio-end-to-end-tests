@@ -1,6 +1,7 @@
 name: Add issue to project board
 # This action could be removed when editing workflow project feature will be enabled.
 # Still notify with "Coming soon" flag
+# Until now, that's not possible to specify a column, see https://github.com/actions/add-to-project/issues/71
 on:
   issues:
     types:
