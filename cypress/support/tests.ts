@@ -23,7 +23,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const archive = 'sample-app.tar.gz';
   const customRoute = 'custom-route-' + appName + '.' + Cypress.env('system_domain');
   const paketobuild = 'paketobuildpacks/builder:tiny';
-  const gitUrl = 'https://github.com/epinio/git-url-app-test';
+  const gitUrl = 'https://github.com/epinio/example-go';
 
   // Create an application on default namespace and check it
   switch (testName) {
