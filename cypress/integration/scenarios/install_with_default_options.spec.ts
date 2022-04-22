@@ -20,7 +20,7 @@ describe('Epinio installation with default options', () => {
 
   it('Add the Epinio helm repo', () => {
     topLevelMenu.clusters(Cypress.env('cluster'));
-    cy.addHelmRepo({repoName: 'epinio-repo', repoUrl: 'https://epinio.github.io/helm-charts'});
+    cy.addHelmRepo({repoName: 'epinio-repo', repoUrl: 'https://github.com/epinio/helm-charts', repoType: 'git'});
   });
 
   it('Install Epinio', () => {
