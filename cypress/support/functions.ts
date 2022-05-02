@@ -66,7 +66,8 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
   if (sourceType == 'Container Image') {
     if (numIndex === 2) {
       cy.get('.tab-label').should('contain', 'testapp - App Logs');
-      cy.contains('Command line: \'httpd -D FOREGROUND\'', {timeout: timeout});
+      // App logs is disabled because of https://github.com/epinio/ui/issues/100
+      //cy.contains('Command line: \'httpd -D FOREGROUND\'', {timeout: timeout});
       cy.get('.tab > .closer').click(); 
     }
   } else {
@@ -80,7 +81,8 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
         and it hides the success badge of step 3...
         So we have to wait last step done before continuing */
         cy.get('.tab-label').should('contain', 'testapp - App Logs');
-        if (sourceType != 'Git URL') cy.contains('ready to handle connections', {timeout: timeout});
+        // App logs is disabled because of https://github.com/epinio/ui/issues/100
+        //if (sourceType != 'Git URL') cy.contains('ready to handle connections', {timeout: timeout});
         cy.get('.tab > .closer').click();
       }      
   }
@@ -388,7 +390,7 @@ Cypress.Commands.add('createNamespace', (namespace) => {
 // Delete an Epinio namespace
 Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
   cy.clickEpinioMenu('Namespaces');
-  cy.get('[data-title="Name"]').contains(namespace).click();
+  cy.contains(namespace).click();
   cy.clickButton('Delete');
   cy.confirmDelete(namespace);
 
@@ -461,10 +463,11 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   cy.clickEpinioMenu('Applications');
   
   // Make sure the configuration is bounded already
-  cy.get('[data-title="Bound Configs"]').should('contain', configurationName);
+  cy.get('.main-row').should('contain', configurationName);
 
   // Select the 3dots button and edit configuration
-  cy.get('.role-multi-action').click();
+  cy.getDetail({name: appName, type: 'applications', namespace: namespace});
+  cy.get('div.actions > .role-multi-action').click()
   cy.contains('Edit Config').click();
 
   // Select the Configurations tab
@@ -478,10 +481,11 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   cy.clickButton('Save');
 
   // Make sure the configuration is not bounded anymore
-  cy.get('[data-title="Bound Configs"]').should('not.contain', configurationName);
+  cy.clickEpinioMenu('Applications');
+  cy.get('.main-row').should('not.contain', configurationName);
 
   // Application status should be equal to 1/1
-  cy.get('[data-title="Status"]', {timeout: 16000}).should('contain', '1/1');
+  cy.get('.main-row').should('contain', '1/1', {timeout: 16000});
   cy.wait(2000);
 });
 
@@ -544,7 +548,7 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
 
 // Add the Epinio Helm repo
 Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType}) => {
-  cy.clickClusterMenu(['Apps & Marketplace', 'Repositories'])
+  cy.clickClusterMenu(['Apps', 'Repositories'])
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
@@ -565,7 +569,7 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType}) => {
 
 // Install Epinio via Helm
 Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
-  cy.clickClusterMenu(['Apps & Marketplace', 'Charts']);
+  cy.clickClusterMenu(['Apps', 'Charts']);
   
   // Make sure we are in the chart screen (test failed here before)
   cy.contains('header', 'Charts', {timeout: 8000}).should('be.visible');
@@ -615,7 +619,7 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
 
 // Uninstall Epinio via Helm
 Cypress.Commands.add('epinioUninstall', () => {
-  cy.clickClusterMenu(['Apps & Marketplace', 'Installed Apps'])
+  cy.clickClusterMenu(['Apps', 'Installed Apps'])
 
   // Make sure we are in the 'Installed Apps' screen (test failed here before)
   cy.contains('header', 'Installed Apps', {timeout: 8000}).should('be.visible');
@@ -627,7 +631,7 @@ Cypress.Commands.add('epinioUninstall', () => {
 
 // Remove the Epinio Helm repo
 Cypress.Commands.add('removeHelmRepo', () => {
-  cy.clickClusterMenu(['Apps & Marketplace', 'Repositories']);
+  cy.clickClusterMenu(['Apps', 'Repositories']);
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
