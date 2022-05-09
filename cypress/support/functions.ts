@@ -300,7 +300,7 @@ Cypress.Commands.add('restartApp', ({appName, namespace='workspace'}) => {
 
   // Handle application log tab
   cy.get('.tab-label').should('contain', 'testapp - App Logs');
-  cy.contains('ready to handle connections', {timeout: 120000});
+  cy.contains('Development Server (http://0.0.0.0:8080) started', {timeout: 120000});
   cy.get('.tab > .closer').click();
 });
 
@@ -345,7 +345,7 @@ Cypress.Commands.add('showAppLog', ({appName, namespace='workspace'}) => {
   cy.get('.tab-label').should('contain', 'testapp - App Logs');
   
   // Web server ready message must appear in the log
-  cy.contains('ready to handle connections');
+  cy.contains('Development Server (http://0.0.0.0:8080) started', {timeout: 120000});
   cy.get('.tab > .closer').click();
 });
 
