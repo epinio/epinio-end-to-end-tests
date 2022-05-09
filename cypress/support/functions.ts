@@ -148,14 +148,43 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   cy.clickEpinioMenu('Applications');
   cy.clickButton('Create');
-  cy.typeValue({label: 'Name', value: appName});
 
-  // Only if we want to check that 'Next' button is disabled
-  // This could happen only if there is no namespace defined
+  // Select the Source Type if needed
+  if (sourceType) {
+    cy.get('.labeled-select').click();
+    cy.contains(sourceType, {timeout: 120000}).click();
+    switch (sourceType) {
+      case 'Container Image':
+        cy.typeValue({label: 'Image', value: archiveName}); 
+        break;
+      case 'Git URL':
+        cy.typeValue({label: 'URL', value: archiveName});
+        cy.typeValue({label: 'Branch', value: 'main'}); 
+        break;
+      case 'Archive':
+        cy.get('.archive input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
+        break; 
+    };
+  };
+
+  // Use a custom Paketo Build Image if needed
+  if (customPaketoImage) {
+    cy.contains('Custom Image').click();
+    cy.typeValue({label: '.no-label', value: customPaketoImage, noLabel: true});
+  }
+
+  // Continue with the next screen
+  cy.clickButton('Next');
+
+  // Only if we want to check that we get warned about no namespace defined
   if (shouldBeDisabled === true) {
     cy.get('.btn').should('contain', 'Next').and('be.disabled');
+    cy.get('.banner.warning').should('contain', 'There are no namespaces. Please create one before proceeding');
     return;  // Of course, in that case the test is done if button is disabled
   }
+
+  // Define application's name
+  cy.typeValue({label: 'Name', value: appName});
 
   // Change default route if needed
   if (route) {
@@ -178,33 +207,6 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Set the desired number of instances
   cy.typeValue({label: 'Instances', value: instanceNum});
-  cy.clickButton('Next');
-
-  // Select the Source Type if needed
-  if (sourceType) {
-    cy.get('.labeled-select').click();
-    cy.contains(sourceType, {timeout: 120000}).click();
-    switch (sourceType) {
-      case 'Container Image':
-        cy.typeValue({label: 'Image', value: archiveName}); 
-        break;
-      case 'Git URL':
-        cy.typeValue({label: 'URL', value: archiveName});
-        cy.typeValue({label: 'Branch', value: 'main'}); 
-        break;
-      case 'Archive':
-        cy.get('input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
-        break; 
-    };
-  };
-
-  // Use a custom Paketo Build Image if needed
-  if (customPaketoImage) {
-    cy.contains('Custom Image').click();
-    cy.typeValue({label: '.no-label', value: customPaketoImage, noLabel: true});
-  }
-
-  // Continue with the next screen
   cy.clickButton('Next');
 
   // Bind a configuration if needed
