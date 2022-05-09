@@ -134,7 +134,7 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       cy.deleteNamespace({namespace: defaultNamespace});
 
       // Try to create the application
-      cy.createApp({appName: appName, archiveName: archive, shouldBeDisabled: true});
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', shouldBeDisabled: true});
 
       // Re-create default namespace
       cy.createNamespace(defaultNamespace);
