@@ -1,5 +1,5 @@
 {
-  "experimentalSessionSupport": true,
+  "experimentalSessionAndOrigin": true,
   "defaultCommandTimeout": 10000,
   "clientCertificates": [
     {
