@@ -8,9 +8,11 @@ describe('Configuration testing', () => {
 
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+    cy.visit('/');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
+      epinio.accessEpinioMenu(Cypress.env('cluster'));
+    }
   });
 
   it('Create an application with a configuration, unbind the configuration and delete all', () => {

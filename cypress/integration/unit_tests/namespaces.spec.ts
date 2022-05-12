@@ -8,9 +8,11 @@ describe('Namespaces testing', () => {
 
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+    cy.visit('/');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
+      epinio.accessEpinioMenu(Cypress.env('cluster'));
+    }
   });
 
   it('Push and check an application into the created namespace', () => {

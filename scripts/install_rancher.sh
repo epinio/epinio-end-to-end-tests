@@ -3,7 +3,7 @@
 set -e
 
 # Add stable Rancher Helm chart repo
-helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 
 # Add stable CertManager Helm chart repo
 helm repo add jetstack https://charts.jetstack.io
@@ -24,7 +24,7 @@ helm upgrade --install cert-manager jetstack/cert-manager \
 kubectl rollout status deployment cert-manager -n cert-manager --timeout=120s
 
 # Install Rancher
-helm upgrade --install rancher rancher-stable/rancher \
+helm upgrade --install rancher rancher-latest/rancher \
   --namespace cattle-system \
   --create-namespace \
   --set hostname=${MY_HOSTNAME} \

@@ -1,3 +1,5 @@
+// This test is only used for testing Epinio in Rancher UI
+
 import { Epinio } from '~/cypress/support/epinio';
 import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
@@ -14,7 +16,7 @@ describe('First login on Rancher', () => {
 describe('Epinio installation with default options', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
+    cy.visit('/');
     topLevelMenu.openIfClosed();
   });
 
@@ -33,7 +35,7 @@ describe('Epinio installation with default options', () => {
 describe('Menu testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
+    cy.visit('/');
     topLevelMenu.openIfClosed();
   });
 
@@ -52,7 +54,7 @@ describe('Menu testing', () => {
 describe('Applications testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
+    cy.visit('/');
     topLevelMenu.openIfClosed();
     epinio.accessEpinioMenu(Cypress.env('cluster'));
   });
@@ -77,7 +79,7 @@ describe('Applications testing', () => {
 describe('Configurations testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
+    cy.visit('/');
     topLevelMenu.openIfClosed();
     epinio.accessEpinioMenu(Cypress.env('cluster'));
   });
@@ -94,7 +96,7 @@ describe('Configurations testing', () => {
 describe('Namespaces testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
+    cy.visit('/');
     topLevelMenu.openIfClosed();
     epinio.accessEpinioMenu(Cypress.env('cluster'));
   });
@@ -111,7 +113,7 @@ describe('Namespaces testing', () => {
 describe('Epinio uninstallation testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
+    cy.visit('/');
     topLevelMenu.openIfClosed();
     cy.get('.clusters').contains(Cypress.env('cluster')).click()
   });

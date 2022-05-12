@@ -1,3 +1,5 @@
+// This test is only used for testing Epinio in Rancher UI
+
 import { Epinio } from '~/cypress/support/epinio';
 import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
