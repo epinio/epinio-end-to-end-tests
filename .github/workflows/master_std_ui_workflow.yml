@@ -87,6 +87,9 @@ jobs:
           echo '::set-output name=MY_IP::'${MY_IP}
           echo '::set-output name=MY_HOSTNAME::'${MY_HOSTNAME}
           make prepare-e2e-ci-standalone
+          # Workaround because helm-chart submodule was not bumped 
+          kubectl patch deployment epinio-ui -n epinio --patch '{"spec": {"template": {"spec": {"containers": [{"name": "epinio-ui","image": "ghcr.io/epinio/epinio-ui:v0.7.1-0.0.2"}]}}}}'
+          kubectl rollout status deployment epinio-ui -n epinio --timeout=480s
 
     outputs:
       MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME }}
