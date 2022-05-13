@@ -35,7 +35,9 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createApp({appName: appName, archiveName: archive, route: customRoute, sourceType: 'Archive'});
       cy.checkApp({appName: appName, route: customRoute});
       cy.showAppLog({appName: appName});
-      cy.showAppShell({appName: appName});
+      // App shell feature is not available in std UI yet
+      // https://github.com/epinio/ui/issues/84 
+      if (Cypress.env('ui') == "rancher") cy.showAppShell({appName: appName});
       break;
     case 'envVarsAndGitUrl':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'ui', sourceType: 'Git URL'});

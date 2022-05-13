@@ -42,15 +42,15 @@ uninstall-epinio: ## Uninstall Epinio with Helm
 get-ca: ## Configure Cypress to use the epinio-ca
 	@./scripts/get_ca.sh
 
-prepare-e2e-ci: install-k3s install-helm install-rancher install-epinio get-ca ## Tests
-
 prepare-e2e-ci-rancher: install-k3s install-helm install-rancher get-ca ## Tests
 
-prepare-e2e-ci-standalone: install-k3s install-helm install-rancher install-epinio get-ca ## Tests
+prepare-e2e-ci-standalone: install-k3s install-helm install-cert-manager install-epinio get-ca ## Tests
 
-clean:
+clean-k3s:
 	/usr/local/bin/k3s-uninstall.sh
-	/usr/local/bin/helm repo remove rancher-stable jetstack
+
+clean-all: clean-k3s
+	/usr/local/bin/helm repo remove rancher-latest jetstack
 
 help: ## Show this Makefile's help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

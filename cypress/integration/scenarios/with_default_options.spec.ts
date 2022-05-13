@@ -5,25 +5,30 @@ Cypress.config();
 const epinio = new Epinio();
 const topLevelMenu = new TopLevelMenu();
 
-describe('First login on Rancher', () => {
-  it('Log in and accept terms and conditions', () => {
+if (Cypress.env('ui') == "rancher") {
+  describe('First login on Rancher', () => {
+    it('Log in and accept terms and conditions', () => {
     cy.runFirstConnectionTest();
+    });
   });
-});
+}
 
 describe('Menu testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
+    cy.visit('/');
   });
-
+  
   it('Check Epinio menu', () => {
-    // Epinio's icon should appear in the side menu
-    epinio.epinioIcon().should('exist');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
 
-    // Click on the Epinio's logo as well as your Epinio instance
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+      // Epinio's icon should appear in the side menu
+      epinio.epinioIcon().should('exist');
+
+      // Click on the Epinio's logo as well as your Epinio instance 
+      epinio.accessEpinioMenu(Cypress.env('cluster')); 
+    }
 
     // Check Epinio's side menu
     epinio.checkEpinioNav();
@@ -33,9 +38,11 @@ describe('Menu testing', () => {
 describe('Applications testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+    cy.visit('/');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
+      epinio.accessEpinioMenu(Cypress.env('cluster'));
+    }
   });
 
   it('Push basic application and check we can restart and rebuild it', () => {
@@ -62,9 +69,11 @@ describe('Applications testing', () => {
 describe('Configurations testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+    cy.visit('/');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
+      epinio.accessEpinioMenu(Cypress.env('cluster'));
+    }
   });
 
   it('Create an application with a configuration, unbind the configuration and delete all', () => {
@@ -79,9 +88,11 @@ describe('Configurations testing', () => {
 describe('Namespaces testing', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+    cy.visit('/');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
+      epinio.accessEpinioMenu(Cypress.env('cluster'));
+    }
   });
 
   it('Push and check an application into the created namespace', () => {

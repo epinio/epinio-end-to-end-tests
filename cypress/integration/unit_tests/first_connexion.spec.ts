@@ -1,8 +1,8 @@
 import { Epinio } from '~/cypress/support/epinio';
- 
+
 Cypress.config();
 describe('First login on Rancher', () => {
-   const epinio = new Epinio();
+  const epinio = new Epinio();
 
   it('Log in and accept terms and conditions', () => {
     cy.visit('/auth/login');

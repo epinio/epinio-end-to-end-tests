@@ -99,13 +99,12 @@ jobs:
     container:
       image: ${{ inputs.cypress_image }}
       env:
-        CLUSTER_NAME: local
         CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
         EXT_REG_USER: ${{ secrets.ext_reg_user }}
         EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
         RANCHER_USER: admin
-        RANCHER_PASSWORD: rancherpassword
-        RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
+        RANCHER_PASSWORD: password
+        RANCHER_URL: https://epinio.${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
         S3_KEY_ID: ${{ secrets.s3_key_id }}
         S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
@@ -151,7 +150,7 @@ jobs:
       - name: Delete k3s cluster
         if: always()
         run: |
-          make clean
+          make clean-k3s
 
       - name: Clean all
         if: always()

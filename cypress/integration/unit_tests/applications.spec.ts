@@ -8,9 +8,11 @@ describe('Applications testing', () => {
 
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+    cy.visit('/');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
+      epinio.accessEpinioMenu(Cypress.env('cluster'));
+    }
   });
 
   it('Push basic application and check we can restart and rebuild it', () => {

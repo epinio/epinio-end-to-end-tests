@@ -99,6 +99,7 @@ jobs:
         S3_KEY_ID: ${{ secrets.s3_key_id }}
         S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+        UI: rancher
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
 
@@ -183,6 +184,7 @@ jobs:
         RANCHER_PASSWORD: rancherpassword
         RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+        UI: rancher
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
 
@@ -222,7 +224,7 @@ jobs:
       - name: Delete k3s cluster
         if: always()
         run: |
-          make clean
+          make clean-all
 
       - name: Clean all
         if: always()

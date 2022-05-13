@@ -2,10 +2,13 @@ import 'cypress-file-upload';
 
 // Generic functions
 
-// Log into Rancher
-Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cypress.env('password'), cacheSession = Cypress.env('cache_session')) => {
+   // Log into Rancher
+Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cypress.env('password'), cacheSession = Cypress.env('cache_session'), ui = Cypress.env('ui')) => {
   const login = () => {
-    cy.intercept('POST', '/v3-public/localProviders/local*').as('loginReq');
+    let loginPath
+    ui == "rancher" ? loginPath="/v3-public/localProviders/local*" : loginPath="/pp/v1/epinio/rancher/v3-public/authProviders/local/login";
+    cy.intercept('POST', loginPath).as('loginReq');
+    
     cy.visit('/auth/login');
 
     cy.byLabel('Username')
@@ -18,7 +21,11 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 
     cy.get('button').click();
     cy.wait('@loginReq');
-    cy.contains("Getting Started", {timeout: 10000}).should('be.visible');
+    if (ui == "rancher") {
+      cy.contains("Getting Started", {timeout: 10000}).should('be.visible');
+    } else {
+      cy.contains('.m-0', 'Applications', {timeout: 20000});
+    }
   };
 
   if (cacheSession) {

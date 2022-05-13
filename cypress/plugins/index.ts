@@ -22,6 +22,7 @@ module.exports = (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions)
   config.env.external_reg_password = process.env.EXT_REG_PASSWORD;
   config.env.s3_key_id = process.env.S3_KEY_ID;
   config.env.s3_key_secret = process.env.S3_KEY_SECRET;
+  config.env.ui = process.env.UI;
 
   return config;
 };

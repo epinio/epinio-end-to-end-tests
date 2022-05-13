@@ -8,16 +8,19 @@ describe('Menu testing', () => {
 
   beforeEach(() => {
     cy.login();
-    cy.visit('/home');
-    topLevelMenu.openIfClosed();
+    cy.visit('/');
   });
   
   it('Check Epinio menu', () => {
-    // Epinio's icon should appear in the side menu
-    epinio.epinioIcon().should('exist');
+    if (Cypress.env('ui') == "rancher") {
+      topLevelMenu.openIfClosed();
 
-    // Click on the Epinio's logo as well as your Epinio instance 
-    epinio.accessEpinioMenu(Cypress.env('cluster'));
+      // Epinio's icon should appear in the side menu
+      epinio.epinioIcon().should('exist');
+
+      // Click on the Epinio's logo as well as your Epinio instance 
+      epinio.accessEpinioMenu(Cypress.env('cluster')); 
+    }
 
     // Check Epinio's side menu
     epinio.checkEpinioNav();
