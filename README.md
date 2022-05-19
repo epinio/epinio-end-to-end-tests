@@ -15,15 +15,49 @@ Tests are executed every night in the CI. For now, two scenarios are tested.
 
 - [Epinio-end-to-end-tests](#epinio-end-to-end-tests)
   - [Contents](#contents)
-  - [Rancher and Epinio UI](#rancher-and-epinio-ui)
+  - [Rancher UI and Epinio UI](#rancher-and-epinio-ui)
   - [Scenario 1 - Using Chrome](#scenario-1---using-chrome)
   - [Scenario 2 - Using Firefox](#scenario-2---using-firefox)
   - [Process explained in one chart](#process-explained-in-one-chart)
-## Rancher and Epinio UI
-E2E tests are executed both on Rancher and Epinio UI but there is a difference between them.</br>
-For the first one, Epinio is installed via Rancher while for Epinio UI, Epinio is installed via Helm command line.</br>
-__Attention__, we currently have an [issue](https://github.com/epinio/ui/issues/88) for running our Cypress tests on the standalone UI so it's still Rancher UI configured there but as mentioned above, installation process is different.</br>
-The tests ran with main branches of [epinio](https://github.com/epinio/epinio) and [epinio's helm chart](https://github.com/epinio/helm-charts).
+## Rancher UI and Epinio UI
+E2E tests are executed both on Rancher UI and Epinio UI but there is a difference between them.</br>
+For the first one, Epinio is installed via Rancher while for Epinio UI, it is installed via Helm command line.</br>
+The tests run with main branches of [epinio](https://github.com/epinio/epinio) and [epinio's helm chart](https://github.com/epinio/helm-charts).
+## How to quickly start a dev env with k3d
+__Attention__, it was only tested on Linux so far.
+### Epinio UI
+
+1. Clone the repo
+```bash
+git clone https://github.com/epinio/epinio-end-to-end-tests.git
+```
+
+2. Check if you got all dependencies installed:
+```bash
+make check-dependencies
+```
+
+3. Create the cluster
+```bash
+make prepare-cluster
+```
+Check the output and export the IP as the IP_ADDR variable (export IP_ADDR=<IP>).
+
+4. Deploy Epinio
+```bash
+make deploy-epinio
+```
+
+5. Export variables for Cypress
+```bash
+export RANCHER_USER=admin RANCHER_PASSWORD=password RANCHER_URL=https://epinio.${IP_ADDR}.nip.io SYSTEM_DOMAIN=${IP_ADDR}.nip.io
+```
+
+6. Start Cypress GUI
+```bash
+make cypress-gui
+```
+
 ## Scenario 1 - Using Chrome
 In this first scenario, Epinio is deployed with default options. </br>
 You can check all the things we test directly in the [file](./cypress/integration/scenarios/with_default_options.spec.ts).
