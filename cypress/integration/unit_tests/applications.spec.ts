@@ -34,4 +34,30 @@ describe('Applications testing', () => {
   it('Push a 5 instances application with mixed options into default namespace and check it', () => {
     cy.runApplicationsTest('allTests');
   });
+
+  it('Push an app from manifest and download manifest from ui', () => {
+    // Create config, app and check it is ok
+    cy.createConfiguration({configurationName: 'newappwithconfiguration15'});
+    cy.createApp({appName: 'testapp', archiveName: 'sample-app.tar.gz', instanceNum: 2, configurationName: 'newappwithconfiguration15', sourceType: 'Archive'});
+    cy.checkApp({appName: 'testapp', checkConfiguration: true});
+
+      // Redirecting to Applications 
+    cy.get('span > i.icon-folder').eq(0).click()
+
+    // Download the manifest
+    cy.get('span > a').eq(0).contains('testapp').should('be.visible')
+    cy.get('span > a').eq(2).contains('newappwithconfiguration15').should('be.visible')
+    cy.get('button.role-multi-action').click()
+    cy.contains('li', 'Download Manifest').click( {force: true} ); 
+
+    // Find manifest in download folder
+    // Verify name of stdout matches expected one
+    cy.exec('find "cypress/downloads/" -name "workspace-testapp*"').its('stdout')
+    .should('contain', 'testapp')
+
+    // Upload downloaded file
+    // cy.createApp({appName: 'testapp2', archiveName: 'downloads/workspace-testapp', sourceType: 'Archive'});
+
+  });
+
 });
