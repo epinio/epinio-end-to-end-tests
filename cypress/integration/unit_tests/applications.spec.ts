@@ -56,7 +56,7 @@ describe('Applications testing', () => {
     .should('contain', 'testapp')
 
     // Upload downloaded file
-    // cy.createApp({appName: 'testapp2', archiveName: 'downloads/workspace-testapp', sourceType: 'Archive'});
+    // cy.createApp({appName: 'testapp2', archiveName: 'downloads/sample-app.tar.gz', sourceType: 'Archive'});
 
   });
 
