@@ -57,14 +57,11 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
       break;
     case 'upFromManifestAndDownload':
-      cy.createConfiguration({configurationName: configuration});
-      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', route: customRoute,  instanceNum: 2, configurationName: configuration });   
-      cy.checkApp({appName: appName , checkConfiguration: true});
-      // Redirecting to Applications 
-      cy.get('span > i.icon-folder').eq(0).click() 
-      // Download the manifest
-      cy.get('span > a').eq(0).contains(appName).should('be.visible')
-      cy.get('span > a').eq(2).contains(configuration).should('be.visible')
+      cy.createConfiguration({configurationName: configuration});      
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', route: customRoute,  instanceNum: 2, addVar: 'ui', configurationName: configuration });   
+      cy.checkApp({appName: appName , checkConfiguration: true, route:customRoute});
+      
+      // Downloading manifest 
       cy.get('button.role-multi-action').click()
       cy.contains('li', 'Download Manifest').click( {force: true} );  
       // Find downloaded json manifest in download folder & verify name in stdout 
@@ -72,15 +69,29 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       .should('contain', appName)
       // Delete app prior uploading from manifest
       cy.deleteApp({appName: appName});
-      // Create app from manifest
-      cy.createApp({archiveName: 'manifest.yaml', sourceType: 'Archive'})
-      cy.checkApp({appName: 'testapp' , checkConfiguration: true})
-      // Redirecting to Applications & checking content
-      cy.get('span > i.icon-folder').eq(0).click()
-      cy.get('.col-link-detail > span > a').contains('testapp').should('be.visible') 
-      cy.get('tr[class="main-row"] > td').eq(3).contains('2/2').should('be.visible') 
-      cy.get('span.route').contains('https://172.19.0.2.nip.io/').should('be.visible')
-      cy.get('tr[class="main-row"] > td').eq(5).contains('configuration01').should('be.visible') 
+                  
+      
+      // // Create app from manifest
+      cy.clickEpinioMenu('Applications');
+      cy.clickButton('Create');
+      cy.get('.labeled-select').click();
+      cy.contains('Archive', {timeout: 120000}).click();
+      cy.get('.archive input[type="file"]').attachFile({filePath: archive, encoding: 'base64', mimeType: 'application/octet-stream'});
+        // Rename downloaded file and upload
+      cy.exec(`mv cypress/downloads/* cypress/downloads/"manifest.json"`)
+      cy.get('input[type="file"]').eq(0).attachFile({filePath: '../downloads/manifest.json', mimeType: 'application/octet-stream'});
+
+      // Next
+      cy.get('.role-primary span').contains('Next').click()
+      
+        // // Checking uploaded content
+      cy.contains(appName).should('exist')
+      // cy.get('.labeled-input.input-string').contains(appName).should('exist')
+      // cy.get('input[type="number"]').contains('2').should('exist')
+      // cy.get('input[placeholder="e.g. my-custom-route.com/my-app"]').contains(customRoute).should('be.visible')
+      // cy.get('.input-string > label').contains(appName).should('be.visible')
+      // cy.get('textarea[placeholder="e.g. bar"]').contains('8080').should('be.visible')
+
       break;
   }
 
