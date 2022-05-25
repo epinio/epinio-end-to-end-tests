@@ -24,6 +24,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const customRoute = 'custom-route-' + appName + '.' + Cypress.env('system_domain');
   const paketobuild = 'paketobuildpacks/builder:tiny';
   const gitUrl = 'https://github.com/epinio/example-go';
+  const configuration = 'configuration01'
 
   // Create an application on default namespace and check it
   switch (testName) {
@@ -54,6 +55,32 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
     case 'allTests':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
+      break;
+    case 'upFromManifestAndDownload':
+      cy.createConfiguration({configurationName: configuration});
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', route: customRoute,  instanceNum: 2, configurationName: configuration });   
+      cy.checkApp({appName: appName , checkConfiguration: true});
+      // Redirecting to Applications 
+      cy.get('span > i.icon-folder').eq(0).click() 
+      // Download the manifest
+      cy.get('span > a').eq(0).contains(appName).should('be.visible')
+      cy.get('span > a').eq(2).contains(configuration).should('be.visible')
+      cy.get('button.role-multi-action').click()
+      cy.contains('li', 'Download Manifest').click( {force: true} );  
+      // Find downloaded json manifest in download folder & verify name in stdout 
+      cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
+      .should('contain', appName)
+      break;
+    case 'upFromManifestAndVerifyConfig':
+      // cy.createConfiguration({configurationName: configuration});
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});   
+      cy.checkApp({appName: appName ,route: customRoute });
+      // Redirecting to Applications & checking content
+      cy.get('span > i.icon-folder').eq(0).click()
+      cy.get('.col-link-detail > span > a').contains(appName).should('be.visible') 
+      cy.get('tr[class="main-row"] > td').eq(3).contains('1/1').should('be.visible') 
+      cy.get('span.route').contains(customRoute).should('be.visible')
+      // cy.get('tr[class="main-row"] > td').eq(5).contains({configurationName: configuration}).should('be.visible') 
       break;
   }
 
