@@ -70,17 +70,17 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       // Find downloaded json manifest in download folder & verify name in stdout 
       cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
       .should('contain', appName)
-      break;
-    case 'upFromManifestAndVerifyConfig':
-      // cy.createConfiguration({configurationName: configuration});
-      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});   
-      cy.checkApp({appName: appName ,route: customRoute });
+      // Delete app prior uploading from manifest
+      cy.deleteApp({appName: appName});
+      // Create app from manifest
+      cy.createApp({archiveName: 'manifest.yaml', sourceType: 'Archive'})
+      cy.checkApp({appName: 'testapp' , checkConfiguration: true})
       // Redirecting to Applications & checking content
       cy.get('span > i.icon-folder').eq(0).click()
-      cy.get('.col-link-detail > span > a').contains(appName).should('be.visible') 
-      cy.get('tr[class="main-row"] > td').eq(3).contains('1/1').should('be.visible') 
-      cy.get('span.route').contains(customRoute).should('be.visible')
-      // cy.get('tr[class="main-row"] > td').eq(5).contains({configurationName: configuration}).should('be.visible') 
+      cy.get('.col-link-detail > span > a').contains('testapp').should('be.visible') 
+      cy.get('tr[class="main-row"] > td').eq(3).contains('2/2').should('be.visible') 
+      cy.get('span.route').contains('https://172.19.0.2.nip.io/').should('be.visible')
+      cy.get('tr[class="main-row"] > td').eq(5).contains('configuration01').should('be.visible') 
       break;
   }
 

@@ -1,0 +1,16 @@
+name: testapp
+configuration:
+  instances: 2
+  configurations:
+  - configuration01
+  environment:
+    foo1: var1
+  routes:
+  - https://172.19.0.2.nip.io/
+  - ''
+  appchart: standard
+origin:
+  Kind: 0
+  git:
+    repository: ''
+  path: sample-app.tar.gz
