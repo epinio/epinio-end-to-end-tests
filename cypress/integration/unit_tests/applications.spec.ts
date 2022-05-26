@@ -35,7 +35,7 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('allTests');
   });
 
-  it('Push an app from manifest and download manifest from ui', () => {
-    cy.runApplicationsTest('upFromManifestAndDownload');
+  it('Download manifest from ui and push an app from it',  () => {
+    cy.runApplicationsTest('downloadManifestAndPushApp');
   });
 });

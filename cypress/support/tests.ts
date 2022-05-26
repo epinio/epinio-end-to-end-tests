@@ -24,7 +24,8 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const customRoute = 'custom-route-' + appName + '.' + Cypress.env('system_domain');
   const paketobuild = 'paketobuildpacks/builder:tiny';
   const gitUrl = 'https://github.com/epinio/example-go';
-  const configuration = 'configuration01'
+  const configuration = 'configuration01';
+  const manifest = 'manifest.json';
 
   // Create an application on default namespace and check it
   switch (testName) {
@@ -56,42 +57,17 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
       break;
-    case 'upFromManifestAndDownload':
+    case 'downloadManifestAndPushApp':
       cy.createConfiguration({configurationName: configuration});      
       cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', route: customRoute,  instanceNum: 2, addVar: 'ui', configurationName: configuration });   
-      cy.checkApp({appName: appName , checkConfiguration: true, route:customRoute});
-      
-      // Downloading manifest 
-      cy.get('button.role-multi-action').click()
-      cy.contains('li', 'Download Manifest').click( {force: true} );  
-      // Find downloaded json manifest in download folder & verify name in stdout 
-      cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
-      .should('contain', appName)
+      cy.checkApp({appName: appName , checkConfiguration: true, route:customRoute, instanceNum: 2}); 
+      // Downloading manifest      
+      cy.downloadManifest({appName: appName});
       // Delete app prior uploading from manifest
       cy.deleteApp({appName: appName});
-                  
-      
-      // // Create app from manifest
-      cy.clickEpinioMenu('Applications');
-      cy.clickButton('Create');
-      cy.get('.labeled-select').click();
-      cy.contains('Archive', {timeout: 120000}).click();
-      cy.get('.archive input[type="file"]').attachFile({filePath: archive, encoding: 'base64', mimeType: 'application/octet-stream'});
-        // Rename downloaded file and upload
-      cy.exec(`mv cypress/downloads/* cypress/downloads/"manifest.json"`)
-      cy.get('input[type="file"]').eq(0).attachFile({filePath: '../downloads/manifest.json', mimeType: 'application/octet-stream'});
-
-      // Next
-      cy.get('.role-primary span').contains('Next').click()
-      
-        // // Checking uploaded content
-      cy.contains(appName).should('exist')
-      // cy.get('.labeled-input.input-string').contains(appName).should('exist')
-      // cy.get('input[type="number"]').contains('2').should('exist')
-      // cy.get('input[placeholder="e.g. my-custom-route.com/my-app"]').contains(customRoute).should('be.visible')
-      // cy.get('.input-string > label').contains(appName).should('be.visible')
-      // cy.get('textarea[placeholder="e.g. bar"]').contains('8080').should('be.visible')
-
+      // Create app from manifest solely and check results
+      cy.createApp({archiveName: archive, sourceType: 'Archive', manifestName: manifest }); 
+      cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: true, instanceNum: 2});
       break;
   }
 
