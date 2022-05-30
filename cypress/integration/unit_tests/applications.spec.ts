@@ -13,6 +13,11 @@ describe('Applications testing', () => {
       topLevelMenu.openIfClosed();
       epinio.accessEpinioMenu(Cypress.env('cluster'));
     }
+    // Executes application cleansing of "testapp" 
+    // If the app does not exist it will not fail
+    cy.exec('epinio app delete testapp', { failOnNonZeroExit: false });
+    // Check that the application has effectively been destroyed
+    cy.contains('testapp', { timeout: 60000 }).should('not.exist');
   });
 
   it('Push basic application and check we can restart and rebuild it', () => {
