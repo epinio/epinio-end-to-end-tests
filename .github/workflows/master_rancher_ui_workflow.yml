@@ -25,6 +25,10 @@ on:
         description: Set other docker options
         required: false
         type: string
+      ext_reg:
+        description: Enable external registry test
+        required: false
+        type: string
       runner:
         description: Runner on which to execute tests
         required: true
@@ -63,6 +67,7 @@ jobs:
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
           K3S_VERSION: v1.22.7+k3s1
+          EXT_REG: ${{ inputs.ext_reg }}
           EXT_REG_USER: ${{ secrets.ext_reg_user }}
           EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
           S3_KEY_ID: ${{ secrets.s3_key_id }}
