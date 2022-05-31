@@ -62,9 +62,9 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', route: customRoute,  instanceNum: 2, addVar: 'ui', configurationName: configuration });   
       cy.checkApp({appName: appName , checkConfiguration: true, route:customRoute, instanceNum: 2}); 
       // Downloading manifest      
-      cy.downloadManifest({appName: appName});
+      cy.downloadManifest({ appName: appName });
       // Delete app prior uploading from manifest
-      cy.deleteApp({appName: appName});
+      cy.deleteApp({ appName: appName });
       // Create app from manifest solely and check results
       cy.createApp({archiveName: archive, sourceType: 'Archive', manifestName: manifest }); 
       cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: true, instanceNum: 2});
