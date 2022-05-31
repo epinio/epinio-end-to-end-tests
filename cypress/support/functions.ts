@@ -79,7 +79,8 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
   } else {
       if (numIndex === 3) {
         cy.get('.tab-label').should('contain', 'testapp - Build');
-        cy.contains('buildpack: _ _ __ ___ _____ Done', {timeout: timeout});
+        cy.contains('===> EXPORTING', {timeout: timeout});
+        cy.contains('_ _ __ ___ _____ Done', {timeout: timeout});
         cy.get('.tab > .closer').click();
       
         /* Ugly thing here...
@@ -328,7 +329,7 @@ Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
   cy.get('header').should('contain', appName).and('contain', 'Building');
   
   cy.get('.tab-label').should('contain', 'testapp - Build');
-  cy.contains('buildpack: Reusing layers from image', {timeout: 120000});
+  cy.contains('Reusing layers from image', {timeout: 120000});
   cy.get('.tab > .closer').click();
 
   cy.get('header', {timeout: 60000}).should('contain', appName).and('contain', 'Running');
