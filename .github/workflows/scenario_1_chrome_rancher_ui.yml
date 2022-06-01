@@ -16,3 +16,6 @@ jobs:
       cypress_install_test: installation.spec.ts
       cypress_test: with_default_options.spec.ts
       runner: ui-e2e-0
+    secrets:
+      ext_reg_user: secrets.DOCKER_USER
+      ext_reg_password: secrets.DOCKER_PASSWORD

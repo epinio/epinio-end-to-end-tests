@@ -28,9 +28,12 @@ uninstall-epinio: ## Uninstall Epinio with Helm
 get-ca: ## Configure Cypress to use the epinio-ca
 	@./scripts/get_ca.sh
 
-prepare-e2e-ci-rancher: install-k3s install-helm install-rancher get-ca ## Tests
+create-docker-secret: ## Create docker pull secret to avoid the docker hub rate limit
+	@./scripts/create_docker_secret.sh
 
-prepare-e2e-ci-standalone: install-k3s install-helm install-cert-manager install-epinio get-ca ## Tests
+prepare-e2e-ci-rancher: install-k3s install-helm install-rancher create-docker-secret get-ca ## Tests
+
+prepare-e2e-ci-standalone: install-k3s install-helm install-cert-manager create-docker-secret install-epinio get-ca ## Tests
 
 clean-k3s:
 	/usr/local/bin/k3s-uninstall.sh
