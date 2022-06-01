@@ -8,7 +8,7 @@ const topLevelMenu = new TopLevelMenu();
 if (Cypress.env('ui') == "rancher") {
   describe('First login on Rancher', () => {
     it('Log in and accept terms and conditions', () => {
-    cy.runFirstConnectionTest();
+      cy.runFirstConnectionTest();
     });
   });
 }
@@ -18,7 +18,7 @@ describe('Menu testing', () => {
     cy.login();
     cy.visit('/');
   });
-  
+
   it('Check Epinio menu', () => {
     if (Cypress.env('ui') == "rancher") {
       topLevelMenu.openIfClosed();
@@ -27,7 +27,7 @@ describe('Menu testing', () => {
       epinio.epinioIcon().should('exist');
 
       // Click on the Epinio's logo as well as your Epinio instance 
-      epinio.accessEpinioMenu(Cypress.env('cluster')); 
+      epinio.accessEpinioMenu(Cypress.env('cluster'));
     }
 
     // Check Epinio's side menu
@@ -43,6 +43,17 @@ describe('Applications testing', () => {
       topLevelMenu.openIfClosed();
       epinio.accessEpinioMenu(Cypress.env('cluster'));
     }
+    // Executes application cleansing of "testapp" and "configuration01"
+    // If the app does not exist it will not fail
+    // Destroy application "testapp" and verify
+    cy.exec('epinio app delete testapp', { failOnNonZeroExit: false });
+    cy.clickEpinioMenu('Applications');
+    cy.contains('testapp', { timeout: 60000 }).should('not.exist');
+
+    // Destroy configuration "configuration01" and verify
+    cy.exec('epinio configuration delete configuration01', { failOnNonZeroExit: false });
+    cy.clickEpinioMenu('Configurations');
+    cy.contains('configuration01', { timeout: 60000 }).should('not.exist');
   });
 
   it('Push basic application and check we can restart and rebuild it', () => {
