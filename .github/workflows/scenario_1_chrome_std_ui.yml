@@ -15,3 +15,6 @@ jobs:
       cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
       cypress_test: with_default_options.spec.ts
       runner: ui-e2e-1
+    secrets:
+      ext_reg_user: secrets.DOCKER_USER
+      ext_reg_password: secrets.DOCKER_PASSWORD

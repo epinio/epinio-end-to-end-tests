@@ -20,8 +20,6 @@
     "unit_tests/applications.spec.ts",
     "unit_tests/configurations.spec.ts",
     "unit_tests/namespaces.spec.ts",
-    "scenarios/install_with_default_options.spec.ts",
-    "scenarios/install_with_s3_and_external_registry.spec.ts",
     "scenarios/with_default_options.spec.ts",
     "scenarios/with_s3_and_external_registry.spec.ts",
     "unit_tests/uninstall.spec.ts"
