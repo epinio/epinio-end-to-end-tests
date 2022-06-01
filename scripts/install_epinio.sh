@@ -10,7 +10,7 @@ make tools-install
 make build
 
 # Add options for External Registry if needed
-if [[ -n "${EXT_REG_USER}" && -n "${EXT_REG_PASSWORD}" ]]; then
+if [[ ${EXT_REG} == "1" ]]; then
   INSTALL_OPTIONS+="
    --set containerregistry.enabled=false \
    --set global.registryURL=registry.hub.docker.com \

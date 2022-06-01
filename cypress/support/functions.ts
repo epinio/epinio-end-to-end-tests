@@ -72,24 +72,23 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
   var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter > .status > .badge';
   if (sourceType == 'Container Image') {
     if (numIndex === 2) {
-      cy.get('.tab-label').should('contain', 'testapp - App Logs');
-      // App logs is disabled because of https://github.com/epinio/ui/issues/100
-      //cy.contains('Command line: \'httpd -D FOREGROUND\'', {timeout: timeout});
+      cy.get('.tab-label', {timeout: 100000}).should('contain', 'testapp - App Logs');
+      cy.contains('Command line: \'httpd -D FOREGROUND\'', {timeout: timeout});
       cy.get('.tab > .closer').click(); 
     }
   } else {
       if (numIndex === 3) {
         cy.get('.tab-label').should('contain', 'testapp - Build');
-        cy.contains('buildpack: _ _ __ ___ _____ Done', {timeout: timeout});
+        cy.contains('===> EXPORTING', {timeout: timeout});
+        cy.contains('_ _ __ ___ _____ Done', {timeout: timeout});
         cy.get('.tab > .closer').click();
       
         /* Ugly thing here...
         When step 3 (building is done), it automatically opens a new App logs tab
         and it hides the success badge of step 3...
         So we have to wait last step done before continuing */
-        cy.get('.tab-label').should('contain', 'testapp - App Logs');
-        // App logs is disabled because of https://github.com/epinio/ui/issues/100
-        //if (sourceType != 'Git URL') cy.contains('ready to handle connections', {timeout: timeout});
+        cy.get('.tab-label', {timeout: 100000}).should('contain', 'testapp - App Logs');
+        if (sourceType != 'Git URL') cy.contains('PHP 8.0.18 Development Server (http://0.0.0.0:8080) started', {timeout: timeout});
         cy.get('.tab > .closer').click();
       }      
   }
@@ -330,7 +329,7 @@ Cypress.Commands.add('rebuildApp', ({appName, namespace='workspace'}) => {
   cy.get('header').should('contain', appName).and('contain', 'Building');
   
   cy.get('.tab-label').should('contain', 'testapp - Build');
-  cy.contains('buildpack: Reusing layers from image', {timeout: 120000});
+  cy.contains('Reusing layers from image', {timeout: 120000});
   cy.get('.tab > .closer').click();
 
   cy.get('header', {timeout: 60000}).should('contain', appName).and('contain', 'Running');
