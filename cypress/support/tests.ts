@@ -65,8 +65,6 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.downloadManifest({ appName: appName });
       // Delete app prior uploading from manifest
       cy.deleteApp({ appName: appName });
-      // Delete the created configuration
-      cy.deleteConfiguration({ configurationName: configuration });
       // Create app from manifest solely and check results
       cy.createApp({archiveName: archive, sourceType: 'Archive', manifestName: manifest }); 
       cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: true, instanceNum: 2});
