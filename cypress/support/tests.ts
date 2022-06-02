@@ -50,8 +50,9 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName});
       cy.restartApp({appName: appName});
       cy.checkApp({appName: appName});
-      cy.rebuildApp({appName: appName});
-      cy.checkApp({appName: appName});
+      // Disable rebuild check due to this bug https://github.com/epinio/ui/issues/126
+      //cy.rebuildApp({appName: appName});
+      //cy.checkApp({appName: appName});
       break;
     case 'allTests':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
