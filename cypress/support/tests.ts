@@ -24,6 +24,8 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const customRoute = 'custom-route-' + appName + '.' + Cypress.env('system_domain');
   const paketobuild = 'paketobuildpacks/builder:tiny';
   const gitUrl = 'https://github.com/epinio/example-go';
+  const configuration = 'configuration01';
+  const manifest = 'manifest.json';
 
   // Create an application on default namespace and check it
   switch (testName) {
@@ -54,6 +56,20 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
     case 'allTests':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
+      break;
+    case 'downloadManifestAndPushApp':
+      cy.createConfiguration({configurationName: configuration});      
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', route: customRoute,  instanceNum: 2, addVar: 'ui', configurationName: configuration });   
+      cy.checkApp({appName: appName , checkConfiguration: true, route:customRoute, instanceNum: 2}); 
+      // Downloading manifest      
+      cy.downloadManifest({ appName: appName });
+      // Delete app prior uploading from manifest
+      cy.deleteApp({ appName: appName });
+      // Delete the created configuration
+      cy.deleteConfiguration({ configurationName: configuration });
+      // Create app from manifest solely and check results
+      cy.createApp({archiveName: archive, sourceType: 'Archive', manifestName: manifest }); 
+      cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: true, instanceNum: 2});
       break;
   }
 

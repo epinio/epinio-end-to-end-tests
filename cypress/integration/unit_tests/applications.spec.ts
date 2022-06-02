@@ -58,4 +58,8 @@ describe('Applications testing', () => {
   it('Push a 5 instances application with mixed options into default namespace and check it', () => {
     cy.runApplicationsTest('allTests');
   });
+
+  it('Download manifest from ui and push an app from it',  () => {
+    cy.runApplicationsTest('downloadManifestAndPushApp');
+  });
 });

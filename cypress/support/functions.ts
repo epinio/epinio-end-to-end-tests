@@ -149,7 +149,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, configurationName, shouldBeDisabled}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
@@ -173,6 +173,12 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     };
   };
 
+  if (manifestName) {
+    // Rename downloaded file and upload
+    cy.exec(`mv cypress/downloads/* cypress/downloads/${manifestName}`,{failOnNonZeroExit: false})
+    cy.get('input[type="file"]').eq(0).attachFile({filePath: `../downloads/${manifestName}`, mimeType: 'application/octet-stream'});
+  }
+
   // Use a custom Paketo Build Image if needed
   if (customPaketoImage) {
     cy.contains('Custom Image').click();
@@ -180,8 +186,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   }
 
   // Continue with the next screen
-  cy.clickButton('Next');
-
+  cy.clickButton('Next', {force : true});
   // Only if we want to check that we get warned about no namespace defined
   if (shouldBeDisabled === true) {
     cy.get('.btn').should('contain', 'Next').and('be.disabled');
@@ -190,7 +195,9 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   }
 
   // Define application's name
+  if (appName){
   cy.typeValue({label: 'Name', value: appName});
+}
 
   // Change default route if needed
   if (route) {
@@ -212,7 +219,8 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   }
 
   // Set the desired number of instances
-  cy.typeValue({label: 'Instances', value: instanceNum});
+  if (!manifestName){
+  cy.typeValue({label: 'Instances', value: instanceNum});}
   cy.clickButton('Next');
 
   // Bind a configuration if needed
@@ -240,7 +248,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum}) => {
   cy.clickEpinioMenu('Applications');
 
   // Go to application details
@@ -251,6 +259,9 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
 
   // Make sure all application instances are up
   cy.get('.numbers', {timeout: 160000}).should('contain', '100%');
+
+  // If needed, check the amount of instances
+  if (instanceNum) cy.get('.scale-instances > div > div.value').contains(instanceNum).should('exist') 
 
   // If needed. check that the correct namespace has been used
   if (namespace) cy.contains('Namespace: ' + namespace).should('be.visible');
@@ -381,6 +392,16 @@ Cypress.Commands.add('showAppShell', ({appName, namespace='workspace'}) => {
   cy.get('.terminal').screenshot('record_ls_command_output');
   cy.get('.tab > .closer').click();
 });
+
+// Downloading manifest 
+Cypress.Commands.add('downloadManifest', ({appName}) => {
+  cy.clickEpinioMenu('Applications');
+  cy.get('.role-multi-action.actions').click();
+  cy.contains('li', 'Download Manifest').click( {force: true} );  
+  // Find downloaded json manifest in download folder & verify name in stdout 
+  cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
+  .should('contain', appName);
+})  
 
 // Namespace functions
 

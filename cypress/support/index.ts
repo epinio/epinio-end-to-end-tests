@@ -16,13 +16,14 @@ declare global {
       typeValue(label: string, value: string, noLabel?: boolean, log?: boolean): Chainable<Element>;
       typeKeyValue(key: string, value: string,): Chainable<Element>;
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
-      createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean,): Chainable<Element>;
-      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean): Chainable<Element>;
+      createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string): Chainable<Element>;
+      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
       rebuildApp(appName: string, namespace?: string,): Chainable<Element>;
       showAppLog(appName: string, namespace?: string,): Chainable<Element>;
       showAppShell(appName: string, namespace?: string,): Chainable<Element>;
+      downloadManifest(appName: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
