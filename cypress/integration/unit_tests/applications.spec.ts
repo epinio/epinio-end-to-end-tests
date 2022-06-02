@@ -13,17 +13,30 @@ describe('Applications testing', () => {
       topLevelMenu.openIfClosed();
       epinio.accessEpinioMenu(Cypress.env('cluster'));
     }
+
     // Executes application cleansing of "testapp" and "configuration01"
-    // If the app does not exist it will not fail
     // Destroy application "testapp" and verify
-    cy.exec('epinio app delete testapp', { failOnNonZeroExit: false });
+    // Could be a function later?
     cy.clickEpinioMenu('Applications');
-    cy.contains('testapp', { timeout: 60000 }).should('not.exist');
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('testapp')) {
+        cy.get('[width="30"] > .checkbox-outer-container').click();
+        cy.clickButton('Delete');
+        cy.confirmDelete();
+        cy.contains('testapp', {timeout: 60000}).should('not.exist');
+      };
+    });
 
     // Destroy configuration "configuration01" and verify
-    cy.exec('epinio configuration delete configuration01', { failOnNonZeroExit: false });
     cy.clickEpinioMenu('Configurations');
-    cy.contains('configuration01', { timeout: 60000 }).should('not.exist');
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('configuration01')) {
+        cy.get('[width="30"] > .checkbox-outer-container').click();
+        cy.clickButton('Delete');
+        cy.confirmDelete();
+        cy.contains('configurations01', {timeout: 60000}).should('not.exist');
+      };
+    });
   });
 
   it('Push basic application and check we can restart and rebuild it', () => {

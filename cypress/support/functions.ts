@@ -218,7 +218,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Bind a configuration if needed
   if (configurationName) {
     cy.wait(500);  // We need to wait a little for the listbox to be updated
-    cy.get('.labeled-select').click();
+    cy.contains('.labeled-select', 'Configurations').click();
     cy.contains(configurationName, {timeout: 120000}).click();
   }
 
@@ -518,7 +518,7 @@ Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespac
   cy.wait(500);  // We need to wait a little for the listbox to be updated
   // 'multiple' and 'force' are needed here
   // TODO: try to find a better way for this
-  cy.get('.labeled-select').click({multiple: true, force: true});
+  cy.contains('.labeled-select', 'Configurations').click();
   cy.contains(configurationName, {timeout: 120000}).click();
 
   // And save
