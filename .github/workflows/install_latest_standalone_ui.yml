@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  installation:
+  E2E-Cypress:
     runs-on: ui-e2e-3
     steps:
       - name: Checkout
@@ -35,14 +35,14 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v2
         env:
-          SETUP_GO_VERSION: '^1.17.2'
+          SETUP_GO_VERSION: '^1.18.0'
         with:
           go-version: ${{ env.SETUP_GO_VERSION }}
 
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 16.2.0
 
       - name: Cache Tools
         uses: actions/cache@v2
@@ -54,59 +54,49 @@ jobs:
         run: |
           echo "`pwd`/output/bin" >> $GITHUB_PATH
 
-      - name: Install K3s / Helm / Rancher / Epinio
+      - name: Install K3s / Helm / Epinio
         id: installation
         env:
-          DASHBOARD_VERSION: epinio-dev
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
           K3S_VERSION: v1.22.7+k3s1
           EXT_REG: ${{ inputs.ext_reg }}
-          EXT_REG_USER: ${{ secrets.ext_reg_user }}
-          EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+          EXT_REG_USER: ${{ secrets.DOCKER_USER }}
+          EXT_REG_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           S3_KEY_ID: ${{ secrets.s3_key_id }}
           S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         run: |
-          ## Export information to other jobs
+          ## Export information
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')
           MY_IP=$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
           export MY_HOSTNAME=$(hostname)
           export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
-          echo '::set-output name=MY_IP::'${MY_IP}
-          echo '::set-output name=MY_HOSTNAME::'${MY_HOSTNAME}
+          echo '::set-output name=EPINIO_SYSTEM_DOMAIN::'${EPINIO_SYSTEM_DOMAIN}
           make prepare-e2e-ci-standalone
-      
-      - name: Deploy latest dev standalone-ui
+
+      - name: Deploy latest dev standalone UI
+        env:
+          EPINIO_SYSTEM_DOMAIN: ${{ steps.installation.outputs.EPINIO_SYSTEM_DOMAIN }}
         run: |
           make deploy-latest-dev-std-ui
+      
+      - name: Start Cypress tests
+        env:
+          BROWSER: chrome
+          CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
+          CYPRESS_CFG: cypress-with-epinio-cert.json
+          CYPRESS_DOCKER: cypress/included:9.7.0 
+          EXT_REG_USER: ${{ secrets.DOCKER_USER }}
+          EXT_REG_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          RANCHER_PASSWORD: password
+          RANCHER_URL: https://host.docker.internal:8005
+          RANCHER_USER: admin
+          SPEC: cypress/integration/scenarios/with_default_options.spec.ts
+          SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
 
-    outputs:
-      MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME }}
-      MY_IP: ${{ steps.installation.outputs.MY_IP }}
-    
-  cypress-run:
-    needs:
-      - installation
-    runs-on: ui-e2e-3
-    container:
-      image: cypress/browsers:node16.13.2-chrome97-ff96
-      env:
-        CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
-        EXT_REG_USER: ${{ secrets.DOCKER_USER }}
-        EXT_REG_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        RANCHER_USER: admin
-        RANCHER_PASSWORD: password
-        RANCHER_URL: https://${{ needs.installation.outputs.MY_IP }}:8005
-        SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
-      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }}
-    steps:
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          browser: chrome
-          headless: true
-          spec: cypress/integration/scenarios/with_default_options.spec.ts
+        run: |
+          sleep 240
+          make start-cypress-tests
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v2
@@ -125,11 +115,6 @@ jobs:
           path: cypress/videos
           retention-days: 7
 
-  delete-cluster:
-    if: always()
-    needs: [installation, cypress-run]
-    runs-on: ui-e2e-3
-    steps:
       - name: Uninstall Epinio
         if: always()
         env:
