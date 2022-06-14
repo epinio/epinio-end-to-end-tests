@@ -24,7 +24,10 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     if (ui == "rancher") {
       cy.contains("Getting Started", {timeout: 10000}).should('be.visible');
     } else {
-      cy.contains('.m-0', 'Applications', {timeout: 20000});
+      cy.get('body').then($body => {
+       if ($body.text().includes('Namespace')) {cy.contains('.m-0', 'Applications', {timeout: 20000});}
+       else {cy.get('h1').contains('Welcome to Epinio', {timeout: 20000})}
+      }) 
     }
   };
 
@@ -47,6 +50,7 @@ Cypress.Commands.add('clickButton', (label) => {
 
 // Ensure that we are in the desired menu
 Cypress.Commands.add('clickEpinioMenu', (label) => {
+  cy.get('.header').contains('Advanced').click();
   cy.get('.label').contains(label).click();
   cy.location('pathname').should('include', '/' + label.toLocaleLowerCase());
   cy.get('.m-0').should('contain', label);
@@ -272,7 +276,7 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
   // Check binded configurations
   var configurationNum = 0;
   if (checkConfiguration === true) configurationNum = 1;
-  cy.contains(configurationNum + ' Configs', {timeout: 24000}).should('be.visible');
+  cy.contains(configurationNum + ' Configurations', {timeout: 24000}).should('be.visible');
 
   // Check the application route
   var appRoute = 'https://' + appName + '.' + Cypress.env('system_domain');
