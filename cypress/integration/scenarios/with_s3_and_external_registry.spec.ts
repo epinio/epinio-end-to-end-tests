@@ -1,5 +1,6 @@
 import { Epinio } from '~/cypress/support/epinio';
 import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
+import '~/cypress/support/functions';
 
 Cypress.config();
 const epinio = new Epinio();
@@ -33,7 +34,20 @@ describe('Menu testing', () => {
     // Check Epinio's side menu
     epinio.checkEpinioNav();
   });
-});
+
+  it('Verify Welcome Screen without Namespaces', () => {
+    cy.clickEpinioMenu('Namespaces');
+    // Deletes all namespaces if detected
+    cy.get("body").then(($body) => {
+      if ($body.text().includes('Delete')) {
+        cy.deleteAllNamespaces()
+      }
+     }
+    )
+    cy.clickEpinioMenu('Applications');
+    cy.get('h1').contains('Welcome to Epinio', { timeout: 4000 }).should('be.visible')
+  }
+)});
 
 describe('Applications testing', () => {
   beforeEach(() => {
