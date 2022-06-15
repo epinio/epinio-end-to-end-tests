@@ -46,6 +46,7 @@ describe('Menu testing', () => {
     )
     cy.clickEpinioMenu('Applications');
     cy.get('h1').contains('Welcome to Epinio', { timeout: 4000 }).should('be.visible')
+    cy.createNamespace('workspace')
   }
 )});
 
