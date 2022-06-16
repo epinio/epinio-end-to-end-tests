@@ -92,7 +92,7 @@ jobs:
           RANCHER_URL: https://host.docker.internal:8005
           RANCHER_USER: admin
           SPEC: cypress/integration/scenarios/with_default_options.spec.ts
-          SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+          SYSTEM_DOMAIN: ${{ steps.installation.outputs.EPINIO_SYSTEM_DOMAIN }}
 
         run: |
           sleep 240
