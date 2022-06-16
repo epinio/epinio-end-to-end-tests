@@ -1,19 +1,20 @@
 # This workflow calls the master UI workflow with custom variables
-name: STD-UI-s3-ext_reg-Firefox
+# It will test deploying an application with s3 and ext registry configured
+name: STD-UI-s3_ext_reg-Firefox
 
 on:
   workflow_dispatch:
   
   schedule:
-    - cron: '0 4 * * *'
+    - cron: '0 2 * * *'
 
 jobs:
   std-firefox:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: firefox
-      cypress_image: cypress/included:9.7.0
-      cypress_test: cypress/integration/scenarios/with_s3_and_external_registry.spec.ts
+      cypress_docker: cypress/included:9.7.0
+      cypress_spec: cypress/integration/scenarios/with_s3_and_external_registry.spec.ts
       # Due to security reason, Firefox can't be started as root
       # https://github.com/cypress-io/github-action#firefox
       docker_options: '--user 1000'

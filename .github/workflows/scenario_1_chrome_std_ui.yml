@@ -1,4 +1,5 @@
 # This workflow calls the master UI workflow with custom variables
+# It will test some scenarios with default epinio installation options
 name: STD-UI-default-Chrome
 
 on:
