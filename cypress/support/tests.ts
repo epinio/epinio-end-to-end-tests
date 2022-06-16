@@ -146,16 +146,5 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       // Delete the namespace
       cy.deleteNamespace({namespace: namespace, appName: appName});
       break;
-    case 'withoutNamespace':
-      // Delete default namespace
-      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
-      cy.deleteNamespace({namespace: defaultNamespace});
-
-      // Try to create the application
-      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', shouldBeDisabled: true});
-
-      // Re-create default namespace
-      cy.createNamespace(defaultNamespace);
-      break;
   }
 });

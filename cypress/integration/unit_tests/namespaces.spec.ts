@@ -18,10 +18,4 @@ describe('Namespaces testing', () => {
   it('Push and check an application into the created namespace', () => {
     cy.runNamespacesTest('newNamespace');
   });
-
-  // Tests removed since udgrade to v.9.0-0.0.3 
-  // Since that version namespace creation is mandatory app creation.
-  it.skip('Try to push an application without any namespace', () => {
-    cy.runNamespacesTest('withoutNamespace');
-  });
 });
