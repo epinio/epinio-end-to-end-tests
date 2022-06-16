@@ -1,5 +1,5 @@
 # This workflow calls the master UI workflow with custom variables
-name: Standalone-UI-1-Chrome
+name: STD-UI-default-Chrome
 
 on:
   workflow_dispatch:
@@ -9,12 +9,11 @@ on:
 
 jobs:
   std-chrome:
-    uses: ./.github/workflows/master_std_ui_workflow.yml
+    uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
-      cypress_test: with_default_options.spec.ts
-      runner: ui-e2e-1
+      cypress_docker: cypress/included:9.7.0 
+      cypress_spec: cypress/integration/scenarios/with_default_options.spec.ts
     secrets:
       ext_reg_user: secrets.DOCKER_USER
       ext_reg_password: secrets.DOCKER_PASSWORD

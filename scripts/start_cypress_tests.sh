@@ -12,6 +12,7 @@ docker run -v $PWD:/e2e -w /e2e                  \
     -e SYSTEM_DOMAIN=$EPINIO_SYSTEM_DOMAIN       \
     -e RANCHER_URL=$RANCHER_URL                  \
     --add-host host.docker.internal:host-gateway \
+    $DOCKER_OPTIONS                              \
     $CYPRESS_DOCKER                              \
     -C /e2e/$CYPRESS_CFG                         \
     -b $BROWSER                                  \
