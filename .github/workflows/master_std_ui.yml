@@ -91,8 +91,8 @@ jobs:
           HELM_VERSION: 3.7.0
           K3S_VERSION: v1.22.7+k3s1
           EXT_REG: ${{ inputs.ext_reg }}
-          EXT_REG_USER: ${{ secrets.DOCKER_USER }}
-          EXT_REG_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          EXT_REG_USER: ${{ secrets.ext_reg_user }}
+          EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
           S3_KEY_ID: ${{ secrets.s3_key_id }}
           S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         run: |
@@ -116,8 +116,8 @@ jobs:
           CYPRESS_CFG: cypress-with-epinio-cert.json
           CYPRESS_DOCKER: ${{ inputs.cypress_docker }}
           DOCKER_OPTIONS: ${{ inputs.docker_options }}
-          EXT_REG_USER: ${{ secrets.DOCKER_USER }}
-          EXT_REG_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          EXT_REG_USER: ${{ secrets.ext_reg_user }}
+          EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
           RANCHER_PASSWORD: password
           RANCHER_URL: https://host.docker.internal:8005
           RANCHER_USER: admin
