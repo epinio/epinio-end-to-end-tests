@@ -38,9 +38,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createApp({appName: appName, archiveName: archive, route: customRoute, sourceType: 'Archive'});
       cy.checkApp({appName: appName, route: customRoute});
       cy.showAppLog({appName: appName});
-      // App shell feature is not available in std UI yet
-      // https://github.com/epinio/ui/issues/84 
-      if (Cypress.env('ui') == "rancher") cy.showAppShell({appName: appName});
+      cy.showAppShell({appName: appName});
       break;
     case 'envVarsAndGitUrl':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'ui', sourceType: 'Git URL'});
@@ -51,9 +49,8 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName});
       cy.restartApp({appName: appName});
       cy.checkApp({appName: appName});
-      // Disable rebuild check due to this bug https://github.com/epinio/ui/issues/126
-      //cy.rebuildApp({appName: appName});
-      //cy.checkApp({appName: appName});
+      cy.rebuildApp({appName: appName});
+      cy.checkApp({appName: appName});
       break;
     case 'allTests':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, customApplicationChart:applicationChart, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
