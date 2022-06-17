@@ -21,12 +21,17 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 
     cy.get('button').click();
     cy.wait('@loginReq');
-    if (ui == "rancher") {
+      if (ui == "rancher") {
       cy.contains("Getting Started", {timeout: 10000}).should('be.visible');
-    } else {
-      cy.contains('.m-0', 'Applications', {timeout: 20000});
-    }
-  };
+    } 
+      else{
+          cy.get("body").then(($body) => {
+            if ($body.text().includes('Routes')) {
+              cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.exist');
+            } else if ($body.text().includes('Welcome to Epinio')) {
+              cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
+          }
+        };
 
   if (cacheSession) {
     cy.session([username, password], login);
@@ -47,9 +52,16 @@ Cypress.Commands.add('clickButton', (label) => {
 
 // Ensure that we are in the desired menu
 Cypress.Commands.add('clickEpinioMenu', (label) => {
+  cy.get('.header').contains('Advanced').click();
   cy.get('.label').contains(label).click();
   cy.location('pathname').should('include', '/' + label.toLocaleLowerCase());
-  cy.get('.m-0').should('contain', label);
+  // This will check application menu regardles if it has namespaces
+  cy.get("body").then(($body) => {
+    if ($body.text().includes('Routes')) {
+      cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.exist');
+    } else if ($body.text().includes('Welcome to Epinio')) {
+      cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
+  
 });
 
 // Confirm the delete operation
@@ -149,7 +161,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
@@ -181,8 +193,18 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Use a custom Paketo Build Image if needed
   if (customPaketoImage) {
+    cy.get('.advanced.text-link').click()
     cy.contains('Custom Image').click();
     cy.typeValue({label: '.no-label', value: customPaketoImage, noLabel: true});
+  }
+
+  // Use a custom Application Chart
+  if (customApplicationChart) {
+    // For now we asume Advance Settings is opened customPaketoImage
+    // This is to avoid closing Advance Settings.
+    // If at any point we want to use this function alone logic should be added
+    cy.get('[data-testid="epinio_app-source_appchart"] > div > div >  .vs__selected').contains(' standard (Epinio standard deployment)').should('be.visible').click()
+    cy.contains(customApplicationChart).click()
   }
 
   // Continue with the next screen
@@ -272,7 +294,7 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
   // Check binded configurations
   var configurationNum = 0;
   if (checkConfiguration === true) configurationNum = 1;
-  cy.contains(configurationNum + ' Configs', {timeout: 24000}).should('be.visible');
+  cy.contains(configurationNum + ' Configurations', {timeout: 24000}).should('be.visible');
 
   // Check the application route
   var appRoute = 'https://' + appName + '.' + Cypress.env('system_domain');
@@ -433,6 +455,15 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
   }
 });
 
+// Delete all Namespaces
+Cypress.Commands.add('deleteAllNamespaces', () => {
+  cy.clickEpinioMenu('Namespaces')
+  cy.get('.checkbox-outer-container.check').click();
+  // Mimics Ctrl + click Delete to destroy all Namespaces
+  cy.get('.btn').contains('Delete').click({ctrlKey: true});
+  cy.get('#promptRemove', {timeout: 25000}).should('not.exist')
+});
+
 // Configurations functions
 
 // Create a configuration
@@ -566,7 +597,9 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
   cy.get('.no-resize').type('_add');
   cy.clickButton('Save'); 
   cy.get('header').should('contain', 'Configurations:').and('contain', configurationName).and('not.contain', 'Saving');
-
+  // For some reason if at this points changes screen and we attempt to delete the app,
+  // it will crash. A bit of extra time,helps to prevent this.
+  cy.wait(6000)
   // For now, that's not possible to check that the configuration has effectively been changed
   // because we can't scrap the value in the html page, maybe because the field is grey.
   // Attach to app might be a solution for checking it but the feature is not yet released.

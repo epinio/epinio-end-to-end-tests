@@ -23,6 +23,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const archive = 'sample-app.tar.gz';
   const customRoute = 'custom-route-' + appName + '.' + Cypress.env('system_domain');
   const paketobuild = 'paketobuildpacks/builder:tiny';
+  const applicationChart = ' standard (Epinio standard deployment)';
   const gitUrl = 'https://github.com/epinio/example-go';
   const configuration = 'configuration01';
   const manifest = 'manifest.json';
@@ -55,7 +56,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       //cy.checkApp({appName: appName});
       break;
     case 'allTests':
-      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
+      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, customApplicationChart:applicationChart, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
       cy.checkApp({appName: appName, checkVar: true, route: customRoute});
       break;
     case 'downloadManifestAndPushApp':
@@ -144,17 +145,6 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
 
       // Delete the namespace
       cy.deleteNamespace({namespace: namespace, appName: appName});
-      break;
-    case 'withoutNamespace':
-      // Delete default namespace
-      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
-      cy.deleteNamespace({namespace: defaultNamespace});
-
-      // Try to create the application
-      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', shouldBeDisabled: true});
-
-      // Re-create default namespace
-      cy.createNamespace(defaultNamespace);
       break;
   }
 });
