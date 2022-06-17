@@ -37,7 +37,7 @@ describe('Menu testing', () => {
      }
     )
     cy.clickEpinioMenu('Applications');
-    cy.get('h1').contains('Welcome to Epinio', { timeout: 4000 }).should('be.visible')
+    cy.get('h1').contains('Welcome to Epinio').should('be.visible')
     // Verify creating namespace from Get Started button works
     cy.get('a.btn.role-secondary').contains('Get started').click()
     cy.clickButton('Create');

@@ -597,7 +597,9 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
   cy.get('.no-resize').type('_add');
   cy.clickButton('Save'); 
   cy.get('header').should('contain', 'Configurations:').and('contain', configurationName).and('not.contain', 'Saving');
-
+  // For some reason if at this points changes screen and we attempt to delete the app,
+  // it will crash. A bit of extra time,helps to prevent this.
+  cy.wait(6000)
   // For now, that's not possible to check that the configuration has effectively been changed
   // because we can't scrap the value in the html page, maybe because the field is grey.
   // Attach to app might be a solution for checking it but the feature is not yet released.
