@@ -1,0 +1,20 @@
+# This workflow calls the master UI workflow with custom variables
+# It will test Epinio Applications
+name: STD-Latest-Applications
+
+on:
+  workflow_dispatch:
+  
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  applications-tests:
+    uses: ./.github/workflows/master_std_ui.yml
+    with:
+      browser: chrome
+      cypress_docker: cypress/included:9.7.0 
+      cypress_spec: cypress/integration/unit_tests/applications.spec.ts
+    secrets:
+      ext_reg_user: secrets.DOCKER_USER
+      ext_reg_password: secrets.DOCKER_PASSWORD
