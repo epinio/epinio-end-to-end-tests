@@ -14,14 +14,8 @@
     }
   ],
   "testFiles": [
-    "unit_tests/first_connexion.spec.ts",
-    "unit_tests/installation.spec.ts",
-    "unit_tests/menu.spec.ts",
-    "unit_tests/applications.spec.ts",
-    "unit_tests/configurations.spec.ts",
-    "unit_tests/namespaces.spec.ts",
-    "scenarios/with_default_options.spec.ts",
-    "scenarios/with_s3_and_external_registry.spec.ts",
-    "unit_tests/uninstall.spec.ts"
+    "Container_ecosystem_demos/01_installation.spec.ts",
+    "Container_ecosystem_demos/02_uninstall.spec.ts",
+    "Container_ecosystem_demos/03_demo_namespaces.spec.ts"
   ]
 }
