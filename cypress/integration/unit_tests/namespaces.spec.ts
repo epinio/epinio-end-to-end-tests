@@ -18,4 +18,9 @@ describe('Namespaces testing', () => {
   it('Push and check an application into the created namespace', () => {
     cy.runNamespacesTest('newNamespace');
   });
+
+  it('Create a Namespace from multiple services', () => {
+    cy.runNamespacesTest('newNamespaceFromResource');
+  });
+
 });
