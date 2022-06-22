@@ -129,6 +129,8 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
   const archive = 'sample-app.tar.gz';
   const defaultNamespace = 'workspace';
   const namespace = 'mynamespace';
+  const namespace2 = 'ns_from_configuration'
+  const namespace3 = 'ns_from_instance'
 
   switch (testName) {
     case 'newNamespace':
@@ -143,5 +145,17 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       // Delete the namespace
       cy.deleteNamespace({namespace: namespace, appName: appName});
       break;
+    case 'newNamespaceFromResource':
+      // Create Namspace from configuration   
+      cy.clickEpinioMenu('Configurations');
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(namespace2)
+
+      // Create Namspace from instances
+      cy.get('div.header > i').eq(0).click()
+      cy.contains('Instances').click() 
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(namespace3)
+    break;
   }
 });
