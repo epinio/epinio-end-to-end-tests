@@ -1,6 +1,6 @@
 export class TopLevelMenu {
   toggle() {
-    cy.get('img.side-menu-logo', {timeout: 12000}).click();
+    cy.get('[data-testid="top-level-menu"]', {timeout: 12000}).click();
   }
 
   openIfClosed() {
