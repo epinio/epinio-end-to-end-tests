@@ -16,24 +16,31 @@ jobs:
     # BUILD LATEST RANCHER DASHBOARD
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout end-to-end-tests repo
+      uses: actions/checkout@v2
+      with:
+        path: epinio-end-to-end-tests
+    
     - name: Checkout dashboard repo
       uses: actions/checkout@v2
       with:
         repository: rancher/dashboard
         ref: epinio-dev
+        path: dashboard
 
     - uses: actions/setup-node@v2
       with:
         node-version: '12.x'
 
     - name: Install & Build
-      run:
-        RANCHER_ENV=epinio ./.github/workflows/scripts/build-dashboard.sh
+      run: |
+        cd dashboard
+        RANCHER_ENV=epinio EXCLUDES_PKG=rancher-components .github/workflows/scripts/build-dashboard.sh
 
     - name: Upload Build
       uses: actions/upload-artifact@v2
       with:
-        path: ${{ env.RELEASE_DIR}}/${{ env.ARTIFACT_NAME }}*
+        path: dashboard/${{ env.RELEASE_DIR}}/${{ env.ARTIFACT_NAME }}*
         name: ${{ env.ARTIFACT_NAME }}
         if-no-files-found: error
 
@@ -42,11 +49,13 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: epinio/ui-backend
+        path: ui-backend
 
     # A tag is mandatory but it will not be pushed in the repo
     # because we do not release
     - name: Create fake tag
       run: |
+        cd ui-backend
         git config user.name github-actions
         git config user.email github-actions@github.com
         git tag -a v99.0.0 -m "Fake tag for QA" --force
@@ -64,22 +73,26 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
+    
     - name: Download the dashboard
       uses: actions/download-artifact@v3
       with:
         name: ${{ env.ARTIFACT_NAME }}
-        path: ui
+        path: ui-backend/ui
 
-    - name: Download dashboard
+    - name: Extract dashboard
       run: |
-        tar xfz *.tar.gz -C ui
+        cd ui-backend
+        tar xfz ui/*.tar.gz -C ui
+        rm ui/*.tar.gz
+        cp ../epinio-end-to-end-tests/.goreleaser-dashboard-qa.yml .
 
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v2
       with:
         distribution: goreleaser
         version: latest
+        workdir: ui-backend
         args: release --skip-announce --skip-validate --skip-sign --config .goreleaser-dashboard-qa.yml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
