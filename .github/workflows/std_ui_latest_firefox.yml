@@ -19,4 +19,5 @@ jobs:
       # https://github.com/cypress-io/github-action#firefox
       docker_options: '--user 1000'
       ext_reg: '1'
+      s3: '1'
     secrets: inherit

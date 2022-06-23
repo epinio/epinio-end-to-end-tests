@@ -21,7 +21,7 @@ if [[ ${EXT_REG} == "1" ]]; then
 fi
 
 # Add options for S3 Storage if needed
-if [[ -n "${S3_KEY_ID}" && -n "${S3_KEY_SECRET}" ]]; then
+if [[ ${S3} == "1" ]]; then
   INSTALL_OPTIONS+="
    --set minio.enabled=false \
    --set s3.useSSL=true \
