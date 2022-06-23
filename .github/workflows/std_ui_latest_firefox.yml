@@ -1,6 +1,6 @@
 # This workflow calls the master UI workflow with custom variables
 # It will test deploying an application with s3 and ext registry configured
-name: STD-UI-s3_ext_reg-Firefox
+name: STD-UI-Latest-Firefox
 
 on:
   workflow_dispatch:

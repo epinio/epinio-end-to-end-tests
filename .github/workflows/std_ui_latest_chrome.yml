@@ -1,6 +1,6 @@
 # This workflow calls the master UI workflow with custom variables
 # It will test all Epinio parts
-name: STD-UI-Latest
+name: STD-UI-Latest-Chrome
 
 on:
   workflow_dispatch:
