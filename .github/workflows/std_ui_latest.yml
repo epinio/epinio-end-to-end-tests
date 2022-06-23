@@ -16,9 +16,7 @@ jobs:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/unit_tests/menu.spec.ts
-    secrets:
-      ext_reg_user: secrets.DOCKER_USER
-      ext_reg_password: secrets.DOCKER_PASSWORD
+    secrets: inherit
 
   configurations-tests:
     uses: ./.github/workflows/master_std_ui.yml
@@ -26,9 +24,7 @@ jobs:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/unit_tests/configurations.spec.ts
-    secrets:
-      ext_reg_user: secrets.DOCKER_USER
-      ext_reg_password: secrets.DOCKER_PASSWORD
+    secrets: inherit
 
   applications-tests:
     uses: ./.github/workflows/master_std_ui.yml
@@ -36,9 +32,7 @@ jobs:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/unit_tests/applications.spec.ts
-    secrets:
-      ext_reg_user: secrets.DOCKER_USER
-      ext_reg_password: secrets.DOCKER_PASSWORD
+    secrets: inherit
 
   namespaces-tests:
     uses: ./.github/workflows/master_std_ui.yml
@@ -46,6 +40,4 @@ jobs:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/unit_tests/namespaces.spec.ts
-    secrets:
-      ext_reg_user: secrets.DOCKER_USER
-      ext_reg_password: secrets.DOCKER_PASSWORD
+    secrets: inherit
