@@ -1,5 +1,5 @@
 # This workflow is a reusable one called by other workflows
-name: Latest STD UI workflow (template)
+name: STD UI template
 on:
   workflow_call:
   # Variables to set when calling this reusable workflow
