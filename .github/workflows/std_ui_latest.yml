@@ -23,7 +23,7 @@ jobs:
   configurations-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
-      browser: chrome
+      browser: edge
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/unit_tests/configurations.spec.ts
     secrets:
@@ -43,7 +43,7 @@ jobs:
   namespaces-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
-      browser: chrome
+      browser: edge
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/unit_tests/namespaces.spec.ts
     secrets:
