@@ -16,5 +16,5 @@ jobs:
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/scenarios/with_default_options.spec.ts
     secrets:
-      ext_reg_user: secrets.DOCKER_USER
-      ext_reg_password: secrets.DOCKER_PASSWORD
+      ext_reg_user: secrets.EPINIO_DOCKER_USER
+      ext_reg_password: secrets.EPINIO_DOCKER_PASSWORD
