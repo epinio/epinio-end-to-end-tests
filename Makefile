@@ -35,8 +35,8 @@ prepare-e2e-ci-rancher: install-k3s install-helm install-rancher create-docker-s
 
 prepare-e2e-ci-standalone: install-k3s install-helm install-cert-manager create-docker-secret install-epinio get-ca ## Tests
 
-deploy-latest-dev-std-ui:
-	@./scripts/deploy_latest_dev_std_ui.sh
+patch-epinio-ui:
+	@./scripts/patch_epinio-ui.sh
 
 start-cypress-tests:
 	@./scripts/start_cypress_tests.sh
