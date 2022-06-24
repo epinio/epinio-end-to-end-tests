@@ -24,11 +24,10 @@ on:
         description: Enable external registry test
         required: false
         type: string
-    secrets:
-      s3_key_id:
+      s3:
+        description: Enable external s3
         required: false
-      s3_key_secret:
-        required: false
+        type: string
 
 jobs:
   E2E-Cypress:
@@ -93,10 +92,11 @@ jobs:
           HELM_VERSION: 3.7.0
           K3S_VERSION: v1.22.7+k3s1
           EXT_REG: ${{ inputs.ext_reg }}
+          S3: ${{ inputs.s3 }}
           EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
           EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
-          S3_KEY_ID: ${{ secrets.s3_key_id }}
-          S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
+          S3_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           ## Export information
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')

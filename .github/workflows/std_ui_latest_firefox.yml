@@ -9,14 +9,52 @@ on:
     - cron: '0 2 * * *'
 
 jobs:
-  std-firefox:
+# I keep the following tests commented out in case someone want to enable them later.
+# Those are the same tests we are running on chrome, main differences are:
+# - Firefox browser
+# - Epinio installed with s3 and external registry
+# They were working but with too much flakyness.
+
+#  menu-tests:
+    #uses: ./.github/workflows/master_std_ui.yml
+    #with:
+      #browser: firefox
+      #cypress_docker: cypress/included:9.7.0 
+      #cypress_spec: cypress/integration/unit_tests/menu.spec.ts
+      #docker_options: '--user 1000'
+      #ext_reg: '1'
+      #s3: '1'
+    #secrets: inherit
+
+  #configurations-tests:
+    #uses: ./.github/workflows/master_std_ui.yml
+    #with:
+      #browser: firefox
+      #cypress_docker: cypress/included:9.7.0 
+      #cypress_spec: cypress/integration/unit_tests/configurations.spec.ts
+      #docker_options: '--user 1000'
+      #ext_reg: '1'
+      #s3: '1'
+    #secrets: inherit
+
+  #applications-tests:
+    #uses: ./.github/workflows/master_std_ui.yml
+    #with:
+      #browser: firefox
+      #cypress_docker: cypress/included:9.7.0 
+      #cypress_spec: cypress/integration/unit_tests/applications.spec.ts
+      #docker_options: '--user 1000'
+      #ext_reg: '1'
+      #s3: '1'
+    #secrets: inherit
+
+  namespaces-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: firefox
-      cypress_docker: cypress/included:9.7.0
-      cypress_spec: cypress/integration/scenarios/with_s3_and_external_registry.spec.ts
-      # Due to security reason, Firefox can't be started as root
-      # https://github.com/cypress-io/github-action#firefox
+      cypress_docker: cypress/included:9.7.0 
+      cypress_spec: cypress/integration/unit_tests/namespaces.spec.ts
       docker_options: '--user 1000'
       ext_reg: '1'
+      s3: '1'
     secrets: inherit
