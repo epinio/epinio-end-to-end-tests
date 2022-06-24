@@ -439,10 +439,18 @@ Cypress.Commands.add('createNamespace', (namespace) => {
 
 // Create an Epinio namespace directly from a Service (configuration,instances,... )
 Cypress.Commands.add('createNamespaceFromResource', (namespace) => {
+  if (namespace === 'ns_from_application'){
+    // Namespace from application requires  a source first
+    // Using File / sample-app.tar by default.
+    cy.get('.labeled-select').click();
+    cy.contains('Archive', {timeout: 120000}).click();
+    cy.get('.archive input[type="file"]').attachFile({filePath: 'sample-app.tar.gz', encoding: 'base64', mimeType: 'application/octet-stream'});
+    cy.clickButton('Next');
+    }  
+  
     // Open Namespace dropdown and select new Namespace
-    cy.get('.primaryheader').contains('Create').should('be.visible')
-    cy.get('#vs1__combobox').click()
-    cy.get("li[id='vs1__option-0']").click()
+    cy.get('div.vs__selected-options').eq(0).click()
+    cy.get('li.vs__dropdown-option').contains('Create a New Namespace').click()
     // Add Namespace and rest of values
     cy.typeValue({label: 'Namespace', value: namespace});
     cy.get("input[placeholder='A unique name']").type('name2')
