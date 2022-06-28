@@ -100,7 +100,7 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
         and it hides the success badge of step 3...
         So we have to wait last step done before continuing */
         cy.get('.tab-label', {timeout: 100000}).should('contain', 'testapp - App Logs');
-        if (sourceType != 'Git URL') cy.contains('PHP 8.0.18 Development Server (http://0.0.0.0:8080) started', {timeout: timeout});
+        if (sourceType != 'Git URL') cy.contains('Development Server (http://0.0.0.0:8080) started', {timeout: timeout});
         cy.get('.tab > .closer').click();
       }      
   }
