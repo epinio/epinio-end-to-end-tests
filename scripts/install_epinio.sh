@@ -37,7 +37,6 @@ helm upgrade --debug --wait --install -n epinio --create-namespace epinio helm-c
   --set global.domain=${EPINIO_SYSTEM_DOMAIN} \
   --set server.accessControlAllowOrigin="https://${MY_HOSTNAME}" \
   ${INSTALL_OPTIONS} \
-  --set global.tlsIssuer=letsencrypt-epinio \
   --values ../scripts/values-users.yaml \
   --wait
 
