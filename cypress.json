@@ -21,7 +21,6 @@
     "unit_tests/configurations.spec.ts",
     "unit_tests/namespaces.spec.ts",
     "unit_tests/uninstall.spec.ts",
-    "unit_tests/login_different_users.spec.ts",
     "scenarios/with_default_options.spec.ts",
     "scenarios/with_s3_and_external_registry.spec.ts"
   ]
