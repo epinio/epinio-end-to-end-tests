@@ -1,0 +1,19 @@
+api:
+  # Default users
+  users:
+    - username: admin
+      passwordBcrypt: "$2a$10$6bCi5NMstMK781In7JGiL.B44pgoplUb330FQvm6mVXMppbXBPiXS"
+      role: admin
+    - username: epinio
+      passwordBcrypt: "$2a$10$6bCi5NMstMK781In7JGiL.B44pgoplUb330FQvm6mVXMppbXBPiXS"
+      role: user
+      #user1 password: Hell@World
+    - username: user1 
+      passwordBcrypt: "$2y$10$xrZYXonrAnklLCURDX2zu.HacO02Fflp5toM/riJ028aNS2PJRutS"
+      role: user
+      #user2 password: Hell#@~%/=World
+    - username: user2 
+      passwordBcrypt: "$2y$10$I3/6py4jE4.P5IO1lWKg5e7D3.WQ8JKPX0kHTgPQPjW/h59utwzo6"
+      role: user
+      workspaces:
+        - workspace
