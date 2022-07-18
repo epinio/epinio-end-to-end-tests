@@ -25,6 +25,7 @@ declare global {
       showAppShell(appName: string, namespace?: string,): Chainable<Element>;
       downloadManifest(appName: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
+      createNamespaceFromResource(namespace: string): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       deleteAllNamespaces():Chainable<Element>;
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;

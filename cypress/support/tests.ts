@@ -1,3 +1,4 @@
+// @ts-nocheck
 import cypress from 'cypress';
 import { Epinio } from '~/cypress/support/epinio';
 import './functions';
@@ -129,6 +130,9 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
   const archive = 'sample-app.tar.gz';
   const defaultNamespace = 'workspace';
   const namespace = 'mynamespace';
+  const namespace2 = 'ns_from_configuration'
+  const namespace3 = 'ns_from_instance'
+  const namespace4 = 'ns_from_application'
 
   switch (testName) {
     case 'newNamespace':
@@ -143,5 +147,23 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       // Delete the namespace
       cy.deleteNamespace({namespace: namespace, appName: appName});
       break;
+    case 'newNamespaceFromResource':
+      // Create Namespace from configuration   
+      cy.clickEpinioMenu('Configurations');
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(namespace2)
+
+      // Create Namespace from instances
+      cy.get('div.header > i').eq(0).click()
+      cy.contains('Instances').click() 
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(namespace3)
+
+      // Create Namespace from application
+      cy.clickEpinioMenu('Applications');
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(namespace4)
+
+    break;
   }
 });

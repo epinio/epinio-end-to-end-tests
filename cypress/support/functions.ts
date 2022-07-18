@@ -61,7 +61,6 @@ Cypress.Commands.add('clickEpinioMenu', (label) => {
       cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.exist');
     } else if ($body.text().includes('Welcome to Epinio')) {
       cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
-  
 });
 
 // Confirm the delete operation
@@ -436,6 +435,40 @@ Cypress.Commands.add('createNamespace', (namespace) => {
 
   // Check that the namespace has effectively been created
   cy.contains(namespace).should('be.visible');
+});
+
+// Create an Epinio namespace directly from a Service (configuration,instances,... )
+Cypress.Commands.add('createNamespaceFromResource', (namespace) => {
+  if (namespace === 'ns_from_application'){
+    // Namespace from application requires  a source first
+    // Using File / sample-app.tar by default.
+    cy.get('.labeled-select').click();
+    cy.contains('Archive', {timeout: 120000}).click();
+    cy.get('.archive input[type="file"]').attachFile({filePath: 'sample-app.tar.gz', encoding: 'base64', mimeType: 'application/octet-stream'});
+    cy.clickButton('Next');
+    }  
+  
+    // Open Namespace dropdown and select new Namespace
+    cy.get('div.vs__selected-options').eq(0).click()
+    cy.get('li.vs__dropdown-option').contains('Create a New Namespace').click()
+    // Add Namespace and rest of values
+    cy.typeValue({label: 'Namespace', value: namespace});
+    cy.get("input[placeholder='A unique name']").type('name2')
+
+    if (namespace === 'ns_from_configuration'){
+    cy.get("input[placeholder='e.g. foo']").type('foo')
+    cy.get("textarea[placeholder='e.g. bar']").type('bar')}
+
+    else if (namespace === 'ns_from_instance'){
+    cy.get("input[placeholder='Select the type of Service to create']").click()
+    cy.wait(1000)
+    cy.get('ul>li').contains('mysql-dev (A MySQL service that can be used during development').click()
+    cy.wait(1000)
+    }
+    cy.clickButton('Create');
+  
+    // Check that the namespace has effectively been created
+    cy.contains(namespace).should('be.visible');
 });
 
 // Delete an Epinio namespace
