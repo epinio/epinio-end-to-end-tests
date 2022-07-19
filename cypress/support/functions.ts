@@ -161,7 +161,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName, serviceName, catalogType}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
@@ -240,10 +240,23 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.get('.no-resize').should('have.value', '8080');
   }
 
+  if (addVar === 'wordpress_env_file') {
+    cy.get('input[type="file"]').attachFile({filePath: 'read_from_worpress_file.txt'});
+    // Check the entered values
+    cy.get('.key > input').should('have.value', 'BP_PHP_VERSION');
+    cy.get('.no-resize').should('have.value', '7.4.x');
+  }
+  
   // Set the desired number of instances
   if (!manifestName){
   cy.typeValue({label: 'Instances', value: instanceNum});}
   cy.clickButton('Next');
+
+  // Bind to Service if needed
+  if (serviceName) {
+    cy.get('input[placeholder="Select services to bind app to"]').should('be.visible').click()
+    cy.get('.vs__dropdown-option > div').contains('(mysql-dev)').should('be.visible').click()
+  }
 
   // Bind a configuration if needed
   if (configurationName) {
@@ -547,6 +560,20 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   // Application status should be equal to 1/1
   cy.get('.main-row').should('contain', '1/1', {timeout: 16000});
   cy.wait(2000);
+});
+
+// Create a service Catalog
+Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
+  cy.get('.accordion.package.depth-0.has-children').contains('Services').click()
+  cy.wait(500)
+  cy.clickButton('Create');
+  cy.typeValue({label: 'Name', value: serviceName});
+  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
+  cy.contains('MySQL').click()
+  cy.clickButton('Create');
+  // Verify service is deployed 
+  cy.get('span.badge-state.bg-success', {timeout: 20000}).contains('Deployed').should('be.visible')
+  cy.get('td.col-link-detail').eq(0).contains(serviceName).should('be.visible')
 });
 
 // Bind a configuration to an existing application
