@@ -27,7 +27,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
       else{
           cy.get("body").then(($body) => {
             if ($body.text().includes('Routes')) {
-              cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.exist');
+              cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.visible');
             } else if ($body.text().includes('Welcome to Epinio')) {
               cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
           }
@@ -243,8 +243,14 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   if (addVar === 'wordpress_env_file') {
     cy.get('input[type="file"]').attachFile({filePath: 'read_from_worpress_file.txt'});
     // Check the entered values
-    cy.get('.key > input').should('have.value', 'BP_PHP_VERSION');
-    cy.get('.no-resize').should('have.value', '7.4.x');
+    cy.get('.key > input').eq(0).should('have.value', 'BP_PHP_VERSION');
+    cy.get('.no-resize').eq(0).should('have.value', '7.4.x');
+    cy.get('.key > input').eq(1).should('have.value', 'BP_PHP_SERVER');
+    cy.get('.no-resize').eq(1).should('have.value', 'nginx');
+    cy.get('.key > input').eq(2).should('have.value', 'BP_PHP_WEB_DIR');
+    cy.get('.no-resize').eq(2).should('have.value', 'wordpress ');
+    cy.get('.key > input').eq(3).should('have.value', 'CONFIG_NAME');
+    cy.get('.no-resize').eq(3).should('have.value', 'x5dc8835923fe6cac2053d8aa18b1-mysql');
   }
   
   // Set the desired number of instances
@@ -255,7 +261,9 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Bind to Service if needed
   if (serviceName) {
     cy.get('input[placeholder="Select services to bind app to"]').should('be.visible').click()
-    cy.get('.vs__dropdown-option > div').contains('(mysql-dev)').should('be.visible').click()
+    cy.get('.vs__dropdown-option > div').contains(serviceName&&catalogType).should('be.visible').click()
+    // Check service is correctly selected
+    cy.get('span.vs__selected').should('contain', serviceName&&catalogType )
   }
 
   // Bind a configuration if needed
@@ -283,7 +291,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum, serviceName}) => {
   cy.clickEpinioMenu('Applications');
 
   // Go to application details
@@ -303,6 +311,14 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
 
   // If needed, check that there is one environment variable
   if (checkVar) cy.contains('1 Environment Vars').should('be.visible');
+
+  // If needed, check that created service exists
+  if (serviceName) {
+    cy.get('li#services').click()
+    cy.contains(serviceName).should('be.visible');
+    // Re-focus to top to check configurations on later steps
+    cy.get('div.application-card-details-bottom').click()
+  }
 
   // Check binded configurations
   var configurationNum = 0;
@@ -562,17 +578,18 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   cy.wait(2000);
 });
 
-// Create a service Catalog
+// Create a instance from catalog service
 Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
-  cy.get('.accordion.package.depth-0.has-children').contains('Services').click()
-  cy.wait(500)
+  cy.get('.accordion.package.depth-0.has-children', {timeout: 20000}).contains('Services').click()
   cy.clickButton('Create');
   cy.typeValue({label: 'Name', value: serviceName});
   cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
-  cy.contains('MySQL').click()
+  cy.contains(catalogType).click()
+  // Verify selected catalog service is selected
+  cy.get('span.vs__selected').eq(1).should('contain', catalogType )
   cy.clickButton('Create');
   // Verify service is deployed 
-  cy.get('span.badge-state.bg-success', {timeout: 20000}).contains('Deployed').should('be.visible')
+  cy.get('span.badge-state.bg-success', {timeout: 60000}).contains('Deployed').should('be.visible')
   cy.get('td.col-link-detail').eq(0).contains(serviceName).should('be.visible')
 });
 

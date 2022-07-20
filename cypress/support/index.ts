@@ -17,7 +17,7 @@ declare global {
       typeKeyValue(key: string, value: string,): Chainable<Element>;
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
       createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, customApplicationChart?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string, serviceName?: string, catalogType?: string): Chainable<Element>;
-      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number): Chainable<Element>;
+      checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number, serviceName?: string): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
       rebuildApp(appName: string, namespace?: string,): Chainable<Element>;
