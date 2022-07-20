@@ -310,7 +310,7 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
   cy.contains(configurationNum + ' Configurations', {timeout: 24000}).should('be.visible');
 
   // Check the application route
-  var appRoute = 'https://' + appName + '.' + Cypress.env('system_domain');
+  var appRoute = new RegExp(`https:\/\/${appName}-[a-z0-9]{5}\.${Cypress.env('system_domain')}`);
   if (route) appRoute = route;  // Supersede the app route if needed
   cy.contains(appRoute).should('be.visible');
 
