@@ -27,7 +27,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
       else{
           cy.get("body").then(($body) => {
             if ($body.text().includes('Routes')) {
-              cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.exist');
+              cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.visible');
             } else if ($body.text().includes('Welcome to Epinio')) {
               cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
           }
@@ -161,7 +161,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName, serviceName, catalogType}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
@@ -240,10 +240,31 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.get('.no-resize').should('have.value', '8080');
   }
 
+  if (addVar === 'wordpress_env_file') {
+    cy.get('input[type="file"]').attachFile({filePath: 'read_from_worpress_file.txt'});
+    // Check the entered values
+    cy.get('.key > input').eq(0).should('have.value', 'BP_PHP_VERSION');
+    cy.get('.no-resize').eq(0).should('have.value', '8.0.x');
+    cy.get('.key > input').eq(1).should('have.value', 'BP_PHP_SERVER');
+    cy.get('.no-resize').eq(1).should('have.value', 'nginx');
+    cy.get('.key > input').eq(2).should('have.value', 'BP_PHP_WEB_DIR');
+    cy.get('.no-resize').eq(2).should('have.value', 'wordpress ');
+    cy.get('.key > input').eq(3).should('have.value', 'CONFIG_NAME');
+    cy.get('.no-resize').eq(3).should('have.value', 'x5dc8835923fe6cac2053d8aa18b1-mysql');
+  }
+  
   // Set the desired number of instances
   if (!manifestName){
   cy.typeValue({label: 'Instances', value: instanceNum});}
   cy.clickButton('Next');
+
+  // Bind to Service if needed
+  if (serviceName) {
+    cy.get('input[placeholder="Select services to bind app to"]').should('be.visible').click()
+    cy.get('.vs__dropdown-option > div').contains(serviceName&&catalogType).should('be.visible').click()
+    // Check service is correctly selected
+    cy.get('span.vs__selected').should('contain', serviceName&&catalogType )
+  }
 
   // Bind a configuration if needed
   if (configurationName) {
@@ -270,7 +291,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum, serviceName, checkCreatedApp}) => {
   cy.clickEpinioMenu('Applications');
 
   // Go to application details
@@ -290,6 +311,31 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
 
   // If needed, check that there is one environment variable
   if (checkVar) cy.contains('1 Environment Vars').should('be.visible');
+
+  // If needed, check that created service exists
+  if (serviceName) {
+    cy.get('li#services').click()
+    cy.contains(serviceName).should('be.visible');
+    // Re-focus to top to check configurations on later steps
+    cy.get('div.application-card-details-bottom').click()
+  }
+
+  if (checkCreatedApp) {
+    // This will check the route link and extract its content
+    // Then it will visit directly the app link within the same tab
+    cy.get('.application-card-details-top > div > ul > li > a').invoke('text').then(text => {cy.visit(text)})
+    // Specify here the exact locator for a given app
+    switch (checkCreatedApp) {
+      case 'wordpress':
+        cy.get('#logo').should('exist'); 
+        break;
+    default:
+      throw new Error('Case App to be checked not specified in test')
+    };
+    // Take a screenshot and go back to previous page
+    cy.screenshot()
+    cy.go('back')
+  }
 
   // Check binded configurations
   var configurationNum = 0;
@@ -547,6 +593,21 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   // Application status should be equal to 1/1
   cy.get('.main-row').should('contain', '1/1', {timeout: 16000});
   cy.wait(2000);
+});
+
+// Create an instance from catalog service
+Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
+  cy.get('.accordion.package.depth-0.has-children', {timeout: 20000}).contains('Services').click()
+  cy.clickButton('Create');
+  cy.typeValue({label: 'Name', value: serviceName});
+  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
+  cy.contains(catalogType).click()
+  // Verify selected catalog service is selected
+  cy.get('span.vs__selected').eq(1).should('contain', catalogType )
+  cy.clickButton('Create');
+  // Verify service is deployed 
+  cy.get('span.badge-state.bg-success', {timeout: 60000}).contains('Deployed').should('be.visible')
+  cy.get('td.col-link-detail').eq(0).contains(serviceName).should('be.visible')
 });
 
 // Bind a configuration to an existing application

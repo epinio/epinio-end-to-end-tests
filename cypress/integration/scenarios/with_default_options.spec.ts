@@ -113,6 +113,11 @@ describe('Applications testing', () => {
   it('Download manifest from ui and push an app from it',  () => {
     cy.runApplicationsTest('downloadManifestAndPushApp');
   });
+
+  it('Create mysql service, bind it to a Wordpress app and push it',  () => {
+    cy.runApplicationsTest('serviceMysqlBindWordpressPushApp');
+  });
+
 });
 
 describe('Configurations testing', () => {

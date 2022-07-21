@@ -1,0 +1,4 @@
+BP_PHP_VERSION=8.0.x
+BP_PHP_SERVER=nginx
+BP_PHP_WEB_DIR=wordpress 
+CONFIG_NAME=x5dc8835923fe6cac2053d8aa18b1-mysql

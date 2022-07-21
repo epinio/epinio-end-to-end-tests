@@ -25,8 +25,11 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const paketobuild = 'paketobuildpacks/builder:tiny';
   const applicationChart = ' standard (Epinio standard deployment)';
   const gitUrl = 'https://github.com/epinio/example-go';
+  const gitUrlWordpress = 'https://github.com/epinio/example-wordpress';
   const configuration = 'configuration01';
   const manifest = 'manifest.json';
+  const customService = 'mycustom-service';
+  const customCatalog = 'mysql-dev';
 
   // Create an application on default namespace and check it
   switch (testName) {
@@ -68,6 +71,10 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createApp({archiveName: archive, sourceType: 'Archive', manifestName: manifest }); 
       cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: true, instanceNum: 2});
       break;
+    case 'serviceMysqlBindWordpressPushApp':
+      cy.createService({ serviceName: customService, catalogType: customCatalog })
+      cy.createApp( {appName: appName, archiveName: gitUrlWordpress, sourceType: 'Git URL', addVar: 'wordpress_env_file', serviceName: customService, catalogType: customCatalog });
+      cy.checkApp({ appName: appName, dontCheckRouteAccess: true, serviceName: customService, checkCreatedApp: 'wordpress'});  
   }
 
   // Delete the tested application
