@@ -244,7 +244,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.get('input[type="file"]').attachFile({filePath: 'read_from_worpress_file.txt'});
     // Check the entered values
     cy.get('.key > input').eq(0).should('have.value', 'BP_PHP_VERSION');
-    cy.get('.no-resize').eq(0).should('have.value', '7.4.x');
+    cy.get('.no-resize').eq(0).should('have.value', '8.0.x');
     cy.get('.key > input').eq(1).should('have.value', 'BP_PHP_SERVER');
     cy.get('.no-resize').eq(1).should('have.value', 'nginx');
     cy.get('.key > input').eq(2).should('have.value', 'BP_PHP_WEB_DIR');
@@ -291,7 +291,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum, serviceName}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum, serviceName, checkCreatedApp}) => {
   cy.clickEpinioMenu('Applications');
 
   // Go to application details
@@ -318,6 +318,23 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
     cy.contains(serviceName).should('be.visible');
     // Re-focus to top to check configurations on later steps
     cy.get('div.application-card-details-bottom').click()
+  }
+
+  if (checkCreatedApp) {
+    // This will check the route link and extract its content
+    // Then it will visit directly the app link within the same tab
+    cy.get('.application-card-details-top > div > ul > li > a').invoke('text').then(text => {cy.visit(text)})
+    // Specify here the exact locator for a given app
+    switch (checkCreatedApp) {
+      case 'wordpress':
+        cy.get('#logo').should('exist'); 
+        break;
+    default:
+      throw new Error('Case App to be checked not specified in test')
+    };
+    // Take a screenshot and go back to previous page
+    cy.screenshot()
+    cy.go('back')
   }
 
   // Check binded configurations
@@ -578,7 +595,7 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   cy.wait(2000);
 });
 
-// Create a instance from catalog service
+// Create an instance from catalog service
 Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
   cy.get('.accordion.package.depth-0.has-children', {timeout: 20000}).contains('Services').click()
   cy.clickButton('Create');

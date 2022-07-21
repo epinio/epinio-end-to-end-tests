@@ -74,7 +74,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
     case 'serviceMysqlBindWordpressPushApp':
       cy.createService({ serviceName: customService, catalogType: customCatalog })
       cy.createApp( {appName: appName, archiveName: gitUrlWordpress, sourceType: 'Git URL', addVar: 'wordpress_env_file', serviceName: customService, catalogType: customCatalog });
-      cy.checkApp({ appName: appName, dontCheckRouteAccess: true, serviceName: customService});  
+      cy.checkApp({ appName: appName, dontCheckRouteAccess: true, serviceName: customService, checkCreatedApp: 'wordpress'});  
   }
 
   // Delete the tested application
