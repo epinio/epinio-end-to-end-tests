@@ -100,7 +100,7 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
         and it hides the success badge of step 3...
         So we have to wait last step done before continuing */
         cy.get('.tab-label', {timeout: 100000}).should('contain', 'testapp - App Logs');
-        if (sourceType != 'Git URL') cy.contains('Development Server (http://0.0.0.0:8080) started', {timeout: timeout});
+        if (sourceType != 'Git URL' && sourceType != 'GitHub') cy.contains('Development Server (http://0.0.0.0:8080) started', {timeout: timeout});
         cy.get('.tab > .closer').click();
       }      
   }
@@ -181,7 +181,22 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         break;
       case 'Archive':
         cy.get('.archive input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
+        // Locator changes on latest dashboard dev version. 
+        // Replace to this once upgraded.
+        // cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});       
         break; 
+      case 'GitHub':
+        cy.typeValue({label: 'Username / Organization', value: 'epinio'}); 
+        // Function 'typeValue' not working here
+        // Selecting Repository
+        cy.get('.labeled-select.edit.hoverable').contains('label', 'Repository').click();
+        cy.contains('example-go').click();
+        // Selecting Branch
+        cy.get('.labeled-select.edit.hoverable').contains('label', 'Branch').click();
+        cy.contains('main').click();
+        // Selecting last commit
+        cy.get('span.radio-custom').last().click();
+        break;
     };
   };
 
@@ -251,6 +266,12 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.get('.no-resize').eq(2).should('have.value', 'wordpress ');
     cy.get('.key > input').eq(3).should('have.value', 'CONFIG_NAME');
     cy.get('.no-resize').eq(3).should('have.value', 'x5dc8835923fe6cac2053d8aa18b1-mysql');
+  }
+
+  if (addVar === 'go_example') {
+    cy.get('.key-value > .footer > .add').click();
+    cy.typeKeyValue({key: '.kv-item.key', value: 'BP_KEEP_FILES'});
+    cy.typeKeyValue({key: '.kv-item.value', value: 'static/*'});
   }
   
   // Set the desired number of instances

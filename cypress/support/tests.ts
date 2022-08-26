@@ -75,6 +75,10 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createService({ serviceName: customService, catalogType: customCatalog })
       cy.createApp( {appName: appName, archiveName: gitUrlWordpress, sourceType: 'Git URL', addVar: 'wordpress_env_file', serviceName: customService, catalogType: customCatalog });
       cy.checkApp({ appName: appName, dontCheckRouteAccess: true, serviceName: customService, checkCreatedApp: 'wordpress'});  
+    case 'gitHubAndEnvVar':
+      cy.createApp({appName: appName, addVar: 'go_example', sourceType: 'GitHub'});
+      cy.checkApp({appName: appName, checkVar: true});
+      break;
   }
 
   // Delete the tested application
