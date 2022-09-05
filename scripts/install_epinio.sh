@@ -32,6 +32,14 @@ if [[ ${S3} == "1" ]]; then
   "
 fi
 
+# Append extraEnv.name and value if provided
+if [[ -v EXTRAENV_NAME ]] && [[ -v EXTRAENV_VALUE ]]; then
+INSTALL_OPTIONS+="
+   --set extraEnv[0].name=${EXTRAENV_NAME} \
+   --set-string extraEnv[0].value=${EXTRAENV_VALUE} \
+  "
+fi
+
 # Install Epinio
 helm upgrade --debug --wait --install -n epinio --create-namespace epinio helm-charts/chart/epinio \
   --set global.domain=${EPINIO_SYSTEM_DOMAIN} \
