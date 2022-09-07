@@ -755,6 +755,12 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
     cy.contains('S3 use SSL').click();
   }
 
+  // Add ExtraEnv values on bottom of values yaml if present, careful here, editor does indentation
+  if (Cypress.env('extraEnvName') && Cypress.env('extraEnvValue')) {
+    cy.contains('Edit YAML').click();
+    cy.get('.CodeMirror textarea').type('{ctrl+end}{enter}extraEnv:{enter}  - name: ' + Cypress.env('extraEnvName') + '{enter}  value: \'' + Cypress.env('extraEnvValue') + '\'', { force: true });
+  }
+
   // Install and check we get successfull installation message with a timeout long enough
   cy.clickButton('Install');
   cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
