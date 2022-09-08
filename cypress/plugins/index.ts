@@ -23,6 +23,8 @@ module.exports = (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions)
   config.env.s3_key_id = process.env.S3_KEY_ID;
   config.env.s3_key_secret = process.env.S3_KEY_SECRET;
   config.env.ui = process.env.UI;
+  config.env.extraEnvName = process.env.EXTRAENV_NAME;
+  config.env.extraEnvValue = process.env.EXTRAENV_VALUE;
 
   return config;
 };
