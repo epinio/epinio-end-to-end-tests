@@ -724,7 +724,10 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
 
   // Namespace where installation will happen
   cy.typeValue({label: 'Name', value: 'epinio-install'});
-  cy.contains('default').type('epinio{enter}');
+  // Typing just a new namespace name is not enough, select 'Create a New Namespace' first
+  cy.get('div.vs__selected-options').eq(0).click();
+  cy.get('li.vs__dropdown-option').contains('Create a New Namespace').click({force: true});
+  cy.get(':nth-child(1) > .labeled-input').type('epinio');
   cy.clickButton('Next');
   
   // Configure custom domain
