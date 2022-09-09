@@ -39,7 +39,7 @@ describe('Configuration testing', () => {
     });
   });
 
-  it.only('Create an application with a configuration, unbind the configuration and delete all', () => {
+  it('Create an application with a configuration, unbind the configuration and delete all', () => {
     cy.runConfigurationsTest('newAppWithConfiguration');
   });
 

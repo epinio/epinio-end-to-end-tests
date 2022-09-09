@@ -184,6 +184,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         break; 
       case 'GitHub':
         cy.typeValue({label: 'Username / Organization', value: 'epinio'}); 
+        cy.wait(1000)
         // Function 'typeValue' not working here
         // Selecting Repository
         cy.get('.labeled-select.edit.hoverable').contains('label', 'Repository').click();
@@ -191,7 +192,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         // Selecting Branch
         cy.get('.labeled-select.edit.hoverable').contains('label', 'Branch').click();
         cy.contains('main').click();
-        // Selecting last commit
+        // Selecting last commit. Currently at the top of the list.
         cy.get('span.radio-custom').first().click();
         break;
     };
