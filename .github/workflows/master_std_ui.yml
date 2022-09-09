@@ -97,8 +97,8 @@ jobs:
           EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
           S3_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          EXTRAENV_NAME: SESSION_KEY
-          EXTRAENV_VALUE: 12345
+          # EXTRAENV_NAME: SESSION_KEY
+          # EXTRAENV_VALUE: 12345
         run: |
           ## Export information
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')
