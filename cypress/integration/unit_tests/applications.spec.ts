@@ -67,7 +67,7 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('serviceMysqlBindWordpressPushApp');
   });
 
-  it.skip('Push application with Github Source type and env vars and check it',  () => {
+  it('Push application with Github Source type and env vars and check it',  () => {
     cy.runApplicationsTest('gitHubAndEnvVar');
   });
 

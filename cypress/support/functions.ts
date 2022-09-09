@@ -180,10 +180,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         cy.typeValue({label: 'Branch', value: 'main'}); 
         break;
       case 'Archive':
-        cy.get('.archive input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});
-        // Locator changes on latest dashboard dev version. 
-        // Replace to this once upgraded.
-        // cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});       
+        cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});       
         break; 
       case 'GitHub':
         cy.typeValue({label: 'Username / Organization', value: 'epinio'}); 
@@ -195,7 +192,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         cy.get('.labeled-select.edit.hoverable').contains('label', 'Branch').click();
         cy.contains('main').click();
         // Selecting last commit
-        cy.get('span.radio-custom').last().click();
+        cy.get('span.radio-custom').first().click();
         break;
     };
   };
