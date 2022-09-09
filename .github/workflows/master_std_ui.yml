@@ -108,11 +108,11 @@ jobs:
           echo '::set-output name=MY_IP::'${MY_IP}
           make prepare-e2e-ci-standalone
 
-      - name: Patch epinio-ui with latest QA image
-        env:
-          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-        run: |
-          make patch-epinio-ui
+      # - name: Patch epinio-ui with latest QA image
+      #   env:
+      #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+      #   run: |
+      #     make patch-epinio-ui
       
       - name: Start Cypress tests
         env:
