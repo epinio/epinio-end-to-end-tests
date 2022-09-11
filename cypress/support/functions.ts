@@ -183,17 +183,18 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});       
         break; 
       case 'GitHub':
-        cy.typeValue({label: 'Username / Organization', value: 'epinio'}); 
-        cy.wait(1000)
+        cy.get('.labeled-input.edit.has-tooltip',{timeout:5000}).contains('label', 'Username / Organization').should('be.visible')
+        // Typing a bit slower to avoid fetching too early
+        cy.get('.labeled-input.edit.has-tooltip > input[type="text"]',{timeout:5000}).type('epinio',{delay:250, force:true})
         // Function 'typeValue' not working here
         // Selecting Repository
-        cy.get('.labeled-select.edit.hoverable').contains('label', 'Repository').click();
+        cy.get('.labeled-select.edit.hoverable',{timeout:5000}).contains('label', 'Repository').should('be.visible').click();
         cy.contains('example-go').click();
         // Selecting Branch
-        cy.get('.labeled-select.edit.hoverable').contains('label', 'Branch').click();
-        cy.contains('main').click();
+        cy.get('.labeled-select.edit.hoverable',{timeout:5000}).contains('label', 'Branch').should('be.visible').click();
+        cy.contains('main',{timeout:5000}).should('be.visible').click();
         // Selecting last commit. Currently at the top of the list.
-        cy.get('span.radio-custom').first().click();
+        cy.get('span.radio-custom',{timeout:5000}).first().should('be.visible').click();
         break;
     };
   };

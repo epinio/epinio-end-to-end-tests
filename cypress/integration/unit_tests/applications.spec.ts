@@ -20,7 +20,7 @@ describe('Applications testing', () => {
     cy.clickEpinioMenu('Applications');
     cy.get('body').then(($body) => {
       if ($body.text().includes('testapp')) {
-        cy.get('[width="30"] > .checkbox-outer-container').click();
+        cy.get('[width="30"] > .checkbox-outer-container.check').click();
         cy.clickButton('Delete');
         cy.confirmDelete();
         cy.contains('testapp', {timeout: 60000}).should('not.exist');
@@ -31,7 +31,7 @@ describe('Applications testing', () => {
     cy.clickEpinioMenu('Configurations');
     cy.get('body').then(($body) => {
       if ($body.text().includes('configuration01')) {
-        cy.get('[width="30"] > .checkbox-outer-container').click();
+        cy.get('[width="30"] > .checkbox-outer-container.check').click();
         cy.clickButton('Delete');
         cy.confirmDelete();
         cy.contains('configurations01', {timeout: 60000}).should('not.exist');
