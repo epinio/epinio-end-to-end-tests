@@ -112,7 +112,8 @@ jobs:
         env:
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
         run: |
-          make patch-epinio-ui
+          echo "::warning::Temporary Disabled"
+          # make patch-epinio-ui
       
       - name: Start Cypress tests
         env:
