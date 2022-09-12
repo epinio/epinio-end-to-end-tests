@@ -110,10 +110,11 @@ jobs:
 
       # Disabling this until it is fixed
       # Related issue: https://github.com/epinio/epinio-end-to-end-tests/issues/223
-      # - name: Patch epinio-ui with latest QA image
-      #   env:
-      #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-      #   run: |
+      - name: Patch epinio-ui with latest QA image
+        env:
+          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+        run: |
+          echo "::warning::Temporary Disabled"
       #     make patch-epinio-ui
       
       - name: Start Cypress tests
