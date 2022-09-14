@@ -1,3 +1,4 @@
+import { forEachLeadingCommentRange } from 'typescript';
 import './functions';
 import './tests';
 
@@ -54,7 +55,8 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
     return false;
   }
   if (promise) {
-    return false
+    cy.log('Unhandled promise error caught')
+    return false;
   }
 });
 
