@@ -1,4 +1,3 @@
-import { forEachLeadingCommentRange } from 'typescript';
 import './functions';
 import './tests';
 
