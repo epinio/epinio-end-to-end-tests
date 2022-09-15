@@ -83,4 +83,12 @@ describe('Login with different users', () => {
     cy.contains('Invalid username or password. Please try again.').should('not.exist')
     cy.contains('Applications').should('be.visible')
   });
+
+  it('Check login with admin user name with special character (user@test) and password also with special characters', () => {
+    const user_epinio = "user@test"
+    const pwd_epinio = "Hell@World"
+    cy.login(user_epinio, pwd_epinio);
+    cy.contains('Invalid username or password. Please try again.').should('not.exist')
+    cy.contains('Applications').should('be.visible')
+  });
 })
