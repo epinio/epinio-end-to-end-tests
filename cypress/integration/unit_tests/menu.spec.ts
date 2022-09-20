@@ -46,8 +46,68 @@ describe('Menu testing', () => {
     cy.clickButton('Create');
     // Check that the namespace has effectively been created
     cy.contains(defaultNamespace).should('be.visible');
-  }
-)});
+  });
+
+  it('Check binary links from version in menu', () => {
+    // Check link in main page is present and works after clicking
+    cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/about');
+    cy.get('.version.text-muted > a').click();
+
+    // Test in ABOUT page starts here
+    cy.get('table > tr > td:nth-child(2)').eq(0).invoke('text').then(version => {
+      cy.log(`Epinio version in ABOUT PAGE is ${version}`);
+      // Check "Go back" link
+      cy.get('.back-link').should('exist').click();
+      cy.get('span.label.no-icon').eq(0).contains('Applications').should('be.visible');
+      // Checks version displayed in about page is the same as in main page
+      // Later returns to About page
+      cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
+        cy.log(`Epinio version in MAIN UI is ${version_main}`);
+        cy.visit('/epinio/about');
+      });
+
+      // Check all links work and match the expected version
+
+      // Verify amount of binaries in the page 
+      cy.get('tr.link > td > a').should('have.length', 3);
+      const binOsNames = ['darwin-arm64', 'linux-arm64', 'windows-x86_64.zip'];
+
+      for (let i = 0; i < binOsNames.length; i++) {
+
+        // Verify binaries names and version match the one in the page
+        cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
+        .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
+
+        // Download binaries
+        // This is added to workaround Cypress error waiting for a page instead of downloading
+        // Source: https://github.com/cypress-io/cypress/issues/14857#issuecomment-785717474 
+        cy.window().document().then(function (doc) {
+          doc.addEventListener('click', () => {
+            setTimeout(function () { doc.location.reload(); }, 5000);
+          });
+          // Now we can download
+          cy.get("tr.link > td > a").eq(i).click({ force: true });
+          // Adding a bit of wait prior executing command to ensure file is downloaded
+          cy.wait(1500);
+        });
+
+        // Verify files are downloaded in cypress/download and its stdout output
+        cy.exec(`find "cypress/downloads/" -name "epinio-${binOsNames[i]}*"`).its('stdout').should('contain', `${binOsNames[i]}`);
+      }
+
+      // Check link "See all packages" and visit binary page
+      // Check version number in binary page matches the one in Epinio
+      cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
+        cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`)
+        cy.origin('https://github.com', { args: { version } }, ({ version }) => {
+          cy.visit(`/epinio/epinio/releases/tag/${version}`);
+          cy.get('.d-inline.mr-3').should('contain', `${version}`);
+          cy.screenshot(`epinio-bin-repo-${version}`);
+        });
+      });
+    });
+  }); 
+});
 
 // // Note: this test may need to be adapted with Rancher Dashboard
 describe('Login with different users', () => {
