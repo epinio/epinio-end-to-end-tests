@@ -53,7 +53,7 @@ describe('Menu testing', () => {
     cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/about');
     cy.get('.version.text-muted > a').click();
 
-    // Test in ABOUT page strats here
+    // Test in ABOUT page starts here
     cy.get('table > tr > td:nth-child(2)').eq(0).invoke('text').then(version => {
       cy.log(`Epinio version in ABOUT PAGE is ${version}`);
       // Check "Go back" link
@@ -75,7 +75,8 @@ describe('Menu testing', () => {
       for (let i = 0; i < binOsNames.length; i++) {
 
         // Verify binaries names and version match the one in the page
-        cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href').and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
+        cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
+        .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
 
         // Download binaries
         // This is added to workaround Cypress error waiting for a page instead of downloading
@@ -85,7 +86,8 @@ describe('Menu testing', () => {
             setTimeout(function () { doc.location.reload(); }, 5000);
           });
           // Now we can download
-          cy.get("tr.link > td > a").eq(i).click( {force: true} );
+          cy.get("tr.link > td > a").eq(i).click({ force: true });
+          // Adding a bit of wait prior executing command to ensure file is downloaded
           cy.wait(1500);
         });
 
@@ -95,7 +97,8 @@ describe('Menu testing', () => {
 
       // Check link "See all packages" and visit binary page
       // Check version number in binary page matches the one in Epinio
-      cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').then(() => {
+      cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
+        cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`)
         cy.origin('https://github.com', { args: { version } }, ({ version }) => {
           cy.visit(`/epinio/epinio/releases/tag/${version}`);
           cy.get('.d-inline.mr-3').should('contain', `${version}`);
@@ -103,7 +106,7 @@ describe('Menu testing', () => {
         });
       });
     });
-  });
+  }); 
 });
 
 // // Note: this test may need to be adapted with Rancher Dashboard
