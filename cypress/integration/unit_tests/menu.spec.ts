@@ -85,11 +85,12 @@ describe('Menu testing', () => {
             setTimeout(function () { doc.location.reload(); }, 5000);
           });
           // Now we can download
-          cy.get("tr.link > td > a").eq(i).click();
+          cy.get("tr.link > td > a").eq(i).click( {force: true} );
+          cy.wait(1500);
         });
 
         // Verify files are downloaded in cypress/download and its stdout output
-        cy.exec(`find "cypress/downloads/" -name "epinio-${binOsNames[i]}"`).its('stdout').should('contain', `${binOsNames[i]}`);
+        cy.exec(`find "cypress/downloads/" -name "epinio-${binOsNames[i]}*"`).its('stdout').should('contain', `${binOsNames[i]}`);
       }
 
       // Check link "See all packages" and visit binary page
