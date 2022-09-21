@@ -8,12 +8,12 @@ describe('Menu testing', () => {
   const epinio = new Epinio();
 
   beforeEach(() => {
-    cy.login();
+    cy.login('admin','password', null, 'epinio');
     cy.visit('/');
   });
   
   it('Check Epinio menu', () => {
-    if (Cypress.env('ui') == "rancher") {
+  /*  if (Cypress.env('ui') == "rancher") {
       topLevelMenu.openIfClosed();
 
       // Epinio's icon should appear in the side menu
@@ -22,7 +22,7 @@ describe('Menu testing', () => {
       // Click on the Epinio's logo as well as your Epinio instance 
       epinio.accessEpinioMenu(Cypress.env('cluster')); 
     }
-
+*/
     // Check Epinio's side menu
     epinio.checkEpinioNav();
   });

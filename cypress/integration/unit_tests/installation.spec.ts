@@ -21,4 +21,27 @@ describe('Epinio installation testing', () => {
     // Boolean must be forced to false otherwise code is failing
     cy.epinioInstall({s3: false, extRegistry: false});
   });
+
+  it('Get and store the epinio-ui ingress URL', () => {
+    cy.contains('More Resources').click();
+    cy.contains('Networking').click();
+    cy.contains('Ingresses').click();
+    cy.contains('.ingress-target .target > a', 'epinio-ui')
+      .prevAll('a')
+      .invoke('attr', 'href').then( (href) => {
+        cy.origin(href, (href) => {
+        cy.visit('/');
+        cy.get('.dashboard-body');
+        cy.url().then(url => {
+          const tempURL= url
+          cy.log(tempURL);
+          cy.task('setEpinioUrl', tempURL);
+        });
+      });
+    });
+    // Debug only
+    cy.task('getEpinioUrl').then((epinioUrl) => {
+      cy.log(epinioUrl);
+    });
+  })
 });

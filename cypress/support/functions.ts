@@ -2,11 +2,19 @@ import 'cypress-file-upload';
 
 // Generic functions
 
-   // Log into Rancher
+// Log into Rancher
 Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cypress.env('password'), cacheSession = Cypress.env('cache_session'), ui = Cypress.env('ui')) => {
   const login = () => {
+    cy.task('getEpinioUrl').then((epinioUrl) => {
+      if (epinioUrl != null) {
+        Cypress.config('baseUrl', epinioUrl);
+        // default admin password for epinio
+        // get rid of rancher ui since now
+      }
+    });
     let loginPath
     ui == "rancher" ? loginPath="/v3-public/localProviders/local*" : loginPath="/pp/v1/epinio/rancher/v3-public/authProviders/local/login";
+    cy.log('ui:' +ui);
     cy.intercept('POST', loginPath).as('loginReq');
     
     cy.visit('/auth/login');
@@ -18,7 +26,6 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     cy.byLabel('Password')
       .focus()
       .type(password, {log: false});
-
     cy.get('button').click();
     cy.wait('@loginReq');
       if (ui == "rancher") {
@@ -38,6 +45,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
   } else {
     login();
   }
+
 });
 
 // Search fields by label

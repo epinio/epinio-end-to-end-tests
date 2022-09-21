@@ -7,12 +7,14 @@ describe('Applications testing', () => {
   const epinio = new Epinio();
 
   beforeEach(() => {
-    cy.login();
+    cy.login('admin','password', null, 'epinio');
     cy.visit('/');
+    /*
     if (Cypress.env('ui') == "rancher") {
       topLevelMenu.openIfClosed();
       epinio.accessEpinioMenu(Cypress.env('cluster'));
     }
+    */
 
     // Executes application cleansing of "testapp" and "configuration01"
     // Destroy application "testapp" and verify

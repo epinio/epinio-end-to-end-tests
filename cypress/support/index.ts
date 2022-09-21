@@ -6,7 +6,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       // Functions declared in functions.ts
-      login(username?: string, password?: string, cacheSession?: boolean,): Chainable<Element>;
+      login(username?: string, password?: string, cacheSession?: boolean, ui?: string): Chainable<Element>;
       byLabel(label: string,): Chainable<Element>;
       clickButton(label: string,): Chainable<Element>;
       clickEpinioMenu(label: string,): Chainable<Element>;
