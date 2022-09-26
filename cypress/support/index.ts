@@ -53,8 +53,11 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
   if (err.message.includes('navigation guard')) {
     return false;
   }
+  if (err.message.includes('on cross-origin object')) {
+    return false;
+  }
   if (promise) {
-      return false;
+    return false;
   }
 });
 
