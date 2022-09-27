@@ -64,6 +64,9 @@ Cypress.on('test:after:run', (test, runnable) => {
       const screenshot = `../cypress/screenshots/${Cypress.spec.name
       }/${runnable.parent.title} -- ${test.title} (failed).png`;
       addContext({ test }, screenshot);
+      const video = `../cypress/videos/${Cypress.spec.name
+      }.mp4`;
+      addContext({ test }, video);
   }
 });
 
