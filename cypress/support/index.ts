@@ -1,5 +1,6 @@
 import './functions';
 import './tests';
+const addContext = require('mochawesome/addContext');
 
 declare global {
   // eslint-disable-next-line no-unused-vars
@@ -55,6 +56,14 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
   }
   if (promise) {
       return false;
+  }
+});
+
+Cypress.on('test:after:run', (test, runnable) => {
+  if (test.state === 'failed') {
+      const screenshot = `../cypress/screenshots/${Cypress.spec.name
+      }/${runnable.parent.title} -- ${test.title} (failed).png`;
+      addContext({ test }, screenshot);
   }
 });
 
