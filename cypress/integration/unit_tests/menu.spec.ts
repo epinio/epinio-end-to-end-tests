@@ -28,7 +28,7 @@ describe('Menu testing', () => {
   });
 
   it('Verify Welcome Screen without Namespaces', () => {
-    cy.clickEpinioMenu('Namespaces');
+    cy.clickEpinioMenu('Namespacess');
     // Deletes all namespaces if detected
     cy.get("body").then(($body) => {
       if ($body.text().includes('Delete')) {
@@ -48,7 +48,7 @@ describe('Menu testing', () => {
     cy.contains(defaultNamespace).should('be.visible');
   });
 
-  it('Check binary links from version in menu', () => {
+  it.skip('Check binary links from version in menu', () => {
     // Check link in main page is present and works after clicking
     cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/about');
     cy.get('.version.text-muted > a').click();
@@ -110,7 +110,7 @@ describe('Menu testing', () => {
 });
 
 // // Note: this test may need to be adapted with Rancher Dashboard
-describe('Login with different users', () => {
+describe.skip('Login with different users', () => {
 
   it('Check login with admin user', () => {
     const user_epinio = "admin"

@@ -1,6 +1,7 @@
 {
   "experimentalSessionAndOrigin": true,
   "defaultCommandTimeout": 10000,
+  "reporter":"mochawesome",
   "clientCertificates": [
     {
       "url": "https://*",
