@@ -153,6 +153,7 @@ jobs:
 
       - name: Upload Mochawesome report
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: mochawesome-report
           path: mochawesome-report
