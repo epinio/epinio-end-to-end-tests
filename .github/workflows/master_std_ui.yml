@@ -135,7 +135,7 @@ jobs:
           make start-cypress-tests
 
       - name: Copying screenshots and videos to Mochawesome report
-        shell: bash
+        if: always()
         run: |
           echo "Printing current directory"
           pwd
