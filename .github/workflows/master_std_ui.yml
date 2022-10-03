@@ -153,8 +153,13 @@ jobs:
  
       - name: Copying screenshots and videos to Mochawesome report
         run: |
+          echo "Printing current directory"
+          pwd
+          echo $PWD 
           cp -r cypress/screenshots mochawesome-report      
           cp -r cypress/videos mochawesome-report
+          cp -r /e2e/cypress/cypress/screenshots mochawesome-report      
+          cp -r /e2e/cypress/cypress/videos mochawesome-report
 
       - name: Upload Mochawesome report
         uses: actions/upload-artifact@v2
