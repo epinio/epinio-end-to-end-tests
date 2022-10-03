@@ -150,6 +150,11 @@ jobs:
           name: cypress-videos
           path: cypress/videos
           retention-days: 7
+ 
+      - name: Copying screenshots and videos to Mochawesome report
+        run: |
+          cp -r cypress/screenshots mochawesome-report      
+          cp -r cypress/videos mochawesome-report
 
       - name: Upload Mochawesome report
         uses: actions/upload-artifact@v2
