@@ -61,23 +61,17 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
 
 Cypress.on('test:after:run', (test, runnable) => {
   if (test.state === 'failed') {
-      // const screenshot = `../cypress/screenshots/${Cypress.spec.name
-      // }/${runnable.parent.title} -- ${test.title} (failed).png`;
-      const screenshot1 = `screenshots/${Cypress.spec.name
+      const screenshot = `../cypress/screenshots/${Cypress.spec.name
       }/${runnable.parent.title} -- ${test.title} (failed).png`;
-      const screenshot2 = `/home/sles/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/screenshots/${Cypress.spec.name
+      const screenshot_ci = `screenshots/${Cypress.spec.name
       }/${runnable.parent.title} -- ${test.title} (failed).png`;
 
-      // addContext({ test }, screenshot);
-      addContext({ test }, screenshot1);
-      addContext({ test }, screenshot2);
+      addContext({ test }, screenshot || screenshot_ci);
       
-      // const video = `../cypress/videos/${Cypress.spec.name}.mp4`;
-      const video1 = `videos/${Cypress.spec.name}.mp4`;
-      const video2 = `/home/sles/actions-runner/_work/epinio-end-to-end-tests/epinio-end-to-end-tests/videos/${Cypress.spec.name}.mp4`;
-      // addContext({ test }, video);
-      addContext({ test }, video1);
-      addContext({ test }, video2);
+      const video = `../cypress/videos/${Cypress.spec.name}.mp4`;
+      const video_ci = `videos/${Cypress.spec.name}.mp4`;
+ 
+      addContext({ test }, video || video_ci);
 }     
 });
 
