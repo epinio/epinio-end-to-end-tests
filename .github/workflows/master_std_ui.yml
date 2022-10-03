@@ -141,6 +141,7 @@ jobs:
           pwd
           echo "Printing whoami"
           whoami
+          makedir -p mochawesome-report
           cp -r cypress/screenshots mochawesome-report      
           cp -r cypress/videos mochawesome-report
           cp -r /e2e/cypress/cypress/screenshots mochawesome-report      
