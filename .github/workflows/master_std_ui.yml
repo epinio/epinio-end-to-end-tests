@@ -141,10 +141,10 @@ jobs:
           pwd
           echo "Printing whoami"
           whoami
-          mkdir -p mochawesome-report
-          cp -r cypress/screenshots mochawesome-report      
-          cp -r cypress/videos mochawesome-report
-          cp -r /e2e/cypress/cypress/screenshots mochawesome-report      
+          sudo mkdir -p mochawesome-report
+          sudo cp -r cypress/screenshots mochawesome-report      
+          sudo cp -r cypress/videos mochawesome-report
+          sudo cp -r /e2e/cypress/cypress/screenshots mochawesome-report      
           sudo cp -r /e2e/cypress/cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
