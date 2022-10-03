@@ -61,17 +61,14 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
 
 Cypress.on('test:after:run', (test, runnable) => {
   if (test.state === 'failed') {
-      const screenshot = `../cypress/screenshots/${Cypress.spec.name
-      }/${runnable.parent.title} -- ${test.title} (failed).png`;
+    // Searches screenshots and videos previously copied in 
+    // mochawesome-report from CI 
       const screenshot_ci = `screenshots/${Cypress.spec.name
       }/${runnable.parent.title} -- ${test.title} (failed).png`;
-
-      addContext({ test }, screenshot || screenshot_ci);
+      addContext({ test }, screenshot_ci);
       
-      const video = `../cypress/videos/${Cypress.spec.name}.mp4`;
       const video_ci = `videos/${Cypress.spec.name}.mp4`;
- 
-      addContext({ test }, video || video_ci);
+      addContext({ test }, video_ci);
 }     
 });
 
