@@ -144,10 +144,11 @@ jobs:
             sudo find mochawesome-report -type f -name "*.html" -delete
             sudo find mochawesome-report -type f -name "*.json" -delete
           else 
+            echo "Warning: '$DIR' NOT found, creating it now ..."
             sudo mkdir -p mochawesome-report
-            sudo cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-            sudo cp -r cypress/videos mochawesome-report
           fi
+          sudo cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
+          sudo cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v2
