@@ -163,8 +163,7 @@ jobs:
       
       - name: Grant permissions to access /public/assets
         run: |
-          sudo chown -R root:$(whoami) /public/assets
-          sudo chmod -R 775 /public/assets
+          sudo chmod -R 777 /public/assets
 
       - name: Generate HTML report
         run: npm run report:generate
