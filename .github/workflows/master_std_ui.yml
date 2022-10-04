@@ -155,8 +155,8 @@ jobs:
       # Inspiration: https://medium.com/swlh/publish-your-cypress-test-report-with-github-actions-47248788713a
       - name: Copy test execution videos
         run: |
-          mkdir public
-          cp -r cypress/videos public/videos
+          sudo mkdir public
+          sudo cp -r cypress/videos public/videos
       
       - name: Merge test results into one
         run: npm run report:merge
