@@ -123,9 +123,9 @@ jobs:
       - name: Copying screenshots and videos to Mochawesome report
         if: always()
         run: |
-          sudo mkdir -p mochawesome-report
-          sudo cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          sudo cp -r cypress/videos mochawesome-report
+          mkdir -p mochawesome-report
+          cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
+          cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v2
@@ -223,9 +223,9 @@ jobs:
       - name: Copying screenshots and videos to Mochawesome report
         if: always()
         run: |
-          sudo mkdir -p mochawesome-report
-          sudo cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          sudo cp -r cypress/videos mochawesome-report
+          mkdir -p mochawesome-report
+          cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
+          cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v2
