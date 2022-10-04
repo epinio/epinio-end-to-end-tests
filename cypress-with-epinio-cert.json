@@ -23,5 +23,15 @@
     "scenarios/with_default_options.spec.ts",
     "scenarios/with_s3_and_external_registry.spec.ts",
     "unit_tests/uninstall.spec.ts"
-  ]
+  ],
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "reporterEnabled": "mochawesome",
+    "mochawesomeReporterOptions": {
+      "reportDir": "cypress/results/json",
+      "overwrite": false,
+      "html": false,
+      "json": true
+    }
+  }
 }

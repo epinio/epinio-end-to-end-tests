@@ -1,5 +1,6 @@
 import './functions';
 import './tests';
+import addContext from 'mochawesome/addContext'
 
 declare global {
   // eslint-disable-next-line no-unused-vars
@@ -56,6 +57,15 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
   if (promise) {
       return false;
   }
+});
+
+Cypress.on("test:after:run", (test, runnable) => {
+    
+  let videoName = Cypress.spec.name
+  videoName = videoName.replace('/.js.*', '.js')
+  const videoUrl = 'videos/' + videoName + '.mp4'
+
+  addContext({ test }, videoUrl)
 });
 
 require('cypress-dark');

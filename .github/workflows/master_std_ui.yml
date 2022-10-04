@@ -151,6 +151,26 @@ jobs:
           path: cypress/videos
           retention-days: 7
 
+      ##### MOCHAWESOME ADDITIONS #####
+      # Inspiration: https://medium.com/swlh/publish-your-cypress-test-report-with-github-actions-47248788713a
+      - name: Copy test execution videos
+        run: |
+          mkdir public
+          cp -r cypress/videos public/videos
+      
+      - name: Merge test results into one
+        run: npm run report:merge
+      
+      - name: Generate HTML report
+        run: npm run report:generate
+      
+      - name: Deploy report page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+      ##################################
+
       - name: Uninstall Epinio
         if: always()
         env:

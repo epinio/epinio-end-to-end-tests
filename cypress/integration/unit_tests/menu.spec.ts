@@ -12,7 +12,7 @@ describe('Menu testing', () => {
     cy.visit('/');
   });
   
-  it('Check Epinio menu', () => {
+  it.only('Check Epinio menu', () => {
     if (Cypress.env('ui') == "rancher") {
       topLevelMenu.openIfClosed();
 
@@ -27,8 +27,8 @@ describe('Menu testing', () => {
     epinio.checkEpinioNav();
   });
 
-  it('Verify Welcome Screen without Namespaces', () => {
-    cy.clickEpinioMenu('Namespaces');
+  it.only('Verify Welcome Screen without Namespaces', () => {
+    cy.clickEpinioMenu('Namespacess');
     // Deletes all namespaces if detected
     cy.get("body").then(($body) => {
       if ($body.text().includes('Delete')) {
