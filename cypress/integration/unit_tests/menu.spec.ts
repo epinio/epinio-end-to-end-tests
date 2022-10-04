@@ -28,7 +28,7 @@ describe('Menu testing', () => {
   });
 
   it('Verify Welcome Screen without Namespaces', () => {
-    cy.clickEpinioMenu('Namespacess');
+    cy.clickEpinioMenu('Namespaces');
     // Deletes all namespaces if detected
     cy.get("body").then(($body) => {
       if ($body.text().includes('Delete')) {
