@@ -155,7 +155,7 @@ jobs:
       # Inspiration: https://medium.com/swlh/publish-your-cypress-test-report-with-github-actions-47248788713a
       - name: Copy test execution videos
         run: |
-          sudo mkdir public
+          sudo mkdir -m 777 public
           sudo cp -r cypress/videos public/videos
       
       - name: Merge test results into one
@@ -164,9 +164,9 @@ jobs:
       - name: Generate HTML report
         run: npm run report:generate
 
-      - name: Grant permissions to access /public/assets
-        run: |
-          sudo chmod -R 777 public/assets
+      # - name: Grant permissions to access /public/assets
+      #   run: |
+      #     sudo chmod -R 777 public/
       
       - name: Deploy report page
         uses: peaceiris/actions-gh-pages@v3
