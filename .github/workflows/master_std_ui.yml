@@ -164,15 +164,19 @@ jobs:
       - name: Generate HTML report
         run: npm run report:generate
 
-      # - name: Grant permissions to access /public/assets
-      #   run: |
-      #     sudo chmod -R 777 public/
-      
-      - name: Deploy report page
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Mochawesome report
+        uses: actions/upload-artifact@v2
+        if: always()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          name: mochawesome-report
+          path: mochawesome-report
+          retention-days: 7
+      
+      # - name: Deploy report page
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./public
       ##################################
 
       - name: Uninstall Epinio
