@@ -169,7 +169,7 @@ jobs:
         if: always()
         with:
           name: mochawesome-report
-          path: mochawesome-report
+          path: public
           retention-days: 7
       
       # - name: Deploy report page
