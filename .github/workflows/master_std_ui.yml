@@ -163,7 +163,7 @@ jobs:
       
       - name: Grant permissions to access /public/assets
         run: |
-          sudo chmod -R 777 /public/assets
+          sudo chmod -R 777 public/assets
 
       - name: Generate HTML report
         run: npm run report:generate
