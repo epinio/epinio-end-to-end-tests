@@ -161,12 +161,12 @@ jobs:
       - name: Merge test results into one
         run: npm run report:merge
       
+      - name: Generate HTML report
+        run: npm run report:generate
+
       - name: Grant permissions to access /public/assets
         run: |
           sudo chmod -R 777 public/assets
-
-      - name: Generate HTML report
-        run: npm run report:generate
       
       - name: Deploy report page
         uses: peaceiris/actions-gh-pages@v3
