@@ -1,6 +1,6 @@
 ##### MOCHAWESOME ADDITIONS #####
 # Inspiration: https://medium.com/swlh/publish-your-cypress-test-report-with-github-actions-47248788713a
-name: STD UI template
+name: Mochawesome report
 on:
     workflow_call:
       # inputs:
