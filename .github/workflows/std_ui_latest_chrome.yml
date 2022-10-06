@@ -45,6 +45,7 @@ jobs:
   mochawesome-test-generation:
     needs: [menu-tests, configurations-tests, applications-tests, namespaces-tests]
     uses: ./.github/workflows/mocha-report.yml
+    if: always()
 
 
     
