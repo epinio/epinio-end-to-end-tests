@@ -1,0 +1,55 @@
+##### MOCHAWESOME ADDITIONS #####
+# Inspiration: https://medium.com/swlh/publish-your-cypress-test-report-with-github-actions-47248788713a
+name: STD UI template
+on:
+    workflow_call:
+      # inputs:
+      #   browser:
+      #     description: Web browser to test
+      #     required: true
+      #     type: string
+      #   cypress_docker:
+      #     description: Cypress docker image to use
+      #     required: true
+      #     type: string
+      #   cypress_spec:
+      #     description: Which Cypress test to execute
+      #     required: true
+      #     type: string
+      #   docker_options:
+      #     description: Set other docker options
+      #     required: false
+      #     type: string
+      #   ext_reg:
+      #     description: Enable external registry test
+      #     required: false
+      #     type: string
+      #   s3:
+      #     description: Enable external s3
+      #     required: false
+      #     type: string
+jobs:
+  E2E-Cypress:
+    runs-on: self-hosted
+    steps:
+    - name: Copy test execution videos
+      if: always()
+      run: |
+        sudo mkdir -m 777 public
+        sudo cp -r cypress/videos public/videos
+      
+    - name: Merge test results into one
+      if: always()
+      run: npm run report:merge
+            
+    - name: Generate HTML report
+      if: always()
+      run: npm run report:generate
+
+    - name: Upload Mochawesome report
+      if: always()
+      uses: actions/upload-artifact@v2    
+      with:
+        name: mochawesome-report
+        path: public
+        retention-days: 7

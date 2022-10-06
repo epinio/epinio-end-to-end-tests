@@ -153,27 +153,27 @@ jobs:
 
       ##### MOCHAWESOME ADDITIONS #####
       # Inspiration: https://medium.com/swlh/publish-your-cypress-test-report-with-github-actions-47248788713a
-      - name: Copy test execution videos
-        if: always()
-        run: |
-          sudo mkdir -m 777 public
-          sudo cp -r cypress/videos public/videos
+      # - name: Copy test execution videos
+      #   if: always()
+      #   run: |
+      #     sudo mkdir -m 777 public
+      #     sudo cp -r cypress/videos public/videos
         
-      - name: Merge test results into one
-        if: always()
-        run: npm run report:merge
+      # - name: Merge test results into one
+      #   if: always()
+      #   run: npm run report:merge
               
-      - name: Generate HTML report
-        if: always()
-        run: npm run report:generate
+      # - name: Generate HTML report
+      #   if: always()
+      #   run: npm run report:generate
 
-      - name: Upload Mochawesome report
-        if: always()
-        uses: actions/upload-artifact@v2    
-        with:
-          name: mochawesome-report
-          path: public
-          retention-days: 7
+      # - name: Upload Mochawesome report
+      #   if: always()
+      #   uses: actions/upload-artifact@v2    
+      #   with:
+      #     name: mochawesome-report
+      #     path: public
+      #     retention-days: 7
       
       # - name: Deploy report page
       #   uses: peaceiris/actions-gh-pages@v3

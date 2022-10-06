@@ -41,3 +41,10 @@ jobs:
       cypress_docker: cypress/included:9.7.0 
       cypress_spec: cypress/integration/unit_tests/namespaces.spec.ts
     secrets: inherit
+
+  mochawesome-test-generation:
+    needs: [menu-tests, configurations-tests, applications-tests, namespaces-tests]
+    uses: ./.github/workflows/mocha.report.yml
+
+
+    
