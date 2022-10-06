@@ -164,11 +164,6 @@ jobs:
         run: npm run report:merge
               
       - name: Generate HTML report
-        uses: lewagon/wait-on-check-action@v1.0.0
-        with:
-          ref: ${{ github.ref }}
-          running-workflow-name: 'STD-UI-Latest-Chrome'
-          allowed-conclusions: success,skipped,cancelled
         if: always()
         run: npm run report:generate
 
