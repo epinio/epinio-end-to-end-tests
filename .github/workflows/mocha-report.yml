@@ -40,6 +40,12 @@ jobs:
       with:
         node-version: 16.2.0
 
+    - name: Cache Tools
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/tools
+        key: ${{ runner.os }}-tools
+
     - name: Copy test execution videos
       if: always()
       run: |
