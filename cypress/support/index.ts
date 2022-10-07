@@ -66,13 +66,12 @@ Cypress.on('test:after:run', (test, runnable) => {
   if (test.state === 'failed') {
     // Searches screenshots and videos previously copied in 
     // mochawesome-report from CI 
-      const screenshot_ci = `screenshots/${Cypress.spec.name
+    const screenshot_ci = `screenshots/${Cypress.spec.name
       }/${runnable.parent.title} -- ${test.title} (failed).png`;
-      addContext({ test }, screenshot_ci);
-      
-      const video_ci = `videos/${Cypress.spec.name}.mp4`;
-      addContext({ test }, video_ci);
-}     
+    addContext({ test }, screenshot_ci);
+  }
+  const video_ci = `videos/${Cypress.spec.name}.mp4`;
+  addContext({ test }, video_ci);
 });
 
 require('cypress-dark');
