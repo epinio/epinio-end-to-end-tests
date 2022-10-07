@@ -120,13 +120,6 @@ jobs:
             cypress/integration/unit_tests/${{ inputs.cypress_install_test }}
           config-file: cypress-with-epinio-cert.json
 
-      - name: Copying screenshots and videos to Mochawesome report
-        if: always()
-        run: |
-          mkdir -p mochawesome-report
-          cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
-
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v2
         if: failure()
@@ -142,14 +135,6 @@ jobs:
         with:
           name: cypress-videos-install
           path: cypress/videos
-          retention-days: 7
-
-      - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: mochawesome-report
-          path: mochawesome-report
           retention-days: 7
 
   # Patch Epinio to use the latest code version (main)
@@ -220,13 +205,6 @@ jobs:
             cypress/integration/unit_tests/uninstall.spec.ts
           config-file: cypress-with-epinio-cert.json
 
-      - name: Copying screenshots and videos to Mochawesome report
-        if: always()
-        run: |
-          mkdir -p mochawesome-report
-          cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
-
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v2
         if: failure()
@@ -242,14 +220,6 @@ jobs:
         with:
           name: cypress-videos-tests
           path: cypress/videos
-          retention-days: 7
-
-      - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: mochawesome-report
-          path: mochawesome-report
           retention-days: 7
 
   delete-cluster:
