@@ -39,7 +39,7 @@ describe('Applications testing', () => {
     });
   });
 
-  it.only('Push basic application and check we can restart and rebuild it', () => {
+  it('Push basic application and check we can restart and rebuild it', () => {
     cy.runApplicationsTest('restartAndRebuild');
   });
 
@@ -66,7 +66,7 @@ describe('Applications testing', () => {
   it('Create mysql service, bind it to a Wordpress app and push it',  () => {
     cy.runApplicationsTest('serviceMysqlBindWordpressPushApp');
   });
-
+  // Remove skip when this is fixed: https://github.com/epinio/ui/issues/160
   it.skip('Push application with Github Source type and env vars and check it',  () => {
     cy.runApplicationsTest('gitHubAndEnvVar');
   });
