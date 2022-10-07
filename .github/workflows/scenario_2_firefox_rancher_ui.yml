@@ -14,14 +14,15 @@ jobs:
       browser: firefox
       cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
       cypress_install_test: installation.spec.ts
-      cypress_test: with_s3_and_external_registry.spec.ts
+      # cypress_test: with_s3_and_external_registry.spec.ts
+      cypress_test: menu.spec.ts
       # Due to security reason, Firefox can't be started as root
       # https://github.com/cypress-io/github-action#firefox
       docker_options: '--user 1000'
       runner: ui-e2e-2
-      ext_reg: '1'
+      # ext_reg: '1'
     secrets:
       ext_reg_user: secrets.EPINIO_DOCKER_USER
       ext_reg_password: secrets.EPINIO_DOCKER_PASSWORD
-      s3_key_id: secrets.AWS_ACCESS_KEY_ID
-      s3_key_secret: secrets.AWS_SECRET_ACCESS_KEY
+      # s3_key_id: secrets.AWS_ACCESS_KEY_ID
+      # s3_key_secret: secrets.AWS_SECRET_ACCESS_KEY
