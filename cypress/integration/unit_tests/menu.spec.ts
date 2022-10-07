@@ -11,7 +11,7 @@ describe('Menu testing', () => {
     cy.login();
     cy.visit('/');
   });
-  
+
   it('Check Epinio menu', () => {
     if (Cypress.env('ui') == "rancher") {
       topLevelMenu.openIfClosed();
@@ -19,7 +19,7 @@ describe('Menu testing', () => {
       // Epinio's icon should appear in the side menu
       epinio.epinioIcon().should('exist');
 
-      // Click on the Epinio's logo as well as your Epinio instance 
+      // Click on the Epinio's logo as well as your Epinio instance
       epinio.accessEpinioMenu(Cypress.env('cluster')); 
     }
 
@@ -68,7 +68,7 @@ describe('Menu testing', () => {
 
       // Check all links work and match the expected version
 
-      // Verify amount of binaries in the page 
+      // Verify amount of binaries in the page
       cy.get('tr.link > td > a').should('have.length', 3);
       const binOsNames = ['darwin-arm64', 'linux-arm64', 'windows-x86_64.zip'];
 
@@ -80,7 +80,7 @@ describe('Menu testing', () => {
 
         // Download binaries
         // This is added to workaround Cypress error waiting for a page instead of downloading
-        // Source: https://github.com/cypress-io/cypress/issues/14857#issuecomment-785717474 
+        // Source: https://github.com/cypress-io/cypress/issues/14857#issuecomment-785717474
         cy.window().document().then(function (doc) {
           doc.addEventListener('click', () => {
             setTimeout(function () { doc.location.reload(); }, 5000);
@@ -106,10 +106,12 @@ describe('Menu testing', () => {
         });
       });
     });
-  }); 
+  });
 });
 
-// // Note: this test may need to be adapted with Rancher Dashboard
+// Note: this test needs to be adapted for Rancher Dashboard
+// Currently we are good if the custom user is unable to login when chart installed over Rancher
+// We'd need to apply values.yaml with the users first in Edit YAML
 describe('Login with different users', () => {
 
   it('Check login with admin user', () => {
@@ -132,23 +134,53 @@ describe('Login with different users', () => {
     const user_epinio = "user1"
     const pwd_epinio = "Hell@World"
     cy.login(user_epinio, pwd_epinio);
-    cy.contains('Invalid username or password. Please try again.').should('not.exist')
-    cy.contains('Applications').should('be.visible')
+    if (Cypress.env('ui') == null ) {
+      cy.contains('Invalid username or password. Please try again.').should('not.exist')
+      cy.contains('Applications').should('be.visible')
+    }
+    // Login fails when installed from rancher
+    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
+      cy.contains('Invalid username or password. Please try again.').should('exist')
+      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+    }
+    else {
+      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
+    }
   });
 
   it('Check login with regular user "user2" and password with many special characters', () => {
     const user_epinio = "user2"
     const pwd_epinio = "Hell#@~%/=World"
     cy.login(user_epinio, pwd_epinio);
-    cy.contains('Invalid username or password. Please try again.').should('not.exist')
-    cy.contains('Applications').should('be.visible')
+    if (Cypress.env('ui') == null ) {
+      cy.contains('Invalid username or password. Please try again.').should('not.exist')
+      cy.contains('Applications').should('be.visible')
+    }
+    // Login fails when installed from rancher
+    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
+      cy.contains('Invalid username or password. Please try again.').should('exist')
+      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+    }
+    else {
+      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
+    }
   });
 
   it('Check login with admin user name with special character (user@test) and password also with special characters', () => {
     const user_epinio = "user@test"
     const pwd_epinio = "Hell@World"
     cy.login(user_epinio, pwd_epinio);
-    cy.contains('Invalid username or password. Please try again.').should('not.exist')
-    cy.contains('Applications').should('be.visible')
+    if (Cypress.env('ui') == null ) {
+      cy.contains('Invalid username or password. Please try again.').should('not.exist')
+      cy.contains('Applications').should('be.visible')
+    }
+    // Login fails when installed from rancher
+    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
+      cy.contains('Invalid username or password. Please try again.').should('exist')
+      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+    }
+    else {
+      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
+    }
   });
 })

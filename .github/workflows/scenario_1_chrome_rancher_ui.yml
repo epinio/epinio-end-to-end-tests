@@ -14,7 +14,8 @@ jobs:
       browser: chrome
       cypress_image: cypress/browsers:node16.13.2-chrome97-ff96
       cypress_install_test: installation.spec.ts
-      cypress_test: with_default_options.spec.ts
+      # cypress_test: with_default_options.spec.ts
+      cypress_test: menu.spec.ts
       runner: ui-e2e-0
     secrets:
       ext_reg_user: secrets.EPINIO_DOCKER_USER

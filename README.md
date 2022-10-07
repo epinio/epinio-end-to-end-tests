@@ -59,12 +59,15 @@ make cypress-gui
 ```
 
 ## Scenario 1 - Using Chrome
-In this first scenario, Epinio is deployed with default options. </br>
-You can check all the things we test directly in the [file](./cypress/integration/scenarios/with_default_options.spec.ts).
+In this first scenario, Epinio is deployed in Rancher with default options. </br>
+And then basic UI test is performed [menu.spec.ts](./cypress/integration/unit_tests/menu.spec.ts).
+<!-- You can check all the things we test directly in the [file](./cypress/integration/scenarios/with_default_options.spec.ts). -->
 
 ## Scenario 2 - Using Firefox
-Second scenario tests Epinio installation with S3 and external registry configured. </br>
-Unlike the first scenario, we only play a small bunch of [tests](./cypress/integration/scenarios/with_s3_and_external_registry.spec.ts).
+Second scenario is the same as the first one just performed in Firefox. </br>
+TODO: Get back installation with S3 and external registry configuration within rancher installation. Ref. [Issue#236](https://github.com/epinio/epinio-end-to-end-tests/issues/236)
+<!-- Second scenario tests Epinio installation with S3 and external registry configured. </br>
+Unlike the first scenario, we only play a small bunch of [tests](./cypress/integration/scenarios/with_s3_and_external_registry.spec.ts). -->
 
 ## Process explained in one chart
 ```mermaid

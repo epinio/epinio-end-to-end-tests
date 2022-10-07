@@ -181,6 +181,7 @@ jobs:
   cypress-epinio-tests:
     needs:
       - installation
+      - cypress-epinio-installation
       - epinio-patching
     runs-on: ${{ inputs.runner }}
     container:
@@ -188,21 +189,20 @@ jobs:
       env:
         CLUSTER_NAME: local
         RANCHER_USER: admin
-        RANCHER_PASSWORD: rancherpassword
-        RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
+        RANCHER_PASSWORD: password
+        RANCHER_URL: https://epinio.${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
-        UI: rancher
+        # set UI value to something else than 'rancher'
+        UI: epinio-rancher
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
-
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           browser: ${{ inputs.browser }}
           headless: true
           spec: |
-            cypress/integration/scenarios/${{ inputs.cypress_test }}
-            cypress/integration/unit_tests/uninstall.spec.ts
+            cypress/integration/unit_tests/${{ inputs.cypress_test }}
           config-file: cypress-with-epinio-cert.json
 
       - name: Upload Cypress screenshots
@@ -222,9 +222,54 @@ jobs:
           path: cypress/videos
           retention-days: 7
 
+  cypress-epinio-uninstall:
+    needs:
+      - installation
+      - cypress-epinio-installation
+      - epinio-patching
+      - cypress-epinio-tests
+    runs-on: ${{ inputs.runner }}
+    container:
+      image: ${{ inputs.cypress_image }}
+      env:
+        CLUSTER_NAME: local
+        RANCHER_USER: admin
+        RANCHER_PASSWORD: rancherpassword
+        RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
+        SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+        UI: rancher
+      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
+    steps:
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          browser: ${{ inputs.browser }}
+          headless: true
+          spec: |
+            cypress/integration/unit_tests/uninstall.spec.ts
+          config-file: cypress-with-epinio-cert.json
+
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots-uninstall
+          path: cypress/screenshots
+          retention-days: 7
+
+      # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos-uninstall
+          path: cypress/videos
+          retention-days: 7
+
   delete-cluster:
     if: always()
-    needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests]
+    needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
     runs-on: ${{ inputs.runner }}
     steps:
 
