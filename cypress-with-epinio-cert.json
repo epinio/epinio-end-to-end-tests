@@ -1,6 +1,11 @@
 {
   "experimentalSessionAndOrigin": true,
   "defaultCommandTimeout": 10000,
+  "reporter":"mochawesome",
+  "reporterOptions": {
+    "reportFilename": "[name]-report_[status]_[datetime]",
+    "timestamp": "shortDate"
+  },
   "clientCertificates": [
     {
       "url": "https://*",
