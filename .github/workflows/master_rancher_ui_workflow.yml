@@ -66,7 +66,7 @@ jobs:
           DASHBOARD_VERSION: epinio-dev
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
-          K3S_VERSION: v1.22.7+k3s1
+          K3S_VERSION: v1.24.6+k3s1
           EXT_REG: ${{ inputs.ext_reg }}
           EXT_REG_USER: ${{ secrets.ext_reg_user }}
           EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
