@@ -90,7 +90,7 @@ jobs:
         env:
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
-          K3S_VERSION: v1.22.7+k3s1
+          K3S_VERSION: v1.24.6+k3s1
           EXT_REG: ${{ inputs.ext_reg }}
           S3: ${{ inputs.s3 }}
           EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
