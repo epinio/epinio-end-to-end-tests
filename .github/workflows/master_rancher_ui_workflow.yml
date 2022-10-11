@@ -48,10 +48,10 @@ jobs:
     runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Cache Tools
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/tools
           key: ${{ runner.os }}-tools
@@ -111,7 +111,7 @@ jobs:
     steps:
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v3
         with:
           browser: ${{ inputs.browser }}
           headless: true
@@ -128,7 +128,7 @@ jobs:
           cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots-install
@@ -137,7 +137,7 @@ jobs:
 
       # Test run video was always captured, so this action uses "always()" condition
       - name: Upload Cypress videos
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-videos-install
@@ -145,7 +145,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: mochawesome-report
@@ -160,7 +160,7 @@ jobs:
     runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout Epinio repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: epinio/epinio
           submodules: recursive
@@ -168,7 +168,7 @@ jobs:
           path: epinio
       
       - name: Cache Tools
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/tools
           key: ${{ runner.os }}-tools
@@ -178,7 +178,7 @@ jobs:
           echo "`pwd`/output/bin" >> $GITHUB_PATH
 
       - name: Setup Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         env:
           SETUP_GO_VERSION: '^1.17.2'
         with:
@@ -212,7 +212,7 @@ jobs:
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME}}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v3
         with:
           browser: ${{ inputs.browser }}
           headless: true
@@ -228,7 +228,7 @@ jobs:
           cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots-tests
@@ -237,7 +237,7 @@ jobs:
 
       # Test run video was always captured, so this action uses "always()" condition
       - name: Upload Cypress videos
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-videos-tests
@@ -245,7 +245,7 @@ jobs:
           retention-days: 7
       
       - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: mochawesome-report
@@ -272,7 +272,7 @@ jobs:
     steps:
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v3
         with:
           browser: ${{ inputs.browser }}
           headless: true
@@ -288,7 +288,7 @@ jobs:
           cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots-uninstall
@@ -297,7 +297,7 @@ jobs:
 
       # Test run video was always captured, so this action uses "always()" condition
       - name: Upload Cypress videos
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-videos-uninstall
@@ -305,7 +305,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: mochawesome-report

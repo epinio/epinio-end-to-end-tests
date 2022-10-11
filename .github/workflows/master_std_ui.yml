@@ -34,16 +34,16 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.EPINIO_DOCKER_USER }}
           password: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
 
       - name: Checkout Epinio repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: epinio/epinio
           submodules: recursive
@@ -51,20 +51,20 @@ jobs:
           path: epinio
 
       - name: Checkout Rancher Dashboard repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: rancher/dashboard
           ref: epinio-dev
           path: dashboard
 
       - name: Checkout Epinio UI-backend repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: epinio/ui-backend 
           path: ui-backend 
 
       - name: Setup Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         env:
           SETUP_GO_VERSION: '^1.18.0'
         with:
@@ -76,7 +76,7 @@ jobs:
           node-version: 16.2.0
 
       - name: Cache Tools
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/tools
           key: ${{ runner.os }}-tools
@@ -142,7 +142,7 @@ jobs:
           sudo cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots
@@ -151,7 +151,7 @@ jobs:
 
       # Test run video was always captured, so this action uses "always()" condition
       - name: Upload Cypress videos
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-videos
@@ -159,7 +159,7 @@ jobs:
           retention-days: 7
  
       - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: mochawesome-report
