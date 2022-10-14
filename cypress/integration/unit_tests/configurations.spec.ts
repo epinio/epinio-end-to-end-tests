@@ -14,29 +14,9 @@ describe('Configuration testing', () => {
       epinio.accessEpinioMenu(Cypress.env('cluster'));
     }
 
-    // Executes application cleansing of "testapp" and "configuration01"
-    // Destroy application "testapp" and verify
-    // Could be a function later?
-    cy.clickEpinioMenu('Applications');
-    cy.get('body').then(($body) => {
-      if ($body.text().includes('testapp')) {
-        cy.get('[width="30"] > .checkbox-outer-container.check').click();
-        cy.clickButton('Delete');
-        cy.confirmDelete();
-        cy.contains('testapp', {timeout: 60000}).should('not.exist');
-      };
-    });
-
-    // Destroy configuration "configuration01" and verify
-    cy.clickEpinioMenu('Configurations');
-    cy.get('body').then(($body) => {
-      if ($body.text().includes('configuration01')) {
-        cy.get('[width="30"] > .checkbox-outer-container.check').click();
-        cy.clickButton('Delete');
-        cy.confirmDelete();
-        cy.contains('configurations01', {timeout: 60000}).should('not.exist');
-      };
-    });
+    // Delete all Apps and Configurations that may exist
+    cy.deleteAllApplications()
+    cy.deleteAllConfigurations()
   });
 
   it('Create an application with a configuration, unbind the configuration and delete all', () => {

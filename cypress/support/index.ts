@@ -20,6 +20,7 @@ declare global {
       createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, customApplicationChart?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string, serviceName?: string, catalogType?: string): Chainable<Element>;
       checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number, serviceName?: string, checkCreatedApp?: string ): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
+      deleteAllApplications():Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
       rebuildApp(appName: string, namespace?: string,): Chainable<Element>;
       showAppLog(appName: string, namespace?: string,): Chainable<Element>;
@@ -31,6 +32,7 @@ declare global {
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       editConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;
+      deleteAllConfigurations():Chainable<Element>;
       createService(serviceName: string, catalogType: string): Chainable<Element>;
       bindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
       unbindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
