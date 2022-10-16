@@ -78,6 +78,20 @@ Cypress.Commands.add('confirmDelete', (namespace) => {
   cy.get('.card-actions').contains('Delete').click();
 });
 
+Cypress.Commands.add('deleteAll', (label) => {
+  // Must be present in Configurations, Aplications or Namespaces page first
+  cy.clickEpinioMenu(label)
+  cy.get('h1').contains(label).should('be.visible')
+  cy.log(`## DElETION OF ALL ${label} STARTS HERE ##`)
+  cy.get('body').then(($body) => {
+    if ($body.text().includes('Delete')) {
+      cy.get('[width="30"] > .checkbox-outer-container.check').click();
+      cy.get('.btn').contains('Delete').click({ctrlKey: true});
+      cy.get('#promptRemove', {timeout: 40000}).should('not.exist')
+    };
+  });
+});
+
 // Check the status of the running stage
 Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, status='Success'}) => {
   var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter > .status > .badge';
@@ -519,47 +533,6 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
     cy.contains(appName).should('not.exist');
   }
 });
-
-// Delete all Namespaces
-Cypress.Commands.add('deleteAllNamespaces', () => {
-  cy.clickEpinioMenu('Namespaces')
-  cy.get('.checkbox-outer-container.check').click();
-  // Mimics Ctrl + click Delete to destroy all Namespaces
-  cy.get('.btn').contains('Delete').click({ctrlKey: true});
-  cy.get('#promptRemove', {timeout: 25000}).should('not.exist')
-});
-
-// Delete all Applications
-Cypress.Commands.add('deleteAllApplications', () => {
-  cy.clickEpinioMenu('Applications');
-  cy.get('h1').contains('Applications').should('be.visible')
-  cy.log('APP DELETION STARTS HERE')
-  // cy.wait(50000)
-    cy.get('body').then(($body) => {
-      if ($body.text().includes('Namespace:')) {
-        cy.get('[width="30"] > .checkbox-outer-container.check').click();
-        cy.clickButton('Delete');
-        cy.confirmDelete();
-        cy.contains('Namespace:', {timeout: 60000}).should('not.exist');
-      };
-    });
-  });
-
-// Delete all Configurations
-Cypress.Commands.add('deleteAllConfigurations', () => {
-  cy.clickEpinioMenu('Configurations');
-  cy.log('CONFIG DELETION STARTS HERE')
-  cy.get('h1').contains('Configurations').should('be.visible')
-    cy.get('body').then(($body) => {
-      
-      if ($body.text().includes('Namespace:')) {
-        cy.get('[width="30"] > .checkbox-outer-container.check').click();
-        cy.clickButton('Delete');
-        cy.confirmDelete();
-        cy.contains('Namespace:', {timeout: 60000}).should('not.exist');
-      };
-    });
-  });
 
 // Configurations functions
 

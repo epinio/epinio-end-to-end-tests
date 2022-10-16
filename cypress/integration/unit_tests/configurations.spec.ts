@@ -15,8 +15,8 @@ describe('Configuration testing', () => {
     }
 
     // Delete all Apps and Configurations that may exist
-    cy.deleteAllApplications()
-    cy.deleteAllConfigurations()
+    cy.deleteAll('Applications')
+    cy.deleteAll('Configurations')
   });
 
   it('Create an application with a configuration, unbind the configuration and delete all', () => {

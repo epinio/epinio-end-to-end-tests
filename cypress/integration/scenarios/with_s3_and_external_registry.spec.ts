@@ -36,14 +36,7 @@ describe('Menu testing', () => {
   });
 
   it('Verify Welcome Screen without Namespaces', () => {
-    cy.clickEpinioMenu('Namespaces');
-    // Deletes all namespaces if detected
-    cy.get("body").then(($body) => {
-      if ($body.text().includes('Delete')) {
-        cy.deleteAllNamespaces()
-      }
-     }
-    )
+    cy.deleteAll('Namespaces')
     cy.clickEpinioMenu('Applications');
     cy.get('h1').contains('Welcome to Epinio').should('be.visible')
     // Verify creating namespace from Get Started button works

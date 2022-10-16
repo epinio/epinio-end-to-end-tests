@@ -14,8 +14,8 @@ describe('Applications testing', () => {
       epinio.accessEpinioMenu(Cypress.env('cluster'));
     }
     // Delete all Apps and Configurations that may exist
-    cy.deleteAllApplications()
-    cy.deleteAllConfigurations()
+    cy.deleteAll('Applications')
+    cy.deleteAll('Configurations')
   });
 
   it('Push basic application and check we can restart and rebuild it', () => {
