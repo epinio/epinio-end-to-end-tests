@@ -58,10 +58,9 @@ Cypress.Commands.add('clickEpinioMenu', (label) => {
   // This will check application menu regardles if it has namespaces
   cy.get("body").then(($body) => {
     if ($body.text().includes('Routes')) {
-      cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.exist');
+      cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.visible');
     } else if ($body.text().includes('Welcome to Epinio')) {
       cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
-  
 });
 
 // Confirm the delete operation
@@ -77,6 +76,20 @@ Cypress.Commands.add('confirmDelete', (namespace) => {
 
   // Confirm the deletion
   cy.get('.card-actions').contains('Delete').click();
+});
+
+Cypress.Commands.add('deleteAll', (label) => {
+  // Must be present in Configurations, Aplications or Namespaces page first
+  cy.clickEpinioMenu(label)
+  cy.get('h1').contains(label).should('be.visible')
+  cy.log(`## DElETION OF ALL ${label} STARTS HERE ##`)
+  cy.get('body').then(($body) => {
+    if ($body.text().includes('Delete')) {
+      cy.get('[width="30"] > .checkbox-outer-container.check').click();
+      cy.get('.btn').contains('Delete').click({ctrlKey: true});
+      cy.get('#promptRemove', {timeout: 40000}).should('not.exist')
+    };
+  });
 });
 
 // Check the status of the running stage
@@ -519,15 +532,6 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
     cy.clickEpinioMenu('Applications');
     cy.contains(appName).should('not.exist');
   }
-});
-
-// Delete all Namespaces
-Cypress.Commands.add('deleteAllNamespaces', () => {
-  cy.clickEpinioMenu('Namespaces')
-  cy.get('.checkbox-outer-container.check').click();
-  // Mimics Ctrl + click Delete to destroy all Namespaces
-  cy.get('.btn').contains('Delete').click({ctrlKey: true});
-  cy.get('#promptRemove', {timeout: 25000}).should('not.exist')
 });
 
 // Configurations functions

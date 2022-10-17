@@ -10,6 +10,7 @@ declare global {
       login(username?: string, password?: string, cacheSession?: boolean,): Chainable<Element>;
       byLabel(label: string,): Chainable<Element>;
       clickButton(label: string,): Chainable<Element>;
+      deleteAll(label: string,):Chainable<Element>;
       clickEpinioMenu(label: string,): Chainable<Element>;
       clickClusterMenu(listLabel: string[],): Chainable<Element>;
       confirmDelete(namespace?: string,): Chainable<Element>;
@@ -27,7 +28,6 @@ declare global {
       downloadManifest(appName: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
-      deleteAllNamespaces():Chainable<Element>;
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       editConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;
