@@ -25,7 +25,10 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: rancher/dashboard
-        ref: epinio-dev
+        # Momentarily freezing latest version until epinio-dev is stable
+        # https://github.com/epinio/epinio-end-to-end-tests/issues/247
+        # ref: epinio-dev
+        ref: epinio-standalone-v1.2.0.0.0.1 
         path: dashboard
 
     - uses: actions/setup-node@v2
