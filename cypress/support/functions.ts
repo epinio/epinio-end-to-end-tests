@@ -22,7 +22,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     cy.get('button').click();
     cy.wait('@loginReq');
       if (ui == "rancher") {
-      cy.contains("Getting Started", {timeout: 10000}).should('be.visible');
+      cy.contains("Get Started", {timeout: 10000}).should('be.visible');
     } 
       else{
           cy.get("body").then(($body) => {
@@ -722,7 +722,7 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
   cy.contains('header', 'Charts', {timeout: 8000}).should('be.visible');
   
   // Install epinio-installer chart
-  cy.contains('install Epinio').click();
+  cy.contains('Epinio deploys Kubernetes').click();
   cy.contains('Charts: epinio').should('be.visible');
   cy.clickButton('Install');
 
