@@ -7,6 +7,9 @@ api:
     - username: epinio
       passwordBcrypt: "$2a$10$6bCi5NMstMK781In7JGiL.B44pgoplUb330FQvm6mVXMppbXBPiXS"
       role: user
+    - username: "0123456789"
+      passwordBcrypt: "$2a$10$6bCi5NMstMK781In7JGiL.B44pgoplUb330FQvm6mVXMppbXBPiXS"
+      role: admin
       #user1 password: Hell@World
     - username: user1 
       passwordBcrypt: "$2y$10$xrZYXonrAnklLCURDX2zu.HacO02Fflp5toM/riJ028aNS2PJRutS"
