@@ -176,4 +176,23 @@ describe('Login with different users', () => {
       throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
     }
   });
+
+  it('Check login with admin user name with numbers (0123456789) and password', () => {
+    const user_epinio = "0123456789"
+    const pwd_epinio = "password"
+    cy.login(user_epinio, pwd_epinio);
+    if (Cypress.env('ui') == null) {
+      cy.contains('Invalid username or password. Please try again.').should('not.exist')
+      cy.contains('Applications').should('be.visible')
+    }
+    // Login fails when installed from rancher
+    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
+      cy.contains('Invalid username or password. Please try again.').should('exist')
+      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+    }
+    else {
+      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
+    }
+  });
+
 })
