@@ -31,8 +31,8 @@ export class Epinio {
   firstLogin() {
     cy.get('input').type(Cypress.env('password'), {log: false});
     cy.clickButton('Log in with Local User');
-    cy.contains('I agree').click('left');
+    cy.contains('By checking the box, you accept').click('left');
     cy.clickButton('Continue');
-    cy.contains("Getting Started", {timeout: 10000});
+    cy.contains("Get Started", {timeout: 10000});
   }
 }
