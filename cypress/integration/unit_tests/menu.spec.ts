@@ -84,8 +84,8 @@ describe('Menu testing', () => {
           cy.wait(1500);
         });
 
-        // Verify files are downloaded in cypress/download and its stdout output
-        cy.exec(`find "cypress/downloads/" -name "epinio-${binOsNames[i]}*"`).its('stdout').should('contain', `${binOsNames[i]}`);
+        // Verify files are downloaded in cypress/download
+        cy.exec(`while true; do { test -f cypress/downloads/epinio-${binOsNames[i]} && break; }; sleep 2; done`, {timeout: 31000}).its('code').should('eq', 0);
       }
 
       // Check link "See all packages" and visit binary page
