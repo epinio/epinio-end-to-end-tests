@@ -630,7 +630,7 @@ Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
   cy.get('span.vs__selected').eq(1).should('contain', catalogType )
   cy.clickButton('Create');
   // Verify service is deployed 
-  cy.get('span.badge-state.bg-success', {timeout: 60000}).contains('Deployed').should('be.visible')
+  cy.get('span.badge-state.bg-success', {timeout: 90000}).contains('Deployed').should('be.visible')
   cy.get('td.col-link-detail').eq(0).contains(serviceName).should('be.visible')
 });
 
