@@ -25,10 +25,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: rancher/dashboard
-        # Momentarily freezing latest version until epinio-dev is stable
-        # https://github.com/epinio/epinio-end-to-end-tests/issues/247
-        # ref: epinio-dev
-        ref: epinio-standalone-v1.2.0.0.0.1 
+        ref: epinio-dev
         path: dashboard
 
     - uses: actions/setup-node@v2
@@ -38,7 +35,7 @@ jobs:
     - name: Install & Build
       run: |
         cd dashboard
-        RANCHER_ENV=epinio EXCLUDES_PKG=rancher-components .github/workflows/scripts/build-dashboard.sh
+        EXCLUDES_PKG=harvester,rancher-components EXCLUDES_NUXT_PLUGINS=plugins/version,plugins/plugin .github/workflows/scripts/build-dashboard.sh
 
     - name: Upload Build
       uses: actions/upload-artifact@v2
