@@ -35,7 +35,7 @@ jobs:
     - name: Install & Build
       run: |
         cd dashboard
-        EXCLUDES_PKG=harvester,rancher-components EXCLUDES_NUXT_PLUGINS=plugins/version,plugins/plugin .github/workflows/scripts/build-dashboard.sh
+        RANCHER_ENV=epinio EXCLUDES_PKG=harvester,rancher-components EXCLUDES_NUXT_PLUGINS=plugins/version,plugins/plugin .github/workflows/scripts/build-dashboard.sh
 
     - name: Upload Build
       uses: actions/upload-artifact@v2
