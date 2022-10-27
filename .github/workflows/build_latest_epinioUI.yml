@@ -17,18 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout end-to-end-tests repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: epinio-end-to-end-tests
     
     - name: Checkout dashboard repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: rancher/dashboard
         ref: epinio-dev
         path: dashboard
 
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
         node-version: '14.x'
 
@@ -38,7 +38,7 @@ jobs:
         RANCHER_ENV=epinio EXCLUDES_PKG=harvester,rancher-components EXCLUDES_NUXT_PLUGINS=plugins/version,plugins/plugin .github/workflows/scripts/build-dashboard.sh
 
     - name: Upload Build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: dashboard/${{ env.RELEASE_DIR}}/${{ env.ARTIFACT_NAME }}*
         name: ${{ env.ARTIFACT_NAME }}
@@ -46,7 +46,7 @@ jobs:
 
     # BUILD LATEST UI-BACKEND
     - name: Checkout dashboard repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: epinio/ui-backend
         path: ui-backend
@@ -61,15 +61,15 @@ jobs:
         git tag -a v99.0.0 -m "Fake tag for QA" --force
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: '1.17'
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v2
 
     - name: Login to Docker Hub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.EPINIO_DOCKER_USER }}
         password: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
@@ -88,7 +88,7 @@ jobs:
         cp ../epinio-end-to-end-tests/.goreleaser-dashboard-qa.yml .
 
     - name: Run GoReleaser
-      uses: goreleaser/goreleaser-action@v2
+      uses: goreleaser/goreleaser-action@v3
       with:
         distribution: goreleaser
         version: latest
