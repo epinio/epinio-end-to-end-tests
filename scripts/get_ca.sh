@@ -18,6 +18,6 @@ for I in crt key; do
   FILE="${DATA_PATH}/${CA_NAME}-${I}-pem.file"
   echo "${VALUE}" > ${FILE}
 
-  # And update cypress.json
-  sed -i "s|%${I}%|${FILE}|g" cypress.json
+  # And update cypress.config.ts
+  sed -i "s|%${I}%|${FILE}|g" cypress.config.ts
 done
