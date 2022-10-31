@@ -118,7 +118,7 @@ jobs:
           spec: |
             cypress/integration/unit_tests/first_connexion.spec.ts
             cypress/integration/unit_tests/${{ inputs.cypress_install_test }}
-          config-file: cypress-with-epinio-cert.json
+          config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
         if: always()
@@ -218,7 +218,7 @@ jobs:
           headless: true
           spec: |
             cypress/integration/unit_tests/${{ inputs.cypress_test }}
-          config-file: cypress-with-epinio-cert.json
+          config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
         if: always()
@@ -278,7 +278,7 @@ jobs:
           headless: true
           spec: |
             cypress/integration/unit_tests/uninstall.spec.ts
-          config-file: cypress-with-epinio-cert.json
+          config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
         if: always()
