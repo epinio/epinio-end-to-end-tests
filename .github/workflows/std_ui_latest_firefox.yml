@@ -53,7 +53,8 @@ jobs:
     with:
       browser: firefox
       cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/e2e/unit_tests/namespaces.spec.ts
+      # cypress_spec: cypress/e2e/unit_tests/namespaces.spec.ts
+      cypress_spec: unit_tests/namespaces.spec.ts
       docker_options: '--user 1000'
       ext_reg: '1'
       s3: '1'
