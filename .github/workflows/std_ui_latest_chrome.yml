@@ -15,7 +15,7 @@ jobs:
     with:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/menu.spec.ts
+      cypress_spec: cypress/e2e/unit_tests/menu.spec.ts
     secrets: inherit
 
   configurations-tests:
@@ -23,7 +23,7 @@ jobs:
     with:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/configurations.spec.ts
+      cypress_spec: cypress/e2e/unit_tests/configurations.spec.ts
     secrets: inherit
 
   applications-tests:
@@ -31,7 +31,7 @@ jobs:
     with:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/applications.spec.ts
+      cypress_spec: cypress/e2e/unit_tests/applications.spec.ts
     secrets: inherit
 
   namespaces-tests:
@@ -39,5 +39,5 @@ jobs:
     with:
       browser: chrome
       cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/namespaces.spec.ts
+      cypress_spec: cypress/e2e/unit_tests/namespaces.spec.ts
     secrets: inherit

@@ -20,7 +20,7 @@ jobs:
     #with:
       #browser: firefox
       #cypress_docker: cypress/included:9.7.0 
-      #cypress_spec: cypress/integration/unit_tests/menu.spec.ts
+      #cypress_spec: cypress/e2e/unit_tests/menu.spec.ts
       #docker_options: '--user 1000'
       #ext_reg: '1'
       #s3: '1'
@@ -31,7 +31,7 @@ jobs:
     #with:
       #browser: firefox
       #cypress_docker: cypress/included:9.7.0 
-      #cypress_spec: cypress/integration/unit_tests/configurations.spec.ts
+      #cypress_spec: cypress/e2e/unit_tests/configurations.spec.ts
       #docker_options: '--user 1000'
       #ext_reg: '1'
       #s3: '1'
@@ -42,7 +42,7 @@ jobs:
     #with:
       #browser: firefox
       #cypress_docker: cypress/included:9.7.0 
-      #cypress_spec: cypress/integration/unit_tests/applications.spec.ts
+      #cypress_spec: cypress/e2e/unit_tests/applications.spec.ts
       #docker_options: '--user 1000'
       #ext_reg: '1'
       #s3: '1'
@@ -53,7 +53,7 @@ jobs:
     with:
       browser: firefox
       cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/namespaces.spec.ts
+      cypress_spec: cypress/e2e/unit_tests/namespaces.spec.ts
       docker_options: '--user 1000'
       ext_reg: '1'
       s3: '1'

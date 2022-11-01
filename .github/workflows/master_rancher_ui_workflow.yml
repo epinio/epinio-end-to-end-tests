@@ -116,8 +116,8 @@ jobs:
           browser: ${{ inputs.browser }}
           headless: true
           spec: |
-            cypress/integration/unit_tests/first_connexion.spec.ts
-            cypress/integration/unit_tests/${{ inputs.cypress_install_test }}
+            cypress/e2e/unit_tests/first_connexion.spec.ts
+            cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
           config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
@@ -217,7 +217,7 @@ jobs:
           browser: ${{ inputs.browser }}
           headless: true
           spec: |
-            cypress/integration/unit_tests/${{ inputs.cypress_test }}
+            cypress/e2e/unit_tests/${{ inputs.cypress_test }}
           config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
@@ -277,7 +277,7 @@ jobs:
           browser: ${{ inputs.browser }}
           headless: true
           spec: |
-            cypress/integration/unit_tests/uninstall.spec.ts
+            cypress/e2e/unit_tests/uninstall.spec.ts
           config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
