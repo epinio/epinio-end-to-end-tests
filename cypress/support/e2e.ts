@@ -38,6 +38,9 @@ declare global {
       removeHelmRepo(): Chainable<Element>;
       epinioInstall(s3?: boolean, extRegistry?: boolean,): Chainable<Element>;
       epinioUninstall(): Chainable<Element>;
+      kubectlDeployCli(): Chainable<Element>;
+      epinioDeployCli(): Chainable<Element>;
+      commandCall(command: string, commandArgs: string): Chainable<Element>;
 
       // Functions declared in tests.ts
       runApplicationsTest(testName: string,): Chainable<Element>;

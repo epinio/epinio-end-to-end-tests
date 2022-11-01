@@ -805,3 +805,75 @@ Cypress.Commands.add('removeHelmRepo', () => {
   cy.contains('Delete').click();
   cy.confirmDelete();
 });
+
+// Prepare kubernetes kubectl CLI environment
+Cypress.Commands.add('kubectlDeployCli', () => {
+  // Verify if this has been done already
+  cy.exec(`kubectl cluster-info 2>/dev/null`, {failOnNonZeroExit: false}).then((result) => {
+    if (result.code != 0) {
+      cy.log('Deploying kubectl CLI.');
+      // Fetch kubeconfig and install kubectl
+      const kuberlrVersion = '0.4.2';
+      const kuberlrURL = `https://github.com/flavio/kuberlr/releases/download/v${kuberlrVersion}/kuberlr_${kuberlrVersion}_linux_amd64.tar.gz`;
+      // Use SYSTEM_DOMAIN URL and get only the IP part from it. Example: 128.242.42.2.omg.howdoi.website
+      const domain = Cypress.env('system_domain');
+      const IngressIP = domain.match(/^(?:\d{1,3}\.){3}\d{1,3}/);
+      cy.exec(`
+        mkdir ~/.kube
+        wget http://ci.${IngressIP}.nip.io/config.yaml -O ~/.kube/config
+        # Check if cypress is running inside container and exit if not
+        grep -q docker /proc/1/cgroup || exit 0
+        wget ${kuberlrURL} -O - | tar -xz -C /usr/local/bin --strip-components 1 --no-anchored kuberlr
+        ln -s /usr/local/bin/kuberlr /usr/local/bin/kubectl
+        kubectl cluster-info 2&> /dev/null
+      `, {timeout: 31000}).its('code').should('eq', 0);
+    }
+    else {
+      cy.log('kubectl CLI already deployed and configured.');
+    }
+  })
+})
+
+Cypress.Commands.add('epinioDeployCli', () => {
+  cy.kubectlDeployCli();
+  cy.exec(`test -f /usr/local/bin/epinio`, {failOnNonZeroExit: false}).then((result) => {
+    if (result.code != 0) {
+      cy.log('Deploying epinio CLI.')
+      // Fetch epinio CLI in version used in by epinio-ui
+      if (Cypress.env('ui') == null || Cypress.env('ui') == 'epinio-rancher' ) {
+        cy.visit('/');
+        cy.get('.version.text-muted > a').should('have.attr', 'href', '/epinio/about').invoke('text').then((version) => {
+          version = version.trim();
+          cy.exec(`
+            # Check if cypress is running inside container and exit if not
+            grep -q docker /proc/1/cgroup || exit 0
+            wget https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O /usr/local/bin/epinio
+            chmod +x /usr/local/bin/epinio
+          `, {timeout: 31000}).its('code').should('eq', 0);
+        })
+      }
+      else {
+        cy.log('Unable to get epinio version.');
+        return false;
+      }
+    }
+    else {
+      cy.log('epinio CLI already deployed.');
+    }
+  })
+})
+
+Cypress.Commands.add('commandCall', (command, commandArgs) => {
+  // Dummy function for getting and returning stdout from the command and its arguments
+  // If the command is suppose to fail add "|| true" to the end of commandArgs argument, default timeout is 60s
+  cy.exec(`${command} ${commandArgs}`).then((result) => {
+    cy.task('log', `### Stdout for command "${command} ${commandArgs}" starts here.`, {log: false})
+    cy.task('log', result.stdout, {log: false});
+    if ( result.stderr != "" ) {
+      cy.task('log', '### Stderr starts here.', {log: false})
+      cy.task('log', result.stderr, {log: false});
+    }
+    cy.task('log', '### Stdout stops here.', {log: false})
+    return cy.wrap(result.stdout).as('pText');
+  })
+})
