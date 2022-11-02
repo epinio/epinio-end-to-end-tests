@@ -182,8 +182,8 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Select the Source Type if needed
   if (sourceType) {
-    cy.get('.labeled-select').click();
-    cy.contains(sourceType, {timeout: 120000}).click();
+    cy.get('.labeled-select.hoverable').contains('Source Type').click();
+    cy.contains(sourceType, {timeout: 120000}).should('be.visible').click();
     switch (sourceType) {
       case 'Container Image':
         cy.typeValue({label: 'Image', value: archiveName}); 
