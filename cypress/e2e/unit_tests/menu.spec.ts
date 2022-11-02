@@ -76,12 +76,12 @@ describe('Menu testing', () => {
         // Source: https://github.com/cypress-io/cypress/issues/14857#issuecomment-785717474
         cy.window().document().then(function (doc) {
           doc.addEventListener('click', () => {
-            setTimeout(function () { doc.location.reload(); }, 5000);
+            setTimeout(function () { doc.location.reload(); }, 10000);
           });
           // Now we can download
           cy.get("tr.link > td > a").eq(i).click({ force: true });
           // Adding a bit of wait prior executing command to ensure file is downloaded
-          cy.wait(1500);
+          cy.wait(5000);
         });
 
         // Verify files are downloaded in cypress/download
