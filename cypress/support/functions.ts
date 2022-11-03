@@ -183,10 +183,13 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Select the Source Type if needed
   if (sourceType) {
     // Adding explicit wait here to attempt avoid failure in CI
-    cy.wait(3000)
-    cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click();
+    cy.wait(5000)
+    cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click( {force : true} );
+    cy.wait(1000)
+    cy.screenshot('SrcType Dropown after opening')
+    cy.task('log', '### NOW OPENING DROPDOWN TO SELECT SOURCE TYPE ###')     
     // Adding explicit wait here to attempt avoid failure in CI
-    cy.wait(3000)
+    
     cy.contains(sourceType, {timeout: 120000}).should('be.visible').click();
     switch (sourceType) {
       case 'Container Image':
@@ -197,7 +200,10 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
         cy.typeValue({label: 'Branch', value: 'main'}); 
         break;
       case 'Archive':
-        cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});       
+        cy.screenshot('SrcType Dropown opened BEFORE selecting ARCHIVE')
+        cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});   
+        cy.screenshot('SrcType Dropown opened AFTER selecting ARCHIVE')
+        cy.wait(120000)
         break; 
       case 'GitHub':
         cy.get('.labeled-input.edit.has-tooltip',{timeout:5000}).contains('label', 'Username / Organization').should('be.visible')
