@@ -10,8 +10,9 @@ on:
 
 # I do not know if I can refactor with a matrix in a reusable workflow?
 jobs:
-## Adding checks to the runner
-  check-runner:
+  menu-tests:
+    ## Adding checks to the runner
+    check-runner:
     runs-on: self-hosted
     steps:
       - run: df -h
@@ -20,8 +21,6 @@ jobs:
       - run: docker ps
       - run: docker images
       - run: sudo ss -tupan
-      
-  menu-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
@@ -30,6 +29,16 @@ jobs:
     secrets: inherit
 
   configurations-tests:
+    ## Adding checks to the runner
+    check-runner:
+    runs-on: self-hosted
+    steps:
+      - run: df -h
+      - run: ps auxf
+      - run: sudo dmesg
+      - run: docker ps
+      - run: docker images
+      - run: sudo ss -tupan
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
@@ -38,6 +47,16 @@ jobs:
     secrets: inherit
 
   applications-tests:
+    ## Adding checks to the runner
+    check-runner:
+    runs-on: self-hosted
+    steps:
+      - run: df -h
+      - run: ps auxf
+      - run: sudo dmesg
+      - run: docker ps
+      - run: docker images
+      - run: sudo ss -tupan
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
@@ -46,6 +65,16 @@ jobs:
     secrets: inherit
 
   namespaces-tests:
+    ## Adding checks to the runner
+    check-runner:
+    runs-on: self-hosted
+    steps:
+      - run: df -h
+      - run: ps auxf
+      - run: sudo dmesg
+      - run: docker ps
+      - run: docker images
+      - run: sudo ss -tupan
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
