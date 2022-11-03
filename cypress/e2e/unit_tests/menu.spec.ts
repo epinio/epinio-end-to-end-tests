@@ -79,6 +79,7 @@ describe('Menu testing', () => {
             setTimeout(function () { doc.location.reload(); }, 10000);
           });
           // Now we can download
+          cy.wait(2000);
           cy.get("tr.link > td > a").eq(i).click({ force: true });
           // Adding a bit of wait prior executing command to ensure file is downloaded
           cy.wait(5000);

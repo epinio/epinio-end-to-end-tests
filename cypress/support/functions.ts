@@ -182,9 +182,11 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Select the Source Type if needed
   if (sourceType) {
+    // Adding explicit wait here to attempt avoid failure in CI
+    cy.wait(3000)
     cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click();
     // Adding explicit wait here to attempt avoid failure in CI
-    cy.wait(1000)
+    cy.wait(3000)
     cy.contains(sourceType, {timeout: 120000}).should('be.visible').click();
     switch (sourceType) {
       case 'Container Image':
