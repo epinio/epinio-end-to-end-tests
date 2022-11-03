@@ -18,7 +18,7 @@ describe('Applications testing', () => {
     cy.deleteAll('Configurations')
   });
 
-  it('Push basic application and check we can restart and rebuild it', () => {
+  it.only('Push basic application and check we can restart and rebuild it', () => {
     cy.runApplicationsTest('restartAndRebuild');
   });
 

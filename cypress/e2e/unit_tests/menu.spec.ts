@@ -41,7 +41,7 @@ describe('Menu testing', () => {
     cy.contains(defaultNamespace).should('be.visible');
   });
 
-  it('Check binary links from version in menu', () => {
+  it.only('Check binary links from version in menu', () => {
     // Check link in main page is present and works after clicking
     cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/about');
     cy.get('.version.text-muted > a').click();
