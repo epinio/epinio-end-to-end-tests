@@ -120,6 +120,10 @@ jobs:
             cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
           config-file: cypress.config.ts
 
+      - name: DEBUG pause container
+        if: always()
+        run: sleep 2h
+
       - name: Copying screenshots and videos to Mochawesome report
         if: always()
         run: |
