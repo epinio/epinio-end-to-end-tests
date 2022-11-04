@@ -52,7 +52,7 @@ jobs:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: firefox
-      cypress_docker: cypress/included:10.11.0
+      cypress_docker: cypress/included:10.9.0
       cypress_spec: cypress/e2e/unit_tests/namespaces.spec.ts
       docker_options: '--user 1000'
       ext_reg: '1'
