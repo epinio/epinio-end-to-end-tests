@@ -19,11 +19,11 @@ describe('Configuration testing', () => {
     cy.deleteAll('Configurations')
   });
 
-  it.skip('Create an application with a configuration, unbind the configuration and delete all', () => {
+  it('Create an application with a configuration, unbind the configuration and delete all', () => {
     cy.runConfigurationsTest('newAppWithConfiguration');
   });
 
-  it.skip('Bind a created configuration to an existing application, edit configuration and delete all', () => {
+  it('Bind a created configuration to an existing application, edit configuration and delete all', () => {
     cy.runConfigurationsTest('bindConfigurationOnApp');
   });
 });
