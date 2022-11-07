@@ -117,7 +117,7 @@ jobs:
       - name: Start Cypress tests
         env:
           BROWSER: ${{ inputs.browser }}
-          CYPRESS_CFG: cypress-with-epinio-cert.json
+          CYPRESS_CFG: cypress.config.ts
           CYPRESS_DOCKER: ${{ inputs.cypress_docker }}
           DOCKER_OPTIONS: ${{ inputs.docker_options }}
           EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}

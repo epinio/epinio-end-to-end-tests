@@ -14,30 +14,30 @@ jobs:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/menu.spec.ts
+      cypress_docker: cypress/included:10.11.0 
+      cypress_spec: cypress/e2e/unit_tests/menu.spec.ts
     secrets: inherit
 
   configurations-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/configurations.spec.ts
+      cypress_docker: cypress/included:10.11.0 
+      cypress_spec: cypress/e2e/unit_tests/configurations.spec.ts
     secrets: inherit
 
   applications-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/applications.spec.ts
+      cypress_docker: cypress/included:10.11.0 
+      cypress_spec: cypress/e2e/unit_tests/applications.spec.ts
     secrets: inherit
 
   namespaces-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:9.7.0 
-      cypress_spec: cypress/integration/unit_tests/namespaces.spec.ts
+      cypress_docker: cypress/included:10.11.0 
+      cypress_spec: cypress/e2e/unit_tests/namespaces.spec.ts
     secrets: inherit

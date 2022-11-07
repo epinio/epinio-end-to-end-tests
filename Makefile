@@ -60,7 +60,7 @@ build-image: ## Build the e2e_image with latest tests version
 
 cypress-gui: ## Start Cypress in GUI mode, need graphical environment
 	npm install
-	./node_modules/cypress/bin/cypress  open -C cypress-with-epinio-cert.json
+	./node_modules/cypress/bin/cypress  open -C cypress.config.ts
 
 check-dependencies:
 	command -v docker && echo "docker - ok"
