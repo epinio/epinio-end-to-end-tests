@@ -111,10 +111,10 @@ jobs:
     steps:
 
       - name: Cypress run
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v4
         with:
           browser: ${{ inputs.browser }}
-          headless: true
+          # headless: true
           spec: |
             cypress/e2e/unit_tests/first_connexion.spec.ts
             cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
@@ -212,10 +212,10 @@ jobs:
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
       - name: Cypress run
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v4
         with:
           browser: ${{ inputs.browser }}
-          headless: true
+          # headless: true
           spec: |
             cypress/e2e/unit_tests/${{ inputs.cypress_test }}
           config-file: cypress.config.ts
@@ -272,10 +272,10 @@ jobs:
     steps:
 
       - name: Cypress run
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v4
         with:
           browser: ${{ inputs.browser }}
-          headless: true
+          # headless: true
           spec: |
             cypress/e2e/unit_tests/uninstall.spec.ts
           config-file: cypress.config.ts
