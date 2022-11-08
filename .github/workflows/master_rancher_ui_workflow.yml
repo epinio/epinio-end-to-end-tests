@@ -114,7 +114,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ inputs.browser }}
-          headless: true
+          # headless: true
           spec: |
             cypress/e2e/unit_tests/first_connexion.spec.ts
             cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
@@ -215,7 +215,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ inputs.browser }}
-          headless: true
+          # headless: true
           spec: |
             cypress/e2e/unit_tests/${{ inputs.cypress_test }}
           config-file: cypress.config.ts
@@ -275,7 +275,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ inputs.browser }}
-          headless: true
+          # headless: true
           spec: |
             cypress/e2e/unit_tests/uninstall.spec.ts
           config-file: cypress.config.ts
