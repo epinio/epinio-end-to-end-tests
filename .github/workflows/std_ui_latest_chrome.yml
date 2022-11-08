@@ -10,11 +10,19 @@ on:
 
 # I do not know if I can refactor with a matrix in a reusable workflow?
 jobs:
+  commandCall-tests:
+    uses: ./.github/workflows/master_std_ui.yml
+    with:
+      browser: chrome
+      cypress_docker: cypress/included:10.11.0
+      cypress_spec: cypress/e2e/unit_tests/commandCall-example.spec.ts
+    secrets: inherit
+
   menu-tests:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:10.11.0 
+      cypress_docker: cypress/included:10.11.0
       cypress_spec: cypress/e2e/unit_tests/menu.spec.ts
     secrets: inherit
 
@@ -22,7 +30,7 @@ jobs:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:10.11.0 
+      cypress_docker: cypress/included:10.11.0
       cypress_spec: cypress/e2e/unit_tests/configurations.spec.ts
     secrets: inherit
 
@@ -30,7 +38,7 @@ jobs:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:10.11.0 
+      cypress_docker: cypress/included:10.11.0
       cypress_spec: cypress/e2e/unit_tests/applications.spec.ts
     secrets: inherit
 
@@ -38,6 +46,6 @@ jobs:
     uses: ./.github/workflows/master_std_ui.yml
     with:
       browser: chrome
-      cypress_docker: cypress/included:10.11.0 
+      cypress_docker: cypress/included:10.11.0
       cypress_spec: cypress/e2e/unit_tests/namespaces.spec.ts
     secrets: inherit

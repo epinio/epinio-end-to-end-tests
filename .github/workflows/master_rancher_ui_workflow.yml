@@ -117,6 +117,7 @@ jobs:
           headless: true
           spec: |
             cypress/e2e/unit_tests/first_connexion.spec.ts
+            cypress/e2e/unit_tests/commandCall-example.spec.ts
             cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
           config-file: cypress.config.ts
 
