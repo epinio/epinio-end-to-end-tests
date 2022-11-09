@@ -41,7 +41,7 @@ describe('Menu testing', () => {
     cy.contains(defaultNamespace).should('be.visible');
   });
 
-  it('Check binary links from version in menu', () => {
+  it.only('Check binary links from version in menu', () => {
     // Check link in main page is present and works after clicking
     cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/about');
     cy.get('.version.text-muted > a').click();
@@ -80,7 +80,8 @@ describe('Menu testing', () => {
           });
           // Now we can download
           // cy.wait(2000);
-          cy.get("tr.link > td > a").eq(i).click({ force: true });
+          // cy.get("tr.link > td > a").eq(i).click({ force: true });
+          cy.get("tr.link > td > a").contains(binOsNames[i]).click({ force: true });
           // Adding a bit of wait prior executing command to ensure file is downloaded
           cy.wait(7000);
         });
