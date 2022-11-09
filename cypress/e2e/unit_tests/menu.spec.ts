@@ -79,9 +79,14 @@ describe('Menu testing', () => {
             setTimeout(function () { doc.location.reload(); }, 10000);
           });
           // Now we can download
-          // cy.wait(2000);
+          cy.wait(2000);
           // cy.get("tr.link > td > a").eq(i).click({ force: true });
-          cy.get("tr.link > td > a").contains(binOsNames[i]).click({ force: true });
+          // cy.get("tr.link > td > a").contains(binOsNames[i]).focus()
+          // cy.get("tr.link > td > a").contains(binOsNames[i]).should('be.focused').click({ force: true });
+          cy.get("tr.link > td > a").contains(binOsNames[i]).as('binaryLinks')
+          cy.get('@binaryLinks').focus()
+          cy.get('@binaryLinks').should('be.focused').click({ force: true })
+          // cy.get('@binaryLinks').focus().then(() => cy.get('@binaryLinks').should('be.focused').click({ force: true }))
           // Adding a bit of wait prior executing command to ensure file is downloaded
           cy.wait(7000);
         });
