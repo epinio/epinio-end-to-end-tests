@@ -80,9 +80,21 @@ describe('Menu testing', () => {
           });
           // Now we can download
           cy.wait(2000);
-          cy.request(`https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`).then((resp) => {
-            expect(resp.status).to.eq(200)
-          })
+          function req () {
+            cy
+              .request(
+              {url:`https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`,
+              encoding: 'binary',
+              retryOnStatusCodeFailure : true,
+              timeout: 40000})
+              .then((resp) => {
+                if (expect(resp.status).to.eq(200)) {
+                  return
+                }
+                req()
+            }) 
+          }
+          req()
           // cy.get("tr.link > td > a").eq(i).click({ force: true });
           // cy.get("tr.link > td > a").contains(binOsNames[i]).focus()
           // cy.get("tr.link > td > a").contains(binOsNames[i]).should('be.focused').click({ force: true });
@@ -93,10 +105,7 @@ describe('Menu testing', () => {
           // Adding a bit of wait prior executing command to ensure file is downloaded
           cy.wait(7000);
         });
-        
-        cy.request(`https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`).then((resp) => {
-          expect(resp.status).to.eq(200)
-        })
+
         // Verify files are downloaded in cypress/download
         cy.exec(`while true; do { test -f cypress/downloads/epinio-${binOsNames[i]} && break; }; sleep 2; done`, {timeout: 31000}).its('code').should('eq', 0);
       }
