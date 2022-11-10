@@ -105,6 +105,8 @@ describe('Menu testing', () => {
       // Check version number in binary page matches the one in Epinio
       cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
         cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`)
+        cy.request(`https://github.com/epinio/epinio/releases/tag/${version}`).then((resp) => {
+                expect(resp.status).to.eq(200)})
         cy.origin('https://github.com', { args: { version } }, ({ version }) => {
           cy.visit(`/epinio/epinio/releases/tag/${version}`, {timeout: 15000});        
           cy.get('.d-inline.mr-3', {timeout: 15000}).contains(`${version}`).should('be.visible');
