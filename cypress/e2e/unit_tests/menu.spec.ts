@@ -106,9 +106,9 @@ describe('Menu testing', () => {
       cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
         cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`)
         cy.origin('https://github.com', { args: { version } }, ({ version }) => {
-          cy.visit(`/epinio/epinio/releases/tag/${version}`);
-          cy.get('.d-inline.mr-3').should('contain', `${version}`);
-          cy.screenshot(`epinio-bin-repo-${version}`);
+          cy.visit(`/epinio/epinio/releases/tag/${version}`, {timeout: 15000});        
+          cy.get('.d-inline.mr-3', {timeout: 15000}).contains(`${version}`).should('be.visible');
+          cy.screenshot(`epinio-bin-repo-${version}`, {timeout: 15000});
         });
       });
     });
