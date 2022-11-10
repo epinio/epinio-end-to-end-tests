@@ -3,6 +3,7 @@ import { defineConfig } from 'cypress'
 // export default defineConfig({
 export default defineConfig({
   defaultCommandTimeout: 10000,
+  pageLoadTimeout:30000,
   // numTestsKeptInMemory:25,
   reporter: 'mochawesome',
   reporterOptions: {
