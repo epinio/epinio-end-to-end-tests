@@ -69,34 +69,30 @@ describe('Menu testing', () => {
 
         // Verify binaries names and version match the one in the page
         cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
-        .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
-
-        // Download binaries
-        // This is added to workaround Cypress error waiting for a page instead of downloading
-        // Source: https://github.com/cypress-io/cypress/issues/14857#issuecomment-785717474
-        cy.window().document().then(function (doc) {
-          doc.addEventListener('click', () => {
-            setTimeout(function () { doc.location.reload(); }, 10000);
-          });
-          // Now we can download
-          // cy.wait(2000);
-          cy.get("tr.link > td > a").eq(i).click({ force: true });
-          // Adding a bit of wait prior executing command to ensure file is downloaded
-          cy.wait(7000);
-        });
-
-        // Verify files are downloaded in cypress/download
-        cy.exec(`while true; do { test -f cypress/downloads/epinio-${binOsNames[i]} && break; }; sleep 2; done`, {timeout: 31000}).its('code').should('eq', 0);
+          .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
       }
+
+      // Downloading using wget to issues with Github when clicking
+      // Scoping download solely to Linux amd
+      cy.exec('mkdir -p cypress/downloads');
+      cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O cypress/downloads/epinio-linux-x86_64`, { failOnNonZeroExit: false }).then((result) => {
+        if (result.code != 0) {
+          cy.task('log', '### ERROR: Could not download binary. Probably an error on Github ###');
+        }
+        cy.task('log', '### Stderr for download binary command starts here.');
+        cy.task('log', result.stderr);
+      });
 
       // Check link "See all packages" and visit binary page
       // Check version number in binary page matches the one in Epinio
       cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
-        cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`)
+        cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`);
+        // Giving a bit of time beween latest time hitting github and now
+        cy.wait(2000);
         cy.origin('https://github.com', { args: { version } }, ({ version }) => {
-          cy.visit(`/epinio/epinio/releases/tag/${version}`);
-          cy.get('.d-inline.mr-3').should('contain', `${version}`);
-          cy.screenshot(`epinio-bin-repo-${version}`);
+          cy.visit(`/epinio/epinio/releases/tag/${version}`, { timeout: 15000 });
+          cy.get('.d-inline.mr-3', { timeout: 15000 }).contains(`${version}`).should('be.visible');
+          cy.screenshot(`epinio-bin-repo-${version}`, { timeout: 15000 });
         });
       });
     });
