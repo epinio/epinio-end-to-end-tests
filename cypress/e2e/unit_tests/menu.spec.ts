@@ -74,7 +74,8 @@ describe('Menu testing', () => {
 
       // Downloading using wget to issues with Github when clicking
       // Scoping download solely to Linux amd
-      cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O downloads/epinio-linux-x86_64`, {failOnNonZeroExit: false}).then((result) => {
+      cy.exec('mkdir -p cypress/downloads')
+      cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O cypress/downloads/epinio-linux-x86_64`, {failOnNonZeroExit: false}).then((result) => {
           if (result.code != 0) {
            cy.task('log', '### ERROR: Could not download binary. Probably an error on Github ###');
           }
