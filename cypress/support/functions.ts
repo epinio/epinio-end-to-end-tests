@@ -282,8 +282,10 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.get('.no-resize').eq(1).should('have.value', 'nginx');
     cy.get('.key > input').eq(2).should('have.value', 'BP_PHP_WEB_DIR');
     cy.get('.no-resize').eq(2).should('have.value', 'wordpress ');
-    cy.get('.key > input').eq(3).should('have.value', 'CONFIG_NAME');
+    cy.get('.key > input').eq(3).should('have.value', 'DB_HOST');
     cy.get('.no-resize').eq(3).should('have.value', 'x8e5ee833a0f2faebaf5c4171baca-mysql');
+    cy.get('.key > input').eq(4).should('have.value', 'SERVICE_NAME');
+    cy.get('.no-resize').eq(4).should('have.value', 'mycustom-service');
   }
 
   if (addVar === 'go_example') {
