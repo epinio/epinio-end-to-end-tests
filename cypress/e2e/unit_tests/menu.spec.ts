@@ -63,7 +63,7 @@ describe('Menu testing', () => {
 
       // Verify amount of binaries in the page
       cy.get('tr.link > td > a').should('have.length', 3);
-      const binOsNames = ['darwin-arm64', 'linux-arm64', 'windows-x86_64.zip'];
+      const binOsNames = ['darwin-x86_64', 'linux-x86_64', 'windows-x86_64.zip'];
 
       for (let i = 0; i < binOsNames.length; i++) {
 
