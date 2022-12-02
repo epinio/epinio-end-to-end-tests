@@ -26,9 +26,10 @@ if [[ ${S3} == "1" ]]; then
    --set minio.enabled=false \
    --set s3.useSSL=true \
    --set s3.bucket=epinio-ci \
-   --set s3.endpoint=s3.amazonaws.com \
+   --set s3.endpoint=s3.eu-central-1.amazonaws.com \
    --set s3.accessKeyID=${S3_KEY_ID} \
    --set s3.secretAccessKey=${S3_KEY_SECRET} \
+   --set s3.region=eu-central-1 \
   "
 fi
 
