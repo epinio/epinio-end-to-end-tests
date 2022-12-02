@@ -192,6 +192,12 @@ jobs:
           make build
           make patch-epinio-deployment
 
+      - name: Patch epinio-ui with latest QA image
+        env:
+          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+        run: |
+          make patch-epinio-ui
+
   # Use a second Cypress container to run all Epinio's tests
   cypress-epinio-tests:
     needs:
