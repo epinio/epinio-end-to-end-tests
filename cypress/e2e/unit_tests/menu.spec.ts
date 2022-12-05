@@ -59,42 +59,47 @@ describe('Menu testing', () => {
         cy.visit('/epinio/about');
       });
 
-      // Check all links work and match the expected version
+      // The following should happen only if server version = 6 chars (v2.0.0 for instance)
+      cy.log(`Server version is (${version.length} characters) long.`)
+      if (version.length < 7) {
 
-      // Verify amount of binaries in the page
-      cy.get('tr.link > td > a').should('have.length', 3);
-      const binOsNames = ['darwin-x86_64', 'linux-x86_64', 'windows-x86_64.zip'];
+        // Check all links work and match the expected version
 
-      for (let i = 0; i < binOsNames.length; i++) {
+        // Verify amount of binaries in the page
+        cy.get('tr.link > td > a').should('have.length', 3);
+        const binOsNames = ['darwin-x86_64', 'linux-x86_64', 'windows-x86_64.zip'];
 
-        // Verify binaries names and version match the one in the page
-        cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
-          .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
-      }
+        for (let i = 0; i < binOsNames.length; i++) {
 
-      // Downloading using wget to issues with Github when clicking
-      // Scoping download solely to Linux amd
-      cy.exec('mkdir -p cypress/downloads');
-      cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O cypress/downloads/epinio-linux-x86_64`, { failOnNonZeroExit: false }).then((result) => {
-        if (result.code != 0) {
-          cy.task('log', '### ERROR: Could not download binary. Probably an error on Github ###');
+          // Verify binaries names and version match the one in the page
+          cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
+            .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
         }
-        cy.task('log', '### Stderr for download binary command starts here.');
-        cy.task('log', result.stderr);
-      });
-
-      // Check link "See all packages" and visit binary page
-      // Check version number in binary page matches the one in Epinio
-      cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
-        cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`);
-        // Giving a bit of time beween latest time hitting github and now
-        cy.wait(2000);
-        cy.origin('https://github.com', { args: { version } }, ({ version }) => {
-          cy.visit(`/epinio/epinio/releases/tag/${version}`, { timeout: 15000 });
-          cy.get('.d-inline.mr-3', { timeout: 15000 }).contains(`${version}`).should('be.visible');
-          cy.screenshot(`epinio-bin-repo-${version}`, { timeout: 15000 });
+        // Downloading using wget to issues with Github when clicking
+        // Scoping download solely to Linux amd
+        cy.exec('mkdir -p cypress/downloads');
+        cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O cypress/downloads/epinio-linux-x86_64`, { failOnNonZeroExit: false }).then((result) => {
+          if (result.code != 0) {
+            cy.task('log', '### ERROR: Could not download binary. Probably an error on Github ###');
+          }
+          cy.task('log', '### Stderr for download binary command starts here.');
+          cy.task('log', result.stderr);
         });
-      });
+
+        // Check link "See all packages" and visit binary page
+        // Check version number in binary page matches the one in Epinio
+        cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
+          cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`);
+          // Giving a bit of time beween latest time hitting github and now
+          cy.wait(2000);
+          cy.origin('https://github.com', { args: { version } }, ({ version }) => {
+            cy.visit(`/epinio/epinio/releases/tag/${version}`, { timeout: 15000 });
+            cy.get('.d-inline.mr-3', { timeout: 15000 }).contains(`${version}`).should('be.visible');
+            cy.screenshot(`epinio-bin-repo-${version}`, { timeout: 15000 });
+          });
+        });
+      }
+      else {cy.log(`Server version is too long (${version.length} characters) so binary download will not work and it is currently disabled.`)}
     });
   });
 });
