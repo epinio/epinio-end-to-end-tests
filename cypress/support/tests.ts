@@ -1,3 +1,4 @@
+// @ts-nocheck
 import cypress from 'cypress';
 import { Epinio } from '~/cypress/support/epinio';
 import './functions';
@@ -154,6 +155,24 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
 
       // Delete the namespace
       cy.deleteNamespace({namespace: namespace, appName: appName});
+      break;
+
+    case 'namespaceFilter':
+      // Preparation
+      // cy.createNamespace('ns-1');
+      // cy.createNamespace('ns-2');
+      // cy.createConfiguration({configurationName: "config-1"});
+      // cy.createConfiguration({configurationName: "config-2"});
+      // cy.createApp({appName: "app-1"});
+      // cy.createApp({appName: "app-2"});
+      //
+      // cy.openNamespacesFilter({location: "Applications"})
+      cy.openNamespacesFilter("Applications")
+      cy.filterNamespacesAndCheck({namespace: "ns-1", elemInNamespaceName: "testapp1"})
+      cy.filterNamespacesAndCheck({namespace: "ns-2", elemInNamespaceName: "testapp2"})
+      // Check 2 ns filters are acually selected
+      cy.checkNumberFilteredNamespacesAndElements({expectedNumFilteredNamespaces: 2, expectedNumElemInNamespaces: 2 })
+      cy.clickEpinioMenu("configurations")
       break;
   }
 });

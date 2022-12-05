@@ -28,6 +28,13 @@ declare global {
       downloadManifest(appName: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
+
+      // WIP
+      openNamespacesFilter(location: string, namespace?: string, appName?: string, configurationName?: string): Chainable<Element>;
+      filterNamespacesAndCheck(namespace: string, elemInNamespaceName: string): Chainable<Element>;
+      checkNumberFilteredNamespacesAndElements(expectedNumFilteredNamespaces: number, expectedNumElemInNamespaces: number ): Chainable<Element>;
+      //END OF WIP
+
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       editConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;

@@ -538,6 +538,51 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
     cy.contains(appName).should('not.exist');
   }
 });
+/////////////////////////////  WIP /////////////////////////////////////////////////
+Cypress.Commands.add('openNamespacesFilter', ({location}) => {
+  // cy.clickEpinioMenu(location);
+  // cy.reload()
+  cy.clickEpinioMenu("Applications");
+
+  cy.wait(15000)
+  // cy.get(".sortable-table.top-divider > tbody> tr.main-row", {timeout: 10000}).should('be.visible')
+  // cy.contains("Loading", {timeout: 10000}).should("not.be.visible")
+  // Open namespace filter dropdown
+  cy.get('.top > .ns-filter').click({force : true})
+
+  // Confirm it is opened
+  cy.get('i[class="icon icon-close"]', {timeout: 5000}).should('be.visible')
+});
+
+Cypress.Commands.add('filterNamespacesAndCheck', ({namespace, elemInNamespaceName}) => {
+  // Select particular namespace in filter
+  cy.get('.ns-item').contains(namespace).click().then(()=>
+    cy.get('.icon.icon-checkmark').should('be.visible')
+  )
+
+  // Check chip is added on top of filter
+  cy.get('.ns-value').contains(namespace).should('be.visible')
+  
+  // Check element associated to namespace (app, config,...) is displayed
+  cy.get(".sortable-table.top-divider > tbody> tr.main-row")
+  .find('td')
+  .contains(elemInNamespaceName)
+  .should('have.length', 1)
+});
+
+Cypress.Commands.add('checkNumberFilteredNamespacesAndElements', ({expectedNumFilteredNamespaces, expectedNumElemInNamespaces}) => {
+ 
+  // Check chip is added on top of filter
+  cy.get('div.ns-value').should('have.length', expectedNumFilteredNamespaces)
+  
+  // Check element associated to namespace (app, config,...) is displayed
+  cy.get(".sortable-table.top-divider > tbody> tr.main-row")
+  .should('have.length', expectedNumElemInNamespaces)
+});
+
+
+
+/////////////////////////////  WIP /////////////////////////////////////////////////
 
 // Configurations functions
 
