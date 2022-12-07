@@ -20,7 +20,7 @@ describe('Namespaces testing', () => {
   });
 
   if (Cypress.env('ui') != 'epinio-rancher' || Cypress.env('ui') != 'rancher') {
-  it('Test namespace filter with 3 namespaces, 3 apps and 3 configurations', () => {
+  it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', () => {
     cy.runNamespacesTest('namespaceFilter');
   })};
 });
