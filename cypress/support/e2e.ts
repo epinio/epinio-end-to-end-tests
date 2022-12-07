@@ -14,11 +14,11 @@ declare global {
       clickEpinioMenu(label: string,): Chainable<Element>;
       clickClusterMenu(listLabel: string[],): Chainable<Element>;
       confirmDelete(namespace?: string,): Chainable<Element>;
-      checkStageStatus(numIndex: number, sourceType: string, timeout?: number, status?: string,): Chainable<Element>;
+      checkStageStatus(numIndex: number, sourceType: string, timeout?: number, status?: string, appName?: string,): Chainable<Element>;
       typeValue(label: string, value: string, noLabel?: boolean, log?: boolean): Chainable<Element>;
       typeKeyValue(key: string, value: string,): Chainable<Element>;
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
-      createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, customApplicationChart?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string, serviceName?: string, catalogType?: string): Chainable<Element>;
+      createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, customApplicationChart?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string, serviceName?: string, catalogType?: string, namespace?: string,): Chainable<Element>;
       checkApp(appName: string, namespace?: string, route?: string, checkVar?: boolean, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number, serviceName?: string, checkCreatedApp?: string ): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
@@ -28,13 +28,10 @@ declare global {
       downloadManifest(appName: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
-
-      // WIP
-      openNamespacesFilter(location: string, namespace?: string, appName?: string, configurationName?: string): Chainable<Element>;
-      filterNamespacesAndCheck(namespace: string, elemInNamespaceName: string): Chainable<Element>;
-      checkNumberFilteredNamespacesAndElements(expectedNumFilteredNamespaces: number, expectedNumElemInNamespaces: number ): Chainable<Element>;
-      //END OF WIP
-
+      openNamespacesFilter(location: string, namespace?: string, appName?: string, configurationName?: string,): Chainable<Element>;
+      filterNamespacesAndCheck(namespace: string, elemInNamespaceName?: string, filterOut?: boolean,): Chainable<Element>;
+      checkOutcomeFilteredNamespaces(expectedNumFilteredNamespaces: number, expectedNumElemInNamespaces: number, expectedNameElementInNamespaces?:string,): Chainable<Element>;
+      selectNamespaceinComboBox(namespace: string,): Chainable<Element>;    
       createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       editConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;
