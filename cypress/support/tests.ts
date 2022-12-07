@@ -161,13 +161,12 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       // Preparation
       cy.createNamespace('ns-1');
       cy.createNamespace('ns-2');
-
       cy.createConfiguration({configurationName: "config-1", namespace: "ns-1"});
-      cy.createConfiguration({configurationName: "config-2", namespace: "ns-2"});
-     
+      cy.createConfiguration({configurationName: "config-2", namespace: "ns-2"});    
       cy.createApp({appName: "testapp-1", namespace: "ns-1", archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image'});
       cy.createApp({appName: "testapp-2", namespace: "ns-2", archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image'});
-        
+      
+      // Go to Appplications and filter 2 namespaces in namespace filter
       cy.openNamespacesFilter({location: "Applications"})
       cy.filterNamespacesAndCheck({namespace: "ns-1", elemInNamespaceName: "testapp-1", filterOut: false})
       cy.filterNamespacesAndCheck({namespace: "ns-2", elemInNamespaceName: "testapp-2", filterOut: false})
@@ -187,7 +186,7 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       cy.filterNamespacesAndCheck({namespace: "ns-1", filterOut: true})
       cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 0, expectedNumElemInNamespaces: 2, expectedNameElementInNamespaces: "config-1"})
       cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 0, expectedNumElemInNamespaces: 2, expectedNameElementInNamespaces: "config-2"})
-
       break;
+      
   }
 });
