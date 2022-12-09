@@ -19,8 +19,7 @@ describe('Namespaces testing', () => {
     cy.runNamespacesTest('newNamespace');
   });
 
-  if (Cypress.env('ui') != 'rancher') {
   it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', () => {
     cy.runNamespacesTest('namespaceFilter');
-  })};
+  });
 });
