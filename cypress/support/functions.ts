@@ -47,13 +47,13 @@ Cypress.Commands.add('byLabel', (label) => {
 
 // Search button by label
 Cypress.Commands.add('clickButton', (label) => {
-  cy.get('.btn').contains(label).click();
+  cy.get('.btn', {timeout: 30000}).contains(label).click();
 });
 
 // Ensure that we are in the desired menu
 Cypress.Commands.add('clickEpinioMenu', (label) => {
-  cy.get('.header').contains('Advanced').click();
-  cy.get('.label').contains(label).click();
+  cy.get('.header').contains('Advanced').click( {force : true} );
+  cy.get('.label').contains(label).click( {force : true} );
   cy.location('pathname').should('include', '/' + label.toLocaleLowerCase());
   // This will check application menu regardles if it has namespaces
   cy.get("body").then(($body) => {
@@ -93,11 +93,11 @@ Cypress.Commands.add('deleteAll', (label) => {
 });
 
 // Check the status of the running stage
-Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, status='Success'}) => {
+Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, status='Success', appName="testapp"}) => {
   var getScope = ':nth-child(' + numIndex + ') > .col-badge-state-formatter > .status > .badge';
   if (sourceType == 'Container Image') {
     if (numIndex === 2) {
-      cy.get('.tab-label', {timeout: 100000}).should('contain', 'testapp - App Logs');
+      cy.get('.tab-label', {timeout: 100000}).should('contain', `${appName} - App Logs`);
       cy.contains('Command line: \'httpd -D FOREGROUND\'', {timeout: timeout});
       cy.get('.tab > .closer').click(); 
     }
@@ -117,7 +117,7 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
         cy.get('.tab > .closer').click();
       }      
   }
-  cy.get(getScope, {timeout: timeout}).contains(status).should('be.visible');
+  cy.get(getScope, {timeout: 20000}).contains(status).should('be.visible');
 });
 
 // Insert a value in a field *BUT* force a clear before!
@@ -174,7 +174,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName, serviceName, catalogType}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName, serviceName, catalogType, namespace='workspace'}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
@@ -247,9 +247,14 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   }
 
   // Define application's name
-  if (appName){
-  cy.typeValue({label: 'Name', value: appName});
-}
+  if (appName) {
+    cy.typeValue({ label: 'Name', value: appName });
+  }
+
+  // Select other namespace aside from default
+  if (namespace != 'workspace'){
+    cy.selectNamespaceinComboBox({namespace});
+    }
 
   // Change default route if needed
   if (route) {
@@ -316,7 +321,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Check that each steps are succesfully done
   cy.checkStageStatus({numIndex: 1});
-  cy.checkStageStatus({numIndex: 2, timeout: 240000, sourceType});
+  cy.checkStageStatus({numIndex: 2, timeout: 240000, sourceType, appName});
   if (sourceType !== 'Container Image') {
     cy.checkStageStatus({numIndex: 3, timeout: 240000, sourceType});
     cy.checkStageStatus({numIndex: 4, timeout: 240000});
@@ -539,6 +544,79 @@ Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
   }
 });
 
+Cypress.Commands.add('openNamespacesFilter', ({location}) => {
+  cy.clickEpinioMenu(location);
+  cy.contains('Namespace:', {timeout: 55000}).should('be.visible');
+
+  // Open namespace filter dropdown
+  cy.get('.top > .ns-filter').click({force : true});
+
+  // Confirm it is opened
+  cy.get('i[class="icon icon-close"]', {timeout: 5000}).should('be.visible')
+});
+
+Cypress.Commands.add('filterNamespacesAndCheck', ({ namespace, elemInNamespaceName, filterOut=false }) => {
+
+  if (filterOut === true) {
+    // Select particular namespace in filter
+    cy.get('.ns-item').contains(namespace).click();    
+
+    // Check chip is not displayed on top of filter
+    cy.get('[data-testid="namespaces-dropdown"]').contains(namespace).should('not.exist');
+    
+    if (elemInNamespaceName) {
+    // Check element associated to namespace (app, config,...) is not displayed
+    cy.get(".sortable-table.top-divider > tbody> tr.main-row")
+      .find('td')
+      .contains(elemInNamespaceName)
+      .should('not.exist');
+    }
+  }
+
+  else if (filterOut === false) {
+    // Select particular namespace in filter
+    cy.get('.ns-item').contains(namespace).click().then(() =>
+      cy.get('.icon.icon-checkmark').should('be.visible'));
+
+    // Check chip is added on top of filter
+    cy.get('.ns-value').contains(namespace).should('be.visible');
+
+    // Check element associated to namespace (app, config,...) is displayed
+    cy.get(".sortable-table.top-divider > tbody> tr.main-row")
+      .find('td')
+      .contains(elemInNamespaceName)
+      .should('have.length', 1);
+  }
+});
+
+Cypress.Commands.add('checkOutcomeFilteredNamespaces', ({expectedNumFilteredNamespaces, expectedNumElemInNamespaces, expectedNameElementInNamespaces}) => {
+ 
+  // Check chip is added on top of filter
+  cy.get('div.ns-value').should('have.length', expectedNumFilteredNamespaces)
+  
+  // If 0 namespaces are filtered, check All namespaces is selected
+  if(expectedNumFilteredNamespaces == 0) {
+    cy.get('#all.ns-selected').contains('All Namespaces').should('be.visible');
+    cy.get('#all.ns-selected > div > i.icon.icon-checkmark').should('be.visible');
+  }
+
+  // Check element associated to namespace (app, config,...) is displayed
+  cy.get(".sortable-table.top-divider > tbody> tr.main-row")
+  .should('have.length', expectedNumElemInNamespaces)
+
+  // Check element displayed (app,config, etc) if specified
+  if(expectedNameElementInNamespaces) {
+  cy.get(".sortable-table.top-divider > tbody> tr.main-row").contains(expectedNameElementInNamespaces).should('be.visible');
+  }
+
+});
+
+
+Cypress.Commands.add('selectNamespaceinComboBox', ({namespace}) => {
+  cy.get('span.vs__selected',{timeout: 25000}).should('be.visible').click({ force: true });
+  cy.get('ul.vs__dropdown-menu > li').contains(namespace).click({ force: true });
+});
+
 // Configurations functions
 
 // Create a configuration
@@ -547,6 +625,11 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
 
   cy.clickEpinioMenu('Configurations');
   cy.clickButton('Create');
+
+  // Select other namespace aside from default
+  if (namespace != 'workspace'){
+  cy.selectNamespaceinComboBox({namespace})
+  }
 
   // Name of the configuration
   cy.typeValue({label: 'Name', value: configurationName});
@@ -569,7 +652,7 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
   cy.clickButton('Create');
 
   // Check that the configuration has effectively been created
-  cy.contains(configurationName).should('be.visible');
+  cy.contains(configurationName, {timeout: 20000}).should('be.visible');
   // Give some time to the configuration to be ready
   cy.wait(1000);
 });

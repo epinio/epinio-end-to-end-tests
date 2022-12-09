@@ -1,3 +1,4 @@
+// @ts-nocheck
 import cypress from 'cypress';
 import { Epinio } from '~/cypress/support/epinio';
 import './functions';
@@ -155,5 +156,37 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       // Delete the namespace
       cy.deleteNamespace({namespace: namespace, appName: appName});
       break;
+
+    case 'namespaceFilter':
+      // Preparation
+      cy.createNamespace('ns-1');
+      cy.createNamespace('ns-2');
+      cy.createConfiguration({configurationName: "config-1", namespace: "ns-1"});
+      cy.createConfiguration({configurationName: "config-2", namespace: "ns-2"});    
+      cy.createApp({appName: "testapp-1", namespace: "ns-1", archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image'});
+      cy.createApp({appName: "testapp-2", namespace: "ns-2", archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image'});
+      
+      // Go to Appplications and filter 2 namespaces in namespace filter
+      cy.openNamespacesFilter({location: "Applications"})
+      cy.filterNamespacesAndCheck({namespace: "ns-1", elemInNamespaceName: "testapp-1", filterOut: false})
+      cy.filterNamespacesAndCheck({namespace: "ns-2", elemInNamespaceName: "testapp-2", filterOut: false})
+ 
+      // Check 2 ns filters are acually selected
+      cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 2, expectedNumElemInNamespaces: 2})
+
+      // Deselect ns-2 and check it is filtered out and not displayed
+      cy.filterNamespacesAndCheck({namespace: "ns-2", elemInNamespaceName: "testapp-2", filterOut: true})
+      cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 1, expectedNumElemInNamespaces: 1, expectedNameElementInNamespaces: "testapp-1"})
+
+      // With previous selection, go to config and check filter is still applied
+      cy.clickEpinioMenu("Configurations")
+      cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 1, expectedNumElemInNamespaces: 1, expectedNameElementInNamespaces: "config-1"})
+    
+      // Deselect ns-1 and check 3 namespaces and 2 apps appear
+      cy.filterNamespacesAndCheck({namespace: "ns-1", filterOut: true})
+      cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 0, expectedNumElemInNamespaces: 2, expectedNameElementInNamespaces: "config-1"})
+      cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 0, expectedNumElemInNamespaces: 2, expectedNameElementInNamespaces: "config-2"})
+      break;
+      
   }
 });

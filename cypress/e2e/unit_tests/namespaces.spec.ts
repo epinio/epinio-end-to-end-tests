@@ -18,4 +18,8 @@ describe('Namespaces testing', () => {
   it('Push and check an application into the created namespace', () => {
     cy.runNamespacesTest('newNamespace');
   });
+
+  it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', () => {
+    cy.runNamespacesTest('namespaceFilter');
+  });
 });
