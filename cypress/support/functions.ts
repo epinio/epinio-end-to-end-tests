@@ -595,8 +595,9 @@ Cypress.Commands.add('checkOutcomeFilteredNamespaces', ({expectedNumFilteredName
   cy.get('div.ns-value').should('have.length', expectedNumFilteredNamespaces)
   
   // If 0 namespaces are filtered, check All namespaces is selected
-  if(expectedNumFilteredNamespaces = 0) {
-    cy.get('#all.ns-selected').contains('All Namespaces').should('be.selected');
+  if(expectedNumFilteredNamespaces == 0) {
+    cy.get('#all.ns-selected').contains('All Namespaces').should('be.visible');
+    cy.get('#all.ns-selected > div > i.icon.icon-checkmark').should('be.visible');
   }
 
   // Check element associated to namespace (app, config,...) is displayed
