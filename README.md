@@ -7,9 +7,14 @@
 [![Standalone UI Firefox](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/std_ui_latest_firefox.yml/badge.svg?branch=main)](https://github.com/epinio/epinio-end-to-end-tests/actions/workflows/std_ui_latest_firefox.yml?query=branch%3Amain)
 
 # epinio-end-to-end-tests
+
 This repository contains all the files necessary to run Epinio end-to-end tests.</br>
-In the cypress directory are stored the tests written using the [Cypress](https://www.cypress.io/) testing framework.</br>
-Tests are executed every night in the CI. For now, two scenarios are tested.
+
+The `cypress` directory contains the tests written using the
+[Cypress](https://www.cypress.io/) testing framework.</br>
+
+GitHub Actions CI is used to execute the tests every night.
+Currently two scenarios are tested.
 
 ## Contents
 
@@ -19,70 +24,96 @@ Tests are executed every night in the CI. For now, two scenarios are tested.
   - [Scenario 1 - Using Chrome](#scenario-1---using-chrome)
   - [Scenario 2 - Using Firefox](#scenario-2---using-firefox)
   - [Process explained in one chart](#process-explained-in-one-chart)
+
 ## Rancher UI and Epinio UI
-E2E tests are executed both on Rancher UI and Epinio UI but there is a difference between them.</br>
-For the first one, Epinio is installed via Rancher while for Epinio UI, it is installed via Helm command line.</br>
-The tests run with main branches of [epinio](https://github.com/epinio/epinio) and [epinio's helm chart](https://github.com/epinio/helm-charts).
-## How to quickly start a dev env with k3d
-__Attention__, it was only tested on Linux so far.
+
+The E2E tests are executed against both Rancher's UI and Epinio's UI.
+Note that they have differences between them.</br>
+
+Epinio is installed via Rancher when testing it against Rancher's UI.
+For testing against its own UI, it is installed via its own Helm Chart instead.</br>
+
+The tests use the main branches of [Epinio](https://github.com/epinio/epinio)
+and [Epinio's Helm Chart](https://github.com/epinio/helm-charts).
+
+## How To Quick-Start a development environment using k3d
+
+:warning: __Attention__, this was only tested on Linux so far.
+
 ### Epinio UI
 
-1. Clone the repo
+1. Clone the repository
+
 ```bash
 git clone https://github.com/epinio/epinio-end-to-end-tests.git
 ```
 
-2. Check if you got all dependencies installed:
+2. Check that all dependencies are installed:
+
 ```bash
 make check-dependencies
 ```
 
 3. Create the cluster
+
 ```bash
 make prepare-cluster
 ```
-Check the output and export the IP as the IP_ADDR variable (export IP_ADDR=<IP>).
+
+   Check the output and export the IP as the IP_ADDR variable (`export IP_ADDR=<IP>`).
 
 4. Deploy Epinio
+
 ```bash
 make deploy-epinio
 ```
 
 5. Export variables for Cypress
+
 ```bash
 export RANCHER_USER=admin RANCHER_PASSWORD=password RANCHER_URL=https://epinio.${IP_ADDR}.nip.io SYSTEM_DOMAIN=${IP_ADDR}.nip.io
 ```
 
 6. Start Cypress GUI
+
 ```bash
 make cypress-gui
 ```
 
 ## Scenario 1 - Using Chrome
-In this first scenario, Epinio is deployed in Rancher with default options. </br>
-And then basic UI test is performed [menu.spec.ts](./cypress/integration/unit_tests/menu.spec.ts).
+
+In this scenario, Epinio is deployed in Rancher with default options and a basic UI test is then
+performed using [menu.spec.ts](./cypress/integration/unit_tests/menu.spec.ts).
+The underlying browser is Chrome.
+
 <!-- You can check all the things we test directly in the [file](./cypress/integration/scenarios/with_default_options.spec.ts). -->
 
 ## Scenario 2 - Using Firefox
-Second scenario is the same as the first one just performed in Firefox. </br>
-TODO: Get back installation with S3 and external registry configuration within rancher installation. Ref. [Issue#236](https://github.com/epinio/epinio-end-to-end-tests/issues/236)
+
+The second scenario is the same as the first, except it uses Firefox as the browser. </br>
+
+TODO: Get back installation with S3 and external registry configuration within rancher installation.
+Ref [Issue#236](https://github.com/epinio/epinio-end-to-end-tests/issues/236)
+
 <!-- Second scenario tests Epinio installation with S3 and external registry configured. </br>
 Unlike the first scenario, we only play a small bunch of [tests](./cypress/integration/scenarios/with_s3_and_external_registry.spec.ts). -->
 
 ## Process explained in one chart
+
 ```mermaid
 flowchart TB;
-    A{{Color meaning}}
-    A --- B([Rancher UI stuff])
-    A --- C([Common stuff])
-    A --- D([Embedded UI stuff])
-    style B fill:#406c93,stroke:#000000,stroke-width:2px;
-    style C fill:#823764,stroke:#000000,stroke-width:2px;
-    style D fill:#256C35,stroke:#000000,stroke-width:2px;
+    A{{Color Legend}}
+    A --- B([Rancher UI Parts])
+    A --- C([Common Parts])
+    A --- D([Embedded UI Parts])
+    style B fill:#7998b3,stroke:#000000,stroke-width:2px;
+    style C fill:#b487a2,stroke:#000000,stroke-width:2px;
+    style D fill:#50895d,stroke:#000000,stroke-width:2px;
 ```
----
-```mermaid
 
+---
+
+```mermaid
 flowchart TB;
     %% Rancher UI part
     A[Epinio e2e tests]:::common --> B{Rancher UI}:::rancherUI
@@ -125,8 +156,7 @@ flowchart TB;
      D1 --> T
 
      %% CSS definition
-classDef stdUI fill:#256C35,stroke:#000000,stroke-width:2px;
-classDef rancherUI fill:#406c93,stroke:#000000,stroke-width:2px;
-classDef common fill:#823764,stroke:#000000,stroke-width:2px;
-
+classDef rancherUI fill:#7998b3,stroke:#000000,stroke-width:2px;
+classDef common    fill:#b487a2,stroke:#000000,stroke-width:2px;
+classDef stdUI     fill:#50895d,stroke:#000000,stroke-width:2px;
 ```
