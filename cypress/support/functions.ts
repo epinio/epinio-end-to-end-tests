@@ -81,7 +81,7 @@ Cypress.Commands.add('confirmDelete', (namespace) => {
 Cypress.Commands.add('deleteAll', (label) => {
   // Must be present in Configurations, Aplications or Namespaces page first
   cy.clickEpinioMenu(label)
-  cy.get('h1').contains(label).should('be.visible')
+  cy.get('h1',{timeout: 35000}).contains(label).should('be.visible')
   cy.log(`## DElETION OF ALL ${label} STARTS HERE ##`)
   cy.get('body').then(($body) => {
     if ($body.text().includes('Delete')) {
@@ -707,21 +707,6 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   cy.wait(2000);
 });
 
-// Create an instance from catalog service
-Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
-  cy.get('.accordion.package.depth-0.has-children', {timeout: 20000}).contains('Services').click()
-  cy.clickButton('Create');
-  cy.typeValue({label: 'Name', value: serviceName});
-  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
-  cy.contains(catalogType).click()
-  // Verify selected catalog service is selected
-  cy.get('span.vs__selected').eq(1).should('contain', catalogType )
-  cy.clickButton('Create');
-  // Verify service is deployed 
-  cy.get('span.badge-state.bg-success', {timeout: 90000}).contains('Deployed').should('be.visible')
-  cy.get('td.col-link-detail').eq(0).contains(serviceName).should('be.visible')
-});
-
 // Bind a configuration to an existing application
 Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespace='workspace'}) => {
   cy.clickEpinioMenu('Applications');
@@ -777,6 +762,63 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
   // because we can't scrap the value in the html page, maybe because the field is grey.
   // Attach to app might be a solution for checking it but the feature is not yet released.
   // Otherwise, we can use kubectl command but at the end of Cypress tests.
+});
+
+// Services functions
+
+// Create an instance from catalog service
+Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
+  cy.get('.accordion.package.depth-0.has-children', {timeout: 20000}).contains('Services').click()
+  cy.clickButton('Create');
+  cy.typeValue({label: 'Name', value: serviceName});
+  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
+  cy.contains(catalogType).click()
+  // Verify selected catalog service is selected
+  cy.get('span.vs__selected').eq(1).should('contain', catalogType )
+  cy.clickButton('Create');
+  // Verify service is deployed 
+  cy.get('span.badge-state.bg-success', {timeout: 90000}).contains('Deployed').should('be.visible')
+  cy.get('td.col-link-detail').eq(0).contains(serviceName).should('be.visible')
+});
+
+// Bind app from Service page
+Cypress.Commands.add('bindServiceFromSevicesPage', ({ appName, serviceName, bindingOption=bind }) => {
+  cy.get('div.header').contains('Services').click( {force : true} );
+
+  // Open 3 dots button
+  cy.contains('tr.main-row', serviceName).within(() => {
+    cy.get('.icon.icon-actions').click()
+  });
+
+  // Open edit config
+  cy.get('.list-unstyled.menu > li > span', {timeout: 15000}).contains('Edit Config').click();
+
+  if (bindingOption == 'bind') {
+  // Open "Bind to Applications" dropdown and bind service to app
+  cy.get('.v-select.inline.vs--multiple').click();
+  cy.contains(appName).should('be.visible').click();
+  // Click on save button
+  cy.clickButton('Save');
+  cy.get('.icon.icon-lg.icon-spinner.icon-spin', {timeout: 60000}).contains('Saving...').should('not.exist');
+  // Confirm bound application after main instance page redirection
+  cy.contains('tr.main-row', serviceName, {timeout: 30000}).within(() => {
+    cy.get('td[data-testid]', {timeout: 45000 }).eq(4).contains(appName).should('be.visible')
+  });
+  }
+
+  else if (bindingOption == 'unbind') {
+  // Deselect bound app to service
+  cy.contains(appName).within(() => {
+    cy.get('button[title="Deselect testapp"]').click();
+  })
+  // Click on save button
+  cy.clickButton('Save');
+  cy.get('.icon.icon-lg.icon-spinner.icon-spin', {timeout: 60000}).contains('Saving...').should('not.exist');
+  // Confirm application is not bound after main instance page redirection
+  cy.contains('tr.main-row', serviceName, {timeout: 45000}).within(() => {
+    cy.get('td[data-testid]', {timeout: 30000 }).eq(4).contains(appName).should('not.exist')
+  });
+  }
 });
 
 // Epinio installation functions

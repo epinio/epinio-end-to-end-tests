@@ -1,4 +1,3 @@
-// @ts-nocheck
 import cypress from 'cypress';
 import { Epinio } from '~/cypress/support/epinio';
 import './functions';
@@ -76,6 +75,12 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createService({ serviceName: customService, catalogType: customCatalog })
       cy.createApp( {appName: appName, archiveName: gitUrlWordpress, sourceType: 'Git URL', addVar: 'wordpress_env_file', serviceName: customService, catalogType: customCatalog });
       cy.checkApp({ appName: appName, dontCheckRouteAccess: true, serviceName: customService, checkCreatedApp: 'wordpress'});  
+      break;
+    case 'serviceBindUnbindFromServicePage':
+      cy.createService({ serviceName: customService, catalogType: "redis-dev" })
+      cy.createApp({ appName: appName, archiveName: 'httpd:latest', instanceNum: 5, sourceType: 'Container Image' });
+      cy.bindServiceFromSevicesPage({ appName: appName, serviceName: customService, bindingOption: 'bind'})
+      cy.bindServiceFromSevicesPage({ appName: appName, serviceName: customService, bindingOption: 'unbind'})
       break;
     case 'gitHubAndEnvVar':
       cy.createApp({appName: appName, addVar: 'go_example', sourceType: 'GitHub'});
