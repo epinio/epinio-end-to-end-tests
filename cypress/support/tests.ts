@@ -76,11 +76,12 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createService({ serviceName: customService, catalogType: customCatalog })
       cy.createApp( {appName: appName, archiveName: gitUrlWordpress, sourceType: 'Git URL', addVar: 'wordpress_env_file', serviceName: customService, catalogType: customCatalog });
       cy.checkApp({ appName: appName, dontCheckRouteAccess: true, serviceName: customService, checkCreatedApp: 'wordpress'});  
+      cy.bindServiceFromSevicesPage({ appName: appName, serviceName: customService, bindingOption: 'unbind'});
       cy.deleteService({ serviceName: customService}); 
       break;
     case 'serviceBindUnbindFromServicePage':
       cy.deleteAll('Services')
-      cy.createService({ serviceName: 'mycustom-service-2', catalogType: 'redis-dev' })
+      cy.createService({ serviceName: 'mycustom-service-2', catalogType: 'postgresql-dev' })
       cy.createApp({ appName: appName, archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image' });
       cy.bindServiceFromSevicesPage({ appName: appName, serviceName: 'mycustom-service-2', bindingOption: 'bind'});
       cy.bindServiceFromSevicesPage({ appName: appName, serviceName: 'mycustom-service-2', bindingOption: 'unbind'});

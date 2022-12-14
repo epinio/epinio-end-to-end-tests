@@ -26,7 +26,7 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('multipleInstanceAndContainer');
   });
 
-  it.only('Push application with custom route into default namespace and check app log/shell features', () => {
+  it('Push application with custom route into default namespace and check app log/shell features', () => {
     cy.runApplicationsTest('customRoute');
   });
 
@@ -46,7 +46,7 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('serviceMysqlBindWordpressPushApp');
   });
 
-  it.only('Create redis service, bind/unbind app from service page',  () => {
+  it.only('Create postgress service, bind/unbind app from service page',  () => {
     cy.runApplicationsTest('serviceBindUnbindFromServicePage');
   });
   // Remove skip when this is fixed: https://github.com/epinio/ui/issues/160
