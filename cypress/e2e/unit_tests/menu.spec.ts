@@ -3,7 +3,7 @@ import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 import '~/cypress/support/functions';
 
 Cypress.config();
-describe.skip('Menu testing', () => {
+describe('Menu testing', () => {
   const topLevelMenu = new TopLevelMenu();
   const epinio = new Epinio();
 
