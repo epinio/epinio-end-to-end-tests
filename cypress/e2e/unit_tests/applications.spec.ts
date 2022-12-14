@@ -42,11 +42,11 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('downloadManifestAndPushApp');
   });
 
-  it('Create mysql service, bind it to a Wordpress app and push it',  () => {
+  it.only('Create mysql service, bind it to a Wordpress app and push it',  () => {
     cy.runApplicationsTest('serviceMysqlBindWordpressPushApp');
   });
 
-  it('Create redis service, bind/unbind app from service page',  () => {
+  it.only('Create redis service, bind/unbind app from service page',  () => {
     cy.runApplicationsTest('serviceBindUnbindFromServicePage');
   });
   // Remove skip when this is fixed: https://github.com/epinio/ui/issues/160

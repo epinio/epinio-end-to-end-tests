@@ -2,7 +2,7 @@ import { Epinio } from '~/cypress/support/epinio';
 import { TopLevelMenu } from '~/cypress/support/toplevelmenu';
 
 Cypress.config();
-describe('Namespaces testing', () => {
+describe.skip('Namespaces testing', () => {
   const topLevelMenu = new TopLevelMenu();
   const epinio = new Epinio();
 
