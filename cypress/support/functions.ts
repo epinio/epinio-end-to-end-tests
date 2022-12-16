@@ -825,6 +825,7 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry, namespace='epinio-insta
   cy.get('li.vs__dropdown-option').contains('Create a New Namespace').click({force: true});
   cy.get(':nth-child(1) > .labeled-input').type('epinio')
 };
+  cy.contains('Next', {timeout: 5000}).should('be.visible')
   cy.clickButton('Next');
   
   // Configure custom domain

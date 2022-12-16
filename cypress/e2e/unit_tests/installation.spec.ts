@@ -66,8 +66,14 @@ describe('Epinio installation testing from experimental charts', () => {
   });
 
   it('Verify Epinio over ingress URL', () => {
+    // Select "All Namespaces" from Namespace filter at the top
+    cy.get('.top > .ns-filter').click({force: true})
+    cy.get('#all', {timeout: 2000}).contains('All Namespaces').should('be.visible').click()
+    // Close the namespaces dropdowy
+    cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({force: true});
+
     // WORKAROUND until Epinio icon will be present again in Rancher UI
-    cy.contains('More Resources').click();
+    cy.contains('More Resources').click({force: true});
     cy.contains('Networking').click();
     cy.contains('Ingresses').click();
     cy.contains('.ingress-target .target > a', 'epinio-ui')
