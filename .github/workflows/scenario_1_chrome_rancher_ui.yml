@@ -3,7 +3,11 @@ name: Rancher-UI-1-Chrome
 
 on:
   workflow_dispatch:
-  
+    inputs:
+        experimental_chart_branch:
+          description: "Experimental Epinio Charts from pull requests"
+          required: false
+          default: ""
   schedule:
     - cron: '0 2 * * *'
 

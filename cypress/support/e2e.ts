@@ -38,9 +38,9 @@ declare global {
       createService(serviceName: string, catalogType: string): Chainable<Element>;
       bindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
       unbindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
-      addHelmRepo(repoName: string, repoUrl: string, repoType?: string,): Chainable<Element>;
-      removeHelmRepo(): Chainable<Element>;
-      epinioInstall(s3?: boolean, extRegistry?: boolean,): Chainable<Element>;
+      addHelmRepo(repoName: string, repoUrl: string, repoType?: string, branchName?: string,): Chainable<Element>;
+      removeHelmRepo(repoName?: string,): Chainable<Element>;
+      epinioInstall(s3?: boolean, extRegistry?: boolean, namespace?: string): Chainable<Element>;
       epinioUninstall(): Chainable<Element>;
 
       // Functions declared in tests.ts

@@ -782,7 +782,7 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
 // Epinio installation functions
 
 // Add the Epinio Helm repo
-Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType}) => {
+Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType, branchName='main'}) => {
   cy.clickClusterMenu(['Apps', 'Repositories'])
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
@@ -795,7 +795,9 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType}) => {
   if (repoType === 'git') {
     cy.contains('Git repository').click();
     cy.typeValue({label: 'Git Repo URL', value: repoUrl});
-    cy.typeValue({label: 'Git Branch', value: 'main'});
+    // cy.typeValue({label: 'Git Branch', value: 'main'});
+    cy.typeValue({label: 'Git Branch', value: branchName});
+    
   } else {
     cy.typeValue({label: 'Index URL', value: repoUrl});
   }
@@ -803,7 +805,7 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType}) => {
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
+Cypress.Commands.add('epinioInstall', ({s3, extRegistry, namespace='epinio-install'}) => {
   cy.clickClusterMenu(['Apps', 'Charts']);
   
   // Make sure we are in the chart screen (test failed here before)
@@ -811,15 +813,18 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
   
   // Install epinio-installer chart
   cy.contains('Epinio deploys Kubernetes').click();
-  cy.contains('Charts: epinio').should('be.visible');
+  cy.contains('Charts: epinio', { matchCase: false }).should('be.visible');
   cy.clickButton('Install');
 
-  // Namespace where installation will happen
-  cy.typeValue({label: 'Name', value: 'epinio-install'});
+  // // Namespace where installation will happen
+  if (namespace !="None"){
+  // cy.typeValue({label: 'Name', value: 'epinio-install'});
+  cy.typeValue({label: 'Name', value: namespace});
   // Typing just a new namespace name is not enough, select 'Create a New Namespace' first
   cy.get('div.vs__selected-options').eq(0).click();
   cy.get('li.vs__dropdown-option').contains('Create a New Namespace').click({force: true});
-  cy.get(':nth-child(1) > .labeled-input').type('epinio');
+  cy.get(':nth-child(1) > .labeled-input').type('epinio')
+};
   cy.clickButton('Next');
   
   // Configure custom domain
@@ -857,7 +862,8 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry}) => {
 
   // Install and check we get successfull installation message with a timeout long enough
   cy.clickButton('Install');
-  cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
+  // cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
+  cy.contains('SUCCESS: helm', { timeout: 600000 }).should('be.visible');
   cy.get('.tab > .closer').click();
 });
 
@@ -874,15 +880,17 @@ Cypress.Commands.add('epinioUninstall', () => {
 });
 
 // Remove the Epinio Helm repo
-Cypress.Commands.add('removeHelmRepo', () => {
+Cypress.Commands.add('removeHelmRepo', ({repoName='epinio-repo'}) => {
   cy.clickClusterMenu(['Apps', 'Repositories']);
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
-  cy.contains('epinio-repo').click();
+  // cy.contains('epinio-repo').click();
+  cy.contains(repoName).click();
   // Using three dots menu to delete the repo
   // TODO: Check if we can click checkbox instead
-  cy.contains('Repository: epinio-repo').should('be.visible');
+  // cy.contains('Repository: epinio-repo').should('be.visible');
+  cy.contains(`Repository: ${repoName}`).should('be.visible');
   cy.get('.role-multi-action').click();
   cy.contains('Delete').click();
   cy.confirmDelete();
