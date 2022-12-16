@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
         experimental_chart_branch:
-          description: "Experimental Epinio Charts from pull requests"
+          description: "Add branch for experimental Epinio Charts"
           required: false
           default: ""
   schedule:
