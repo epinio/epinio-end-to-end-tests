@@ -52,8 +52,8 @@ Cypress.Commands.add('clickButton', (label) => {
 
 // Ensure that we are in the desired menu
 Cypress.Commands.add('clickEpinioMenu', (label) => {
-  cy.get('.header').contains('Advanced').click( {force : true} );
-  cy.get('.label').contains(label).click( {force : true} );
+  cy.get('.header').contains('Advanced').click( {force: true} );
+  cy.get('.label').contains(label).click( {force: true} );
   cy.location('pathname').should('include', '/' + label.toLocaleLowerCase());
   // This will check application menu regardles if it has namespaces
   cy.get("body").then(($body) => {
@@ -80,8 +80,14 @@ Cypress.Commands.add('confirmDelete', (namespace) => {
 
 Cypress.Commands.add('deleteAll', (label) => {
   // Must be present in Configurations, Aplications or Namespaces page first
-  cy.clickEpinioMenu(label)
-  cy.get('h1').contains(label).should('be.visible')
+  if (label == 'Services') {
+    cy.get('div.header').contains('Services').click({force: true});
+    cy.get('span.label.no-icon').contains('Instances').click({force: true});
+  }
+  else {
+    cy.clickEpinioMenu(label)
+    cy.get('h1',{timeout: 35000}).contains(label).should('be.visible')
+  };
   cy.log(`## DElETION OF ALL ${label} STARTS HERE ##`)
   cy.get('body').then(($body) => {
     if ($body.text().includes('Delete')) {
@@ -117,7 +123,7 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
         cy.get('.tab > .closer').click();
       }      
   }
-  cy.get(getScope, {timeout: 20000}).contains(status).should('be.visible');
+  cy.get(getScope, {timeout: 35000}).contains(status).should('be.visible');
 });
 
 // Insert a value in a field *BUT* force a clear before!
@@ -184,7 +190,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   if (sourceType) {
     // Adding explicit wait here to attempt avoid failure in CI
     cy.wait(5000)
-    cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click( {force : true} );
+    cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click( {force: true} );
     cy.wait(1000)
     cy.contains(sourceType, {timeout: 10000}).should('be.visible').click({force: true});
     switch (sourceType) {
@@ -238,7 +244,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   }
 
   // Continue with the next screen
-  cy.clickButton('Next', {force : true});
+  cy.clickButton('Next', {force: true});
   // Only if we want to check that we get warned about no namespace defined
   if (shouldBeDisabled === true) {
     cy.get('.btn').should('contain', 'Next').and('be.disabled');
@@ -549,7 +555,7 @@ Cypress.Commands.add('openNamespacesFilter', ({location}) => {
   cy.contains('Namespace:', {timeout: 55000}).should('be.visible');
 
   // Open namespace filter dropdown
-  cy.get('.top > .ns-filter').click({force : true});
+  cy.get('.top > .ns-filter').click({force: true});
 
   // Confirm it is opened
   cy.get('i[class="icon icon-close"]', {timeout: 5000}).should('be.visible')
@@ -707,21 +713,6 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   cy.wait(2000);
 });
 
-// Create an instance from catalog service
-Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
-  cy.get('.accordion.package.depth-0.has-children', {timeout: 20000}).contains('Services').click()
-  cy.clickButton('Create');
-  cy.typeValue({label: 'Name', value: serviceName});
-  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
-  cy.contains(catalogType).click()
-  // Verify selected catalog service is selected
-  cy.get('span.vs__selected').eq(1).should('contain', catalogType )
-  cy.clickButton('Create');
-  // Verify service is deployed 
-  cy.get('span.badge-state.bg-success', {timeout: 90000}).contains('Deployed').should('be.visible')
-  cy.get('td.col-link-detail').eq(0).contains(serviceName).should('be.visible')
-});
-
 // Bind a configuration to an existing application
 Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespace='workspace'}) => {
   cy.clickEpinioMenu('Applications');
@@ -777,6 +768,80 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
   // because we can't scrap the value in the html page, maybe because the field is grey.
   // Attach to app might be a solution for checking it but the feature is not yet released.
   // Otherwise, we can use kubectl command but at the end of Cypress tests.
+});
+
+// Services functions
+
+// Create an instance from catalog service
+Cypress.Commands.add('createService', ({serviceName, catalogType}) => {
+  cy.get('.accordion.package.depth-0.has-children', {timeout: 20000}).contains('Services').click()
+  cy.clickButton('Create');
+  cy.typeValue({label: 'Name', value: serviceName});
+  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
+  cy.contains(catalogType).click()
+  // Verify selected catalog service is selected
+  cy.get('span.vs__selected').eq(1).should('contain', catalogType )
+  cy.clickButton('Create');
+  // Verify service is deployed 
+  cy.get('span.badge-state.bg-success', {timeout: 90000}).contains('Deployed').should('be.visible')
+  cy.get('td.col-link-detail').contains(serviceName).should('be.visible')
+});
+
+// Bind app from Service page
+Cypress.Commands.add('bindServiceFromSevicesPage', ({ appName, serviceName, bindingOption=bind }) => {
+  cy.get('div.header').contains('Services').click( {force: true} );
+
+  // Open 3 dots button
+  cy.contains('tr.main-row', serviceName).within(() => {
+    cy.get('.icon.icon-actions').click()
+  });
+
+  // Open edit config
+  cy.get('.list-unstyled.menu > li > span', {timeout: 15000}).contains('Edit Config').click();
+
+  if (bindingOption == 'bind') {
+  // Open "Bind to Applications" dropdown and bind service to app
+  cy.get('.v-select.inline.vs--multiple').click();
+  cy.contains(appName).should('be.visible').click();
+  // Click on save button
+  cy.clickButton('Save');
+  cy.get('.icon.icon-lg.icon-spinner.icon-spin', {timeout: 60000}).contains('Saving...').should('not.exist');
+  // Confirm bound application after main instance page redirection
+  cy.contains('tr.main-row', serviceName, {timeout: 45000}).within(() => {
+    cy.get('td[data-testid]', {timeout: 45000}).eq(4).contains(appName).should('be.visible')
+  });
+  }
+
+  else if (bindingOption == 'unbind') {
+  // Deselect bound app to service
+  cy.contains(appName).within(() => {
+    cy.get('button[title="Deselect testapp"]').click();
+  })
+  // Click on save button
+  cy.clickButton('Save');
+  cy.get('.icon.icon-lg.icon-spinner.icon-spin', {timeout: 60000}).contains('Saving...').should('not.exist');
+  // Confirm application is not bound after main instance page redirection
+  cy.contains('tr.main-row', serviceName, {timeout: 60000}).within(() => {
+    cy.get('td[data-testid]', {timeout: 30000 }).eq(4).contains(appName).should('not.exist')
+  });
+  }
+});
+
+// Delete a Service
+Cypress.Commands.add('deleteService', ({ serviceName }) => {
+  cy.get('div.header').contains('Services').click({force: true});
+  cy.get('span.label.no-icon').contains('Instances').click({force: true});
+  
+  // Open 3 dots button
+  cy.contains('tr.main-row', serviceName).within(() => {
+    cy.get('.icon.icon-actions').click()
+  });
+  // Open edit config
+  cy.get('.list-unstyled.menu > li > span', {timeout: 15000}).contains('Delete').click();
+  // Confirm it
+  cy.get('.btn.bg-error.ml-10.btn.role-primary', {timeout: 30000}).contains('Delete').click({force: true});
+  // Check Service does not appear on main screen
+  cy.contains('tr.main-row', serviceName, {timeout: 45000}).should('not.exist');
 });
 
 // Epinio installation functions
