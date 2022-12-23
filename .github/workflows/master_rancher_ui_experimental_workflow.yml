@@ -108,7 +108,8 @@ jobs:
   cypress-epinio-installation:
     needs:
       - installation
-    runs-on: ${{ inputs.runner }}
+    # runs-on: ${{ inputs.runner }}
+    runs-on: [self-hosted, ui-e2e-0]
     container:
       image: ${{ inputs.cypress_image }}
       env:
@@ -179,7 +180,8 @@ jobs:
   epinio-patching:
     needs:
       - cypress-epinio-installation
-    runs-on: ${{ inputs.runner }}
+    # runs-on: ${{ inputs.runner }}
+    runs-on: [self-hosted, ui-e2e-0]
     steps:
       - name: Checkout Epinio repository
         uses: actions/checkout@v3
@@ -227,7 +229,8 @@ jobs:
       - installation
       - cypress-epinio-installation
       - epinio-patching
-    runs-on: ${{ inputs.runner }}
+    # runs-on: ${{ inputs.runner }}
+    runs-on: [self-hosted, ui-e2e-0]
     container:
       image: ${{ inputs.cypress_image }}
       env:
@@ -287,7 +290,8 @@ jobs:
       - cypress-epinio-installation
       - epinio-patching
       - cypress-epinio-tests
-    runs-on: ${{ inputs.runner }}
+    # runs-on: ${{ inputs.runner }}
+    runs-on: [self-hosted, ui-e2e-0]
     container:
       image: ${{ inputs.cypress_image }}
       env:
