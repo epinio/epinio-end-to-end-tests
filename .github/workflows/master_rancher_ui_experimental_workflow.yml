@@ -45,9 +45,9 @@ on:
       runner:
         description: Runner on which to execute tests
         required: true
+        default: "ui-e2e-0"
         type: string
         # Setting default runner to execute the test into
-        default: "ui-e2e-0"
     secrets:
       ext_reg_user:
         required: false
