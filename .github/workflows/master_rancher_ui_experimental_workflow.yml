@@ -47,7 +47,7 @@ on:
         required: true
         type: string
         # Setting default runner to execute the test into
-        default: ui-e2e-0
+        default: "ui-e2e-0"
     secrets:
       ext_reg_user:
         required: false
