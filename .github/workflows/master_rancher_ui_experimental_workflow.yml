@@ -44,8 +44,8 @@ on:
         type: string
       runner:
         description: Runner on which to execute tests
-        required: true
         default: "ui-e2e-0"
+        required: true
         type: string
         # Setting default runner to execute the test into
     secrets:
@@ -60,8 +60,8 @@ on:
 
 jobs:
   installation:
-    # runs-on: ${{ inputs.runner }}
-    runs-on: ${{ github.event.inputs.runner }}
+    runs-on: ${{ inputs.runner }}
+    # runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
