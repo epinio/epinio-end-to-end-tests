@@ -24,7 +24,7 @@ on:
         type: string
         # Default working cypress image for Chrome browser 
         default: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      cypress_install_test:
+      cypress_install_test: installation.spec.ts
         description: Epinio installation test
         required: true
         type: string
@@ -142,7 +142,8 @@ jobs:
           # headless: true
           spec: |
             cypress/e2e/unit_tests/first_connexion.spec.ts
-            cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
+            # cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
+            cypress/e2e/unit_tests/installation.spec.ts
           config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
