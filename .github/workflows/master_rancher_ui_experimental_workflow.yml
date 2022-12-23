@@ -60,7 +60,7 @@ on:
 
 jobs:
   installation:
-    runs-on: ${{ inputs.runner }}
+    runs-on: ${{ workflow_call.inputs.runner }}
     # runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout
@@ -343,7 +343,7 @@ jobs:
     if: always()
     needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
     # runs-on: ${{ inputs.runner }}
-    runs-on: ${{ github.event.inputs.runner }}
+    runs-on: ${{ on.workflow_call.inputs.runner }}
     steps:
 
       - name: Delete k3s cluster
