@@ -232,7 +232,8 @@ jobs:
     # runs-on: ${{ inputs.runner }}
     runs-on: [self-hosted, ui-e2e-0]
     container:
-      image: ${{ inputs.cypress_image }}
+      # image: ${{ inputs.cypress_image }}
+      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       env:
         CLUSTER_NAME: local
         RANCHER_USER: admin
@@ -293,7 +294,8 @@ jobs:
     # runs-on: ${{ inputs.runner }}
     runs-on: [self-hosted, ui-e2e-0]
     container:
-      image: ${{ inputs.cypress_image }}
+      # image: ${{ inputs.cypress_image }}
+      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       env:
         CLUSTER_NAME: local
         RANCHER_USER: admin
