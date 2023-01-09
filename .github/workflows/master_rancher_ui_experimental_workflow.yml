@@ -254,7 +254,8 @@ jobs:
           browser: chrome
           # headless: true
           spec: |
-            cypress/e2e/unit_tests/${{ inputs.cypress_test }}
+            # cypress/e2e/unit_tests/${{ inputs.cypress_test }}
+            cypress/e2e/unit_tests/menu.spec.ts
           config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
