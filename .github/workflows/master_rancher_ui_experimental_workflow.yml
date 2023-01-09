@@ -48,6 +48,10 @@ on:
         required: true
         type: string
         # Setting default runner to execute the test into
+      experimental_chart_branch:
+        description: "Add branch for experimental Epinio Charts"
+        required: false
+        type: string
     secrets:
       ext_reg_user:
         required: false
@@ -314,7 +318,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         env:
-          EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
+        #   EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
+          EXPERIMENTAL_CHART_BRANCH: ${{ inputs.experimental_chart_branch }}
         with:
           # browser: ${{ inputs.browser }}
           browser: chrome
