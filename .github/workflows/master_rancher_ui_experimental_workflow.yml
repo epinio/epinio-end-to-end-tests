@@ -44,7 +44,7 @@ on:
         type: string
       runner:
         description: Runner on which to execute tests
-        default: "ui-e2e-0"
+        default: ui-e2e-0
         required: true
         type: string
         # Setting default runner to execute the test into
@@ -64,8 +64,8 @@ on:
 
 jobs:
   installation:
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
+    runs-on: ${{ inputs.runner }}
+    # runs-on: [self-hosted, ui-e2e-0]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -80,291 +80,292 @@ jobs:
         run: |
           echo "`pwd`/output/bin" >> $GITHUB_PATH
 
-      - name: Install K3s / Helm / Rancher
-        id: installation
-        env:
-          DASHBOARD_VERSION: epinio-dev
-          KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-          HELM_VERSION: 3.7.0
-          K3S_VERSION: v1.24.6+k3s1
-          EXT_REG: ${{ inputs.ext_reg }}
-          # EXT_REG_USER: ${{ secrets.ext_reg_user }}
-          # EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
-          EXT_REG_USER: secrets.EPINIO_DOCKER_USER
-          EXT_REG_PASSWORD: secrets.EPINIO_DOCKER_PASSWORD
-          S3_KEY_ID: ${{ secrets.s3_key_id }}
-          S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
-        run: |
-          ## Export information to other jobs
-          ETH_DEV=$(ip route | awk '/default via / { print $5 }')
-          MY_IP=$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
-          export MY_HOSTNAME=$(hostname)
-          export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
-          echo "MY_IP=${MY_IP}" >> $GITHUB_OUTPUT
-          echo "MY_HOSTNAME=${MY_HOSTNAME}" >> $GITHUB_OUTPUT
-          make prepare-e2e-ci-rancher
+  #     - name: Install K3s / Helm / Rancher
+  #       id: installation
+  #       env:
+  #         DASHBOARD_VERSION: epinio-dev
+  #         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  #         HELM_VERSION: 3.7.0
+  #         K3S_VERSION: v1.24.6+k3s1
+  #         EXT_REG: ${{ inputs.ext_reg }}
+  #         # EXT_REG_USER: ${{ secrets.ext_reg_user }}
+  #         # EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+  #         EXT_REG_USER: secrets.EPINIO_DOCKER_USER
+  #         EXT_REG_PASSWORD: secrets.EPINIO_DOCKER_PASSWORD
+  #         S3_KEY_ID: ${{ secrets.s3_key_id }}
+  #         S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
+  #       run: |
+  #         ## Export information to other jobs
+  #         ETH_DEV=$(ip route | awk '/default via / { print $5 }')
+  #         MY_IP=$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
+  #         export MY_HOSTNAME=$(hostname)
+  #         export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
+  #         echo "MY_IP=${MY_IP}" >> $GITHUB_OUTPUT
+  #         echo "MY_HOSTNAME=${MY_HOSTNAME}" >> $GITHUB_OUTPUT
+  #         make prepare-e2e-ci-rancher
 
-    outputs:
-      MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME }}
-      MY_IP: ${{ steps.installation.outputs.MY_IP }}
+  #   outputs:
+  #     MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME }}
+  #     MY_IP: ${{ steps.installation.outputs.MY_IP }}
 
-  # Use a first Cypress container to install Epinio on Rancher
-  cypress-epinio-installation:
-    needs:
-      - installation
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
-    container:
-      # image: ${{ inputs.cypress_image }}
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      env:
-        CLUSTER_NAME: local
-        CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
-        # EXT_REG_USER: ${{ secrets.ext_reg_user }}
-        # EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
-        # Adding secrets statically
-        EXT_REG_USER: secrets.EPINIO_DOCKER_USER
-        EXT_REG_PASSWORD: secrets.EPINIO_DOCKER_PASSWORD
-        RANCHER_USER: admin
-        RANCHER_PASSWORD: rancherpassword
-        RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
-        S3_KEY_ID: ${{ secrets.s3_key_id }}
-        S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
-        SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
-        UI: rancher
-        EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
-        # EXTRAENV_NAME: SESSION_KEY
-        # EXTRAENV_VALUE: 12345
-      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
-    steps:
+  # # Use a first Cypress container to install Epinio on Rancher
+  # cypress-epinio-installation:
+  #   needs:
+  #     - installation
+  #   # runs-on: ${{ inputs.runner }}
+  #   runs-on: [self-hosted, ui-e2e-0]
+  #   container:
+  #     # image: ${{ inputs.cypress_image }}
+  #     image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+  #     env:
+  #       CLUSTER_NAME: local
+  #       CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
+  #       # EXT_REG_USER: ${{ secrets.ext_reg_user }}
+  #       # EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+  #       # Adding secrets statically
+  #       EXT_REG_USER: secrets.EPINIO_DOCKER_USER
+  #       EXT_REG_PASSWORD: secrets.EPINIO_DOCKER_PASSWORD
+  #       RANCHER_USER: admin
+  #       RANCHER_PASSWORD: rancherpassword
+  #       RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
+  #       S3_KEY_ID: ${{ secrets.s3_key_id }}
+  #       S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
+  #       SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+  #       UI: rancher
+  #       EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
+  #       # EXTRAENV_NAME: SESSION_KEY
+  #       # EXTRAENV_VALUE: 12345
+  #     options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
+  #   steps:
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          # browser: ${{ inputs.browser }}
-          browser: chrome
-          # headless: true
-          spec: |
-            cypress/e2e/unit_tests/first_connexion.spec.ts
-            # cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
-            cypress/e2e/unit_tests/installation.spec.ts
-          config-file: cypress.config.ts
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v4
+  #       with:
+  #         # browser: ${{ inputs.browser }}
+  #         browser: chrome
+  #         # headless: true
+  #         spec: |
+  #           cypress/e2e/unit_tests/first_connexion.spec.ts
+  #           # cypress/e2e/unit_tests/${{ inputs.cypress_install_test }}
+  #           cypress/e2e/unit_tests/installation.spec.ts
+  #         config-file: cypress.config.ts
 
-      - name: Copying screenshots and videos to Mochawesome report
-        if: always()
-        run: |
-          mkdir -p mochawesome-report
-          cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
+  #     - name: Copying screenshots and videos to Mochawesome report
+  #       if: always()
+  #       run: |
+  #         mkdir -p mochawesome-report
+  #         cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
+  #         cp -r cypress/videos mochawesome-report
 
-      - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: cypress-screenshots-install
-          path: cypress/screenshots
-          retention-days: 7
+  #     - name: Upload Cypress screenshots
+  #       uses: actions/upload-artifact@v3
+  #       if: failure()
+  #       with:
+  #         name: cypress-screenshots-install
+  #         path: cypress/screenshots
+  #         retention-days: 7
 
-      # Test run video was always captured, so this action uses "always()" condition
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-videos-install
-          path: cypress/videos
-          retention-days: 7
+  #     # Test run video was always captured, so this action uses "always()" condition
+  #     - name: Upload Cypress videos
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: cypress-videos-install
+  #         path: cypress/videos
+  #         retention-days: 7
 
-      - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: mochawesome-report
-          path: mochawesome-report
-          retention-days: 7
+  #     - name: Upload Mochawesome report
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: mochawesome-report
+  #         path: mochawesome-report
+  #         retention-days: 7
 
-  # Patch Epinio to use the latest code version (main)
-  # It can only be done with CLI
-  epinio-patching:
-    needs:
-      - cypress-epinio-installation
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
-    steps:
-      - name: Checkout Epinio repository
-        uses: actions/checkout@v3
-        with:
-          repository: epinio/epinio
-          submodules: recursive
-          fetch-depth: 0
-          path: epinio
+  # # Patch Epinio to use the latest code version (main)
+  # # It can only be done with CLI
+  # epinio-patching:
+  #   needs:
+  #     - cypress-epinio-installation
+  #   # runs-on: ${{ inputs.runner }}
+  #   runs-on: [self-hosted, ui-e2e-0]
+  #   steps:
+  #     - name: Checkout Epinio repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         repository: epinio/epinio
+  #         submodules: recursive
+  #         fetch-depth: 0
+  #         path: epinio
       
-      - name: Cache Tools
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}/tools
-          key: ${{ runner.os }}-tools
+  #     - name: Cache Tools
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: ${{ github.workspace }}/tools
+  #         key: ${{ runner.os }}-tools
 
-      - name: Add Tools to PATH
-        run: |
-          echo "`pwd`/output/bin" >> $GITHUB_PATH
+  #     - name: Add Tools to PATH
+  #       run: |
+  #         echo "`pwd`/output/bin" >> $GITHUB_PATH
 
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        env:
-          SETUP_GO_VERSION: '^1.17.2'
-        with:
-          go-version: ${{ env.SETUP_GO_VERSION }}
+  #     - name: Setup Go
+  #       uses: actions/setup-go@v3
+  #       env:
+  #         SETUP_GO_VERSION: '^1.17.2'
+  #       with:
+  #         go-version: ${{ env.SETUP_GO_VERSION }}
 
-      # Disabled for experimental version
-      # - name: Patch epinio-server
-      #   env:
-      #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-      #   run: |
-      #     cd epinio
-      #     make build
-      #     make patch-epinio-deployment
+  #     # Disabled for experimental version
+  #     # - name: Patch epinio-server
+  #     #   env:
+  #     #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  #     #   run: |
+  #     #     cd epinio
+  #     #     make build
+  #     #     make patch-epinio-deployment
 
-      # - name: Patch epinio-ui with latest QA image
-      #   env:
-      #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-      #   run: |
-      #     make patch-epinio-ui
+  #     # - name: Patch epinio-ui with latest QA image
+  #     #   env:
+  #     #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  #     #   run: |
+  #     #     make patch-epinio-ui
 
-  # Use a second Cypress container to run all Epinio's tests
-  cypress-epinio-tests:
-    needs:
-      - installation
-      - cypress-epinio-installation
-      - epinio-patching
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
-    container:
-      # image: ${{ inputs.cypress_image }}
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      env:
-        CLUSTER_NAME: local
-        RANCHER_USER: admin
-        RANCHER_PASSWORD: password
-        RANCHER_URL: https://epinio.${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
-        SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
-        # set UI value to something else than 'rancher'
-        UI: epinio-rancher
-      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
-    steps:
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          # browser: ${{ inputs.browser }}
-          browser: chrome
-          # headless: true
-          spec: |
-            # cypress/e2e/unit_tests/${{ inputs.cypress_test }}
-            cypress/e2e/unit_tests/menu.spec.ts
-          config-file: cypress.config.ts
+  # # Use a second Cypress container to run all Epinio's tests
+  # cypress-epinio-tests:
+  #   needs:
+  #     - installation
+  #     - cypress-epinio-installation
+  #     - epinio-patching
+  #   # runs-on: ${{ inputs.runner }}
+  #   runs-on: [self-hosted, ui-e2e-0]
+  #   container:
+  #     # image: ${{ inputs.cypress_image }}
+  #     image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+  #     env:
+  #       CLUSTER_NAME: local
+  #       RANCHER_USER: admin
+  #       RANCHER_PASSWORD: password
+  #       RANCHER_URL: https://epinio.${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+  #       SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+  #       # set UI value to something else than 'rancher'
+  #       UI: epinio-rancher
+  #     options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
+  #   steps:
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v4
+  #       with:
+  #         # browser: ${{ inputs.browser }}
+  #         browser: chrome
+  #         # headless: true
+  #         spec: |
+  #           # cypress/e2e/unit_tests/${{ inputs.cypress_test }}
+  #           cypress/e2e/unit_tests/menu.spec.ts
+  #         config-file: cypress.config.ts
 
-      - name: Copying screenshots and videos to Mochawesome report
-        if: always()
-        run: |
-          mkdir -p mochawesome-report
-          cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
+  #     - name: Copying screenshots and videos to Mochawesome report
+  #       if: always()
+  #       run: |
+  #         mkdir -p mochawesome-report
+  #         cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
+  #         cp -r cypress/videos mochawesome-report
 
-      - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: cypress-screenshots-tests
-          path: cypress/screenshots
-          retention-days: 7
+  #     - name: Upload Cypress screenshots
+  #       uses: actions/upload-artifact@v3
+  #       if: failure()
+  #       with:
+  #         name: cypress-screenshots-tests
+  #         path: cypress/screenshots
+  #         retention-days: 7
 
-      # Test run video was always captured, so this action uses "always()" condition
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-videos-tests
-          path: cypress/videos
-          retention-days: 7
+  #     # Test run video was always captured, so this action uses "always()" condition
+  #     - name: Upload Cypress videos
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: cypress-videos-tests
+  #         path: cypress/videos
+  #         retention-days: 7
       
-      - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: mochawesome-report
-          path: mochawesome-report
-          retention-days: 7
+  #     - name: Upload Mochawesome report
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: mochawesome-report
+  #         path: mochawesome-report
+  #         retention-days: 7
 
-  cypress-epinio-uninstall:
-    needs:
-      - installation
-      - cypress-epinio-installation
-      - epinio-patching
-      - cypress-epinio-tests
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
-    container:
-      # image: ${{ inputs.cypress_image }}
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      env:
-        CLUSTER_NAME: local
-        RANCHER_USER: admin
-        RANCHER_PASSWORD: rancherpassword
-        RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
-        SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
-        UI: rancher
-      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
-    steps:
+  # cypress-epinio-uninstall:
+  #   needs:
+  #     - installation
+  #     - cypress-epinio-installation
+  #     - epinio-patching
+  #     - cypress-epinio-tests
+  #   # runs-on: ${{ inputs.runner }}
+  #   runs-on: [self-hosted, ui-e2e-0]
+  #   container:
+  #     # image: ${{ inputs.cypress_image }}
+  #     image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+  #     env:
+  #       CLUSTER_NAME: local
+  #       RANCHER_USER: admin
+  #       RANCHER_PASSWORD: rancherpassword
+  #       RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
+  #       SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
+  #       UI: rancher
+  #     options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
+  #   steps:
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        env:
-        #   EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
-          EXPERIMENTAL_CHART_BRANCH: ${{ inputs.experimental_chart_branch }}
-        with:
-          # browser: ${{ inputs.browser }}
-          browser: chrome
-          # headless: true
-          spec: |
-            cypress/e2e/unit_tests/uninstall.spec.ts
-          config-file: cypress.config.ts
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v4
+  #       env:
+  #       #   EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
+  #         EXPERIMENTAL_CHART_BRANCH: ${{ inputs.experimental_chart_branch }}
+  #       with:
+  #         # browser: ${{ inputs.browser }}
+  #         browser: chrome
+  #         # headless: true
+  #         spec: |
+  #           cypress/e2e/unit_tests/uninstall.spec.ts
+  #         config-file: cypress.config.ts
 
-      - name: Copying screenshots and videos to Mochawesome report
-        if: always()
-        run: |
-          mkdir -p mochawesome-report
-          cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
+  #     - name: Copying screenshots and videos to Mochawesome report
+  #       if: always()
+  #       run: |
+  #         mkdir -p mochawesome-report
+  #         cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
+  #         cp -r cypress/videos mochawesome-report
 
-      - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: cypress-screenshots-uninstall
-          path: cypress/screenshots
-          retention-days: 7
+  #     - name: Upload Cypress screenshots
+  #       uses: actions/upload-artifact@v3
+  #       if: failure()
+  #       with:
+  #         name: cypress-screenshots-uninstall
+  #         path: cypress/screenshots
+  #         retention-days: 7
 
-      # Test run video was always captured, so this action uses "always()" condition
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-videos-uninstall
-          path: cypress/videos
-          retention-days: 7
+  #     # Test run video was always captured, so this action uses "always()" condition
+  #     - name: Upload Cypress videos
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: cypress-videos-uninstall
+  #         path: cypress/videos
+  #         retention-days: 7
 
-      - name: Upload Mochawesome report
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: mochawesome-report
-          path: mochawesome-report
-          retention-days: 7
+  #     - name: Upload Mochawesome report
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: mochawesome-report
+  #         path: mochawesome-report
+  #         retention-days: 7
 
   delete-cluster:
     if: always()
-    needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
+    # needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
+    needs: [installation]
+    runs-on: ${{ inputs.runner }}
+    # runs-on: [self-hosted, ui-e2e-0]
     steps:
 
       - name: Delete k3s cluster
