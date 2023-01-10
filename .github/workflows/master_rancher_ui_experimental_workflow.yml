@@ -2,12 +2,12 @@
 name: Master Rancher UI EXPERIMENTAL workflow (template)
 
 on:
-  workflow_dispatch:
-    inputs:
-        experimental_chart_branch:
-          description: "Add branch for experimental Epinio Charts"
-          required: false
-          default: ""
+  # workflow_dispatch:
+  #   inputs:
+  #       experimental_chart_branch:
+  #         description: "Add branch for experimental Epinio Charts"
+  #         required: false
+  #         default: ""
 
   workflow_call:
   # Variables to set when calling this reusable workflow
@@ -64,7 +64,7 @@ on:
 
 jobs:
   installation:
-    runs-on: ${{ inputs.runner.default }}
+    runs-on: ${{ inputs.runner }}
     # runs-on: [self-hosted, ui-e2e-0]
     steps:
       - name: Checkout
@@ -364,7 +364,7 @@ jobs:
     if: always()
     # needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
     needs: [installation]
-    runs-on: ${{ inputs.runner.default }}
+    runs-on: ${{ inputs.runner }}
     # runs-on: [self-hosted, ui-e2e-0]
     steps:
 
