@@ -2,12 +2,12 @@
 name: Master Rancher UI EXPERIMENTAL workflow (template)
 
 on:
-  # workflow_dispatch:
-  #   inputs:
-  #       experimental_chart_branch:
-  #         description: "Add branch for experimental Epinio Charts"
-  #         required: false
-  #         default: ""
+  workflow_dispatch:
+    inputs:
+        experimental_chart_branch:
+          description: Add branch for experimental Epinio Charts
+          required: false
+          default: ''
 
   workflow_call:
   # Variables to set when calling this reusable workflow
