@@ -9,58 +9,58 @@ on:
           required: false
           default: ''
 
-  workflow_call:
-  # Variables to set when calling this reusable workflow
-    inputs:
-      browser:
-        description: Web browser to test
-        required: true
-        type: string
-        # Default browser
-        default: chrome
-      cypress_image:
-        description: Cypress docker image to use
-        required: true
-        type: string
-        # Default working cypress image for Chrome browser 
-        default: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      cypress_install_test: 
-        description: Epinio installation test
-        required: true
-        type: string
-      cypress_test:
-        description: Scenario to test
-        required: true
-        type: string
-        # Default cypress test. 
-        default: menu.spec.ts
-      docker_options:
-        description: Set other docker options
-        required: false
-        type: string
-      ext_reg:
-        description: Enable external registry test
-        required: false
-        type: string
-      runner:
-        description: Runner on which to execute tests
-        default: ui-e2e-0
-        required: true
-        type: string
-        # Setting default runner to execute the test into
-      experimental_chart_branch:
-        description: "Add branch for experimental Epinio Charts"
-        required: false
-        type: string
-    secrets:
-      ext_reg_user:
-        required: false
-      ext_reg_password:
-        required: false
-      s3_key_id:
-        required: false
-      s3_key_secret:
-        required: false
+  # workflow_call:
+  # # Variables to set when calling this reusable workflow
+  #   inputs:
+  #     browser:
+  #       description: Web browser to test
+  #       required: true
+  #       type: string
+  #       # Default browser
+  #       default: chrome
+  #     cypress_image:
+  #       description: Cypress docker image to use
+  #       required: true
+  #       type: string
+  #       # Default working cypress image for Chrome browser 
+  #       default: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+  #     cypress_install_test: 
+  #       description: Epinio installation test
+  #       required: true
+  #       type: string
+  #     cypress_test:
+  #       description: Scenario to test
+  #       required: true
+  #       type: string
+  #       # Default cypress test. 
+  #       default: menu.spec.ts
+  #     docker_options:
+  #       description: Set other docker options
+  #       required: false
+  #       type: string
+  #     ext_reg:
+  #       description: Enable external registry test
+  #       required: false
+  #       type: string
+  #     runner:
+  #       description: Runner on which to execute tests
+  #       default: ui-e2e-0
+  #       required: true
+  #       type: string
+  #       # Setting default runner to execute the test into
+  #     experimental_chart_branch:
+  #       description: "Add branch for experimental Epinio Charts"
+  #       required: false
+  #       type: string
+  #   secrets:
+  #     ext_reg_user:
+  #       required: false
+  #     ext_reg_password:
+  #       required: false
+  #     s3_key_id:
+  #       required: false
+  #     s3_key_secret:
+  #       required: false
 
 jobs:
   installation:
