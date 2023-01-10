@@ -22,7 +22,7 @@ describe('Epinio uninstallation testing', () => {
       cy.removeHelmRepo({ repoName: 'epinio-experimental' });
     });
   }
-  else if (Cypress.env('experimental_chart_branch') == null) {
+  else {
     it('Remove the Epinio helm repo', () => {
       // cy.removeHelmRepo('epinio-repo');
       cy.removeHelmRepo({ repoName: 'epinio-dev' });
