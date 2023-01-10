@@ -64,7 +64,7 @@ on:
 
 jobs:
   installation:
-    runs-on: ${{ github.event.inputs.runner || inputs.runner || 'default' }}
+    runs-on: ${{ github.event.inputs.runner || inputs.runner }}
     # runs-on: [self-hosted, ui-e2e-0]
     steps:
       - name: Checkout
@@ -364,7 +364,7 @@ jobs:
     if: always()
     # needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
     needs: [installation]
-    runs-on: ${{ github.event.inputs.runner || inputs.runner || 'default' }}
+    runs-on: ${{ github.event.inputs.runner || inputs.runner }}
     # runs-on: [self-hosted, ui-e2e-0]
     steps:
 
