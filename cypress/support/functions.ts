@@ -860,7 +860,6 @@ Cypress.Commands.add('addHelmRepo', ({repoName, repoUrl, repoType, branchName='m
   if (repoType === 'git') {
     cy.contains('Git repository').click();
     cy.typeValue({label: 'Git Repo URL', value: repoUrl});
-    // cy.typeValue({label: 'Git Branch', value: 'main'});
     cy.typeValue({label: 'Git Branch', value: branchName});
     
   } else {
@@ -883,7 +882,6 @@ Cypress.Commands.add('epinioInstall', ({s3, extRegistry, namespace='epinio-insta
 
   // // Namespace where installation will happen
   if (namespace !="None"){
-  // cy.typeValue({label: 'Name', value: 'epinio-install'});
   cy.typeValue({label: 'Name', value: namespace});
   // Typing just a new namespace name is not enough, select 'Create a New Namespace' first
   cy.get('div.vs__selected-options').eq(0).click();

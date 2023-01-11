@@ -12,7 +12,6 @@ on:
           description: Web browser to test
           required: true
           type: string
-          # Default browser
           default: chrome
         cypress_image:
           description: Cypress docker image to use (check browser compatibilty)
@@ -32,62 +31,8 @@ on:
           required: true
           type: string
 
-  # workflow_call:
-  # # Variables to set when calling this reusable workflow
-  #   inputs:
-  #     browser:
-  #       description: Web browser to test
-  #       required: true
-  #       type: string
-  #       # Default browser
-  #       default: chrome
-  #     cypress_image:
-  #       description: Cypress docker image to use
-  #       required: true
-  #       type: string
-  #       # Default working cypress image for Chrome browser 
-  #       default: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-  #     cypress_install_test: 
-  #       description: Epinio installation test
-  #       required: true
-  #       type: string
-  #     cypress_test:
-  #       description: Scenario to test
-  #       required: true
-  #       type: string
-  #       # Default cypress test. 
-  #       default: menu.spec.ts
-  #     docker_options:
-  #       description: Set other docker options
-  #       required: false
-  #       type: string
-  #     ext_reg:
-  #       description: Enable external registry test
-  #       required: false
-  #       type: string
-  #     runner:
-  #       description: Runner on which to execute tests
-  #       default: ui-e2e-0
-  #       required: true
-  #       type: string
-  #       # Setting default runner to execute the test into
-  #     experimental_chart_branch:
-  #       description: "Add branch for experimental Epinio Charts"
-  #       required: false
-  #       type: string
-  #   secrets:
-  #     ext_reg_user:
-  #       required: false
-  #     ext_reg_password:
-  #       required: false
-  #     s3_key_id:
-  #       required: false
-  #     s3_key_secret:
-  #       required: false
-
 jobs:
   installation:
-    # runs-on: [self-hosted, ui-e2e-0]
     runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout
@@ -135,11 +80,8 @@ jobs:
   cypress-epinio-installation:
     needs:
       - installation
-    # runs-on: [self-hosted, ui-e2e-0]
     runs-on: ${{ github.event.inputs.runner }}
     container:
-      # image: ${{ inputs.cypress_image }}
-      # image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       image: ${{ github.event.inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
@@ -166,7 +108,6 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ github.event.inputs.browser }}
-          # browser: chrome
           # headless: true
           spec: |
             cypress/e2e/unit_tests/first_connexion.spec.ts
@@ -211,8 +152,6 @@ jobs:
   epinio-patching:
     needs:
       - cypress-epinio-installation
-    # runs-on: ${{ inputs.runner }}
-    # runs-on: [self-hosted, ui-e2e-0]
     runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout Epinio repository
@@ -261,12 +200,8 @@ jobs:
       - installation
       - cypress-epinio-installation
       - epinio-patching
-    # runs-on: ${{ inputs.runner }}
-    # runs-on: [self-hosted, ui-e2e-0]
     runs-on: ${{ github.event.inputs.runner }}
     container:
-      # image: ${{ inputs.cypress_image }}
-      # image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       image: ${{ github.event.inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
@@ -282,7 +217,6 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ github.event.inputs.browser }}
-          # browser: chrome
           # headless: true
           spec: |
             cypress/e2e/unit_tests/${{ github.event.inputs.cypress_test }}
@@ -327,12 +261,8 @@ jobs:
       - cypress-epinio-installation
       - epinio-patching
       - cypress-epinio-tests
-    # runs-on: ${{ inputs.runner }}
-    # runs-on: [self-hosted, ui-e2e-0]
     runs-on: ${{ github.event.inputs.runner }}
     container:
-      # image: ${{ inputs.cypress_image }}
-      # image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       image: ${{ github.event.inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
@@ -350,8 +280,6 @@ jobs:
           EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
         with:
           browser: ${{ github.event.inputs.browser }}
-          # browser: chrome
-          # headless: true
           spec: |
             cypress/e2e/unit_tests/uninstall.spec.ts
           config-file: cypress.config.ts
@@ -391,7 +319,6 @@ jobs:
   delete-cluster:
     if: always()
     needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
-    # runs-on: [self-hosted, ui-e2e-0]
     runs-on: ${{ github.event.inputs.runner }}
     steps:
 

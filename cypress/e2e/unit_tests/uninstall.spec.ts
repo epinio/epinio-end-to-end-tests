@@ -25,7 +25,7 @@ describe('Epinio uninstallation testing', () => {
   else {
     it('Remove the Epinio helm repo', () => {
       // cy.removeHelmRepo('epinio-repo');
-      cy.removeHelmRepo({ repoName: 'epinio-dev' });
+      cy.removeHelmRepo({ repoName: 'epinio-repo' });
   });
   }
 });
