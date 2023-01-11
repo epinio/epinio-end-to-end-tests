@@ -14,6 +14,23 @@ on:
           type: string
           # Default browser
           default: chrome
+        cypress_image:
+          description: Cypress docker image to use (check browser compatibilty)
+          required: true
+          type: string
+          # Default working cypress image for Chrome browser 
+          default: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+        cypress_test:
+          description: Scenario to test (once Epinio is installed)
+          required: true
+          type: string
+          # Default cypress test. 
+          default: menu.spec.ts
+        runner:
+          description: Runner on which to execute tests
+          default: ui-e2e-0
+          required: true
+          type: string
 
   # workflow_call:
   # # Variables to set when calling this reusable workflow
@@ -70,7 +87,8 @@ on:
 
 jobs:
   installation:
-    runs-on: [self-hosted, ui-e2e-0]
+    # runs-on: [self-hosted, ui-e2e-0]
+    runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -117,10 +135,12 @@ jobs:
   cypress-epinio-installation:
     needs:
       - installation
-    runs-on: [self-hosted, ui-e2e-0]
+    # runs-on: [self-hosted, ui-e2e-0]
+    runs-on: ${{ github.event.inputs.runner }}
     container:
       # image: ${{ inputs.cypress_image }}
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      # image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      image: ${{ github.event.inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
         CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
@@ -192,7 +212,8 @@ jobs:
     needs:
       - cypress-epinio-installation
     # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
+    # runs-on: [self-hosted, ui-e2e-0]
+    runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout Epinio repository
         uses: actions/checkout@v3
@@ -241,10 +262,12 @@ jobs:
       - cypress-epinio-installation
       - epinio-patching
     # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
+    # runs-on: [self-hosted, ui-e2e-0]
+    runs-on: ${{ github.event.inputs.runner }}
     container:
       # image: ${{ inputs.cypress_image }}
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      # image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      image: ${{ github.event.inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
         RANCHER_USER: admin
@@ -262,8 +285,8 @@ jobs:
           # browser: chrome
           # headless: true
           spec: |
-            # cypress/e2e/unit_tests/${{ inputs.cypress_test }}
-            cypress/e2e/unit_tests/menu.spec.ts
+            cypress/e2e/unit_tests/${{ github.event.inputs.cypress_test }}
+            # cypress/e2e/unit_tests/menu.spec.ts
           config-file: cypress.config.ts
 
       - name: Copying screenshots and videos to Mochawesome report
@@ -305,10 +328,12 @@ jobs:
       - epinio-patching
       - cypress-epinio-tests
     # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e-0]
+    # runs-on: [self-hosted, ui-e2e-0]
+    runs-on: ${{ github.event.inputs.runner }}
     container:
       # image: ${{ inputs.cypress_image }}
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      # image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      image: ${{ github.event.inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
         RANCHER_USER: admin
@@ -366,7 +391,8 @@ jobs:
   delete-cluster:
     if: always()
     needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
-    runs-on: [self-hosted, ui-e2e-0]
+    # runs-on: [self-hosted, ui-e2e-0]
+    runs-on: ${{ github.event.inputs.runner }}
     steps:
 
       - name: Delete k3s cluster
