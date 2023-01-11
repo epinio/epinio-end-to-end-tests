@@ -8,6 +8,12 @@ on:
           description: Add branch for experimental Epinio Charts
           required: false
           default: ''
+        browser:
+          description: Web browser to test
+          required: true
+          type: string
+          # Default browser
+          default: chrome
 
   # workflow_call:
   # # Variables to set when calling this reusable workflow
@@ -139,8 +145,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          # browser: ${{ inputs.browser }}
-          browser: chrome
+          browser: ${{ github.event.inputs.browser }}
+          # browser: chrome
           # headless: true
           spec: |
             cypress/e2e/unit_tests/first_connexion.spec.ts
@@ -252,8 +258,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          # browser: ${{ inputs.browser }}
-          browser: chrome
+          browser: ${{ github.event.inputs.browser }}
+          # browser: chrome
           # headless: true
           spec: |
             # cypress/e2e/unit_tests/${{ inputs.cypress_test }}
@@ -318,8 +324,8 @@ jobs:
         env:
           EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
         with:
-          # browser: ${{ inputs.browser }}
-          browser: chrome
+          browser: ${{ github.event.inputs.browser }}
+          # browser: chrome
           # headless: true
           spec: |
             cypress/e2e/unit_tests/uninstall.spec.ts
