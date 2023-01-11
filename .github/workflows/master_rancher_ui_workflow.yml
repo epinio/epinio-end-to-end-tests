@@ -105,7 +105,6 @@ jobs:
         S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
         UI: rancher
-        EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
         # EXTRAENV_NAME: SESSION_KEY
         # EXTRAENV_VALUE: 12345
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
