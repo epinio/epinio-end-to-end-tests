@@ -98,7 +98,6 @@ jobs:
         # EXTRAENV_VALUE: 12345
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
-
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
@@ -140,7 +139,6 @@ jobs:
           name: mochawesome-report
           path: mochawesome-report
           retention-days: 7
-
  
   cypress-epinio-tests:
     needs:
@@ -217,7 +215,6 @@ jobs:
         UI: rancher
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
-
       - name: Cypress run
         uses: cypress-io/github-action@v4
         env:
