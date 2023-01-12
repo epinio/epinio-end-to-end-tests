@@ -949,11 +949,9 @@ Cypress.Commands.add('removeHelmRepo', ({repoName='epinio-repo'}) => {
 
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', {timeout: 8000}).should('be.visible');
-  // cy.contains('epinio-repo').click();
   cy.contains(repoName).click();
   // Using three dots menu to delete the repo
   // TODO: Check if we can click checkbox instead
-  // cy.contains('Repository: epinio-repo').should('be.visible');
   cy.contains(`Repository: ${repoName}`).should('be.visible');
   cy.get('.role-multi-action').click();
   cy.contains('Delete').click();
