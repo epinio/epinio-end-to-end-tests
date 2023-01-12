@@ -17,7 +17,7 @@ describe('Epinio uninstallation testing', () => {
     cy.epinioUninstall();
   });
 
-  if (Cypress.env('experimental_chart_branch') != null){
+  if (Cypress.env('experimental_chart_branch') != null) {
     it('Remove the Epinio experimental repo', () => {
       cy.removeHelmRepo({ repoName: 'epinio-experimental' });
     });
@@ -26,7 +26,6 @@ describe('Epinio uninstallation testing', () => {
     it('Remove the Epinio helm repo', () => {
       // cy.removeHelmRepo('epinio-repo');
       cy.removeHelmRepo({ repoName: 'epinio-repo' });
-  });
+    });
   }
 });
-

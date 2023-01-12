@@ -33,8 +33,7 @@ on:
 
 jobs:
   installation:
-    # runs-on: ${{ github.event.inputs.runner }}
-    runs-on: ${{ inputs.runner }}
+    runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

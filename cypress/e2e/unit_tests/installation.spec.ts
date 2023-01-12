@@ -15,30 +15,30 @@ describe('Epinio installation testing', () => {
 
   it('Add the Epinio helm repo', () => {
     if (Cypress.env('experimental_chart_branch') != null) {
-      cy.addHelmRepo({ repoName: 'epinio-experimental', repoUrl: 'https://github.com/epinio/charts.git', repoType: 'git', branchName: Cypress.env('experimental_chart_branch') }); 
+      cy.addHelmRepo({ repoName: 'epinio-experimental', repoUrl: 'https://github.com/epinio/charts.git', repoType: 'git', branchName: Cypress.env('experimental_chart_branch') });
     }
     else {
-    cy.addHelmRepo({ repoName: 'epinio-repo', repoUrl: 'https://github.com/epinio/helm-charts', repoType: 'git' });
+      cy.addHelmRepo({ repoName: 'epinio-repo', repoUrl: 'https://github.com/epinio/helm-charts', repoType: 'git' });
     }
   });
 
   it('Install Epinio', () => {
     if (Cypress.env('experimental_chart_branch') != null) {
-      cy.epinioInstall({ s3: false, extRegistry: false, namespace: 'None' });  
+      cy.epinioInstall({ s3: false, extRegistry: false, namespace: 'None' });
     }
     else {
-    // Boolean must be forced to false otherwise code is failing
-    cy.epinioInstall({ s3: false, extRegistry: false });
+      // Boolean must be forced to false otherwise code is failing
+      cy.epinioInstall({ s3: false, extRegistry: false });
     }
   });
 
   it('Verify Epinio over ingress URL', () => {
     if (Cypress.env('experimental_chart_branch') != null) {
-    // Select "All Namespaces" from Namespace filter at the top
-    cy.get('.top > .ns-filter').click({force: true})
-    cy.get('#all', {timeout: 2000}).contains('All Namespaces').should('be.visible').click()
-    // Close the namespaces dropdowy
-    cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({force: true});
+      // Select "All Namespaces" from Namespace filter at the top
+      cy.get('.top > .ns-filter').click({ force: true });
+      cy.get('#all', { timeout: 2000 }).contains('All Namespaces').should('be.visible').click();
+      // Close the namespaces dropdowy
+      cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
     }
 
     // WORKAROUND until Epinio icon will be present again in Rancher UI
