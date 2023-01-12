@@ -1,4 +1,5 @@
-# This workflow is a reusable one called by other workflows 
+# This is a single workflow to install/uninstall specific branches of Epinio
+# on Rancher Dashboard and run tests with several dispatch options in Github Actions
 name: Master Rancher UI EXPERIMENTAL workflow
 
 on:
@@ -30,6 +31,11 @@ on:
           default: ui-e2e-0
           required: true
           type: string
+        docker_options:
+          description: Extra options for docker (set to "--user 1000" for firefox)
+          required: false
+          type: string
+          default: ''
 
 jobs:
   installation:
@@ -96,7 +102,7 @@ jobs:
         EXPERIMENTAL_CHART_BRANCH: ${{ github.event.inputs.experimental_chart_branch }}
         # EXTRAENV_NAME: SESSION_KEY
         # EXTRAENV_VALUE: 12345
-      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
+      options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ github.event.inputs.docker_options }}
     steps:
       - name: Cypress run
         uses: cypress-io/github-action@v4
