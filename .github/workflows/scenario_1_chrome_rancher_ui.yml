@@ -3,7 +3,7 @@ name: Rancher-UI-1-Chrome
 
 on:
   workflow_dispatch:
-  
+
   schedule:
     - cron: '0 2 * * *'
 
