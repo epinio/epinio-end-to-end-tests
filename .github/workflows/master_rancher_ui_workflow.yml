@@ -111,7 +111,7 @@ jobs:
     steps:
 
       - name: Cypress run
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v5
         with:
           browser: ${{ inputs.browser }}
           # headless: true
@@ -218,7 +218,7 @@ jobs:
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
       - name: Cypress run
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v5
         with:
           browser: ${{ inputs.browser }}
           # headless: true
@@ -278,7 +278,7 @@ jobs:
     steps:
 
       - name: Cypress run
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v5
         with:
           browser: ${{ inputs.browser }}
           # headless: true
