@@ -81,3 +81,5 @@ Cypress.on('test:after:run', (test, runnable) => {
 });
 
 require('cypress-dark');
+const registerCypressGrep = require('@cypress/grep')
+registerCypressGrep();

@@ -26,6 +26,7 @@ module.exports = (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions)
   config.env.extraEnvName = process.env.EXTRAENV_NAME;
   config.env.extraEnvValue = process.env.EXTRAENV_VALUE;
   config.env.experimental_chart_branch = process.env.EXPERIMENTAL_CHART_BRANCH;
+  config.env.grep = process.env.GREP
 
   return config;
 };
