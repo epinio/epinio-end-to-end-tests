@@ -26,7 +26,8 @@
       "@types/node",
       "@nuxt/types",
       "cypress",
-      "cypress-file-upload"
+      "cypress-file-upload",
+      "@cypress/grep"
     ]
   },
   "exclude": [
