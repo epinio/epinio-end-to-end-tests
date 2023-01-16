@@ -19,10 +19,10 @@ on:
         required: true
         type: string
         default: ''
-      # grep:
-      #   description: Select spefic test(s)
-      #   required: false
-      #   default: ''
+      grep:
+        description: Select spefic test(s)
+        required: false
+        default: ''
       docker_options:
         description: Set other docker options
         required: false
@@ -132,9 +132,9 @@ jobs:
           RANCHER_PASSWORD: password
           RANCHER_URL: https://epinio.${{ steps.installation.outputs.MY_IP }}.omg.howdoi.website
           RANCHER_USER: admin
-          SPEC: cypress/e2e/unit_tests/.${{ inputs.cypress_spec }}.spec.ts
+          SPEC: cypress/e2e/unit_tests/${{ inputs.cypress_spec }}.spec.ts
           SYSTEM_DOMAIN: ${{ steps.installation.outputs.MY_IP }}.omg.howdoi.website
-          # GREP_TEST: ${{ inputs.grep }}
+          GREP_TEST: ${{ inputs.grep }}
 
         run: |
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')
