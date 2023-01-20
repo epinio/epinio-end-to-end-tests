@@ -18,9 +18,13 @@ on:
         description: Which Cypress test to execute
         required: true
         type: string
+        default: 'menu'
+      grep_test_by_name:
+        description: Select spefic test(s) by using words in the title (no special characters allowed)
+        required: false
         default: ''
-      grep:
-        description: Select spefic test(s)
+      grep_test_by_tag:
+        description: Select spefic test(s) by using tags
         required: false
         default: ''
       docker_options:
@@ -134,7 +138,8 @@ jobs:
           RANCHER_USER: admin
           SPEC: cypress/e2e/unit_tests/${{ inputs.cypress_spec }}.spec.ts
           SYSTEM_DOMAIN: ${{ steps.installation.outputs.MY_IP }}.omg.howdoi.website
-          GREP_TEST: ${{ inputs.grep }}
+          GREP: ${{ inputs.grep_test_by_name }}
+          GREPTAGS: ${{ inputs.grep_test_by_tag }}
 
         run: |
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')
