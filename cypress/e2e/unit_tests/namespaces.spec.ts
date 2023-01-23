@@ -19,7 +19,7 @@ describe('Namespaces testing', () => {
     cy.runNamespacesTest('newNamespace');
   });
 
-  it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', () => {
+  it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', { tags: '@ns-2' }, () => {
     cy.runNamespacesTest('namespaceFilter');
   });
 });
