@@ -5,42 +5,30 @@ on:
   # Variables to set when calling this reusable workflow
     inputs:
       browser:
-        description: Web browser to test
+        description: "BROWSER where the test will run"
         required: true
         type: string
         default: chrome
       cypress_docker:
-        description: Cypress docker image to use
+        description: "CYPRESS DOCKER IMAGE (ensure it is compatible with the selected browser)."
         required: true
         type: string
         default: cypress/included:10.11.0 
       cypress_spec:
-        description: Which Cypress test to execute (All by default)
+        description: "CYPRESS SPECS to be run (default: all). Current valid ones are menu, applications, configurations, namespaces"
         required: false
         type: string
         default: "*"
       grep_test_by_name:
-        description: Select specific test(s) by TEST TITLE or KEYWORDS within 
+        description: "GREP TITLE.  Select specific test(s) by TEST TITLE or KEYWORDS within" 
         required: false
         type: string
         default: ''
       grep_test_by_tag:
-        description: Select spefic test using TAGS (for multiple selection separate with spaces)
+        description: "GREP TAGS. Target specific tests using preconfigured tags (@menu-#, @login-#, @ns-#, @config-#, @appl-# ). For multiple selection separate with spaces"
         required: false
         type: string
         default: ''
-      docker_options:
-        description: Set other docker options
-        required: false
-        type: string
-      # ext_reg:
-      #   description: Enable external registry test
-      #   required: false
-      #   type: string
-      # s3:
-      #   description: Enable external s3
-      #   required: false
-      #   type: string
 
 jobs:
   E2E-Cypress:
