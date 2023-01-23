@@ -22,23 +22,25 @@ on:
       grep_test_by_name:
         description: Select spefic test(s) by using words in the title (no special characters allowed)
         required: false
+        type: string
         default: ''
       grep_test_by_tag:
         description: Select spefic test(s) by using tags
         required: false
+        type: string
         default: ''
       docker_options:
         description: Set other docker options
         required: false
         type: string
-      ext_reg:
-        description: Enable external registry test
-        required: false
-        type: string
-      s3:
-        description: Enable external s3
-        required: false
-        type: string
+      # ext_reg:
+      #   description: Enable external registry test
+      #   required: false
+      #   type: string
+      # s3:
+      #   description: Enable external s3
+      #   required: false
+      #   type: string
 
 jobs:
   E2E-Cypress:
