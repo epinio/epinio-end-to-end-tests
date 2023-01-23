@@ -10,17 +10,17 @@ on:
         type: string
         default: chrome
       cypress_docker:
-        description: "CYPRESS DOCKER IMAGE (ensure it is compatible with the selected browser)."
+        description: "CYPRESS DOCKER IMAGE (ensure compatibilty with selected browser)."
         required: true
         type: string
         default: cypress/included:10.11.0 
       cypress_spec:
-        description: "CYPRESS SPECS to be run (default: all). Current valid ones are menu, applications, configurations, namespaces"
+        description: "CYPRESS SPECS (default: all). Current valid ones: menu, applications, configurations, namespaces"
         required: false
         type: string
         default: "*"
       grep_test_by_name:
-        description: "GREP TITLE.  Select specific test(s) by TEST TITLE or KEYWORDS within" 
+        description: "GREP TITLE.  Select specific test by TEST TITLE or KEYWORDS within" 
         required: false
         type: string
         default: ''
