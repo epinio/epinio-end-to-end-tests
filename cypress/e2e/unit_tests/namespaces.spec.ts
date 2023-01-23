@@ -15,7 +15,7 @@ describe('Namespaces testing', () => {
     }
   });
 
-  it('Push and check an application into the created namespace', { tags: '@ns-1' }, () => {
+  it('Push and check an application into the created namespace', { tags: ['@ns-1', '@smoke'] }, () => {
     cy.runNamespacesTest('newNamespace');
   });
 

@@ -12,7 +12,7 @@ describe('Menu testing', () => {
     cy.visit('/');
   });
 
-  it('Check Epinio menu',  { tags: '@menu-1' },  () => {
+  it('Check Epinio menu',  { tags: ['@menu-1', '@smoke']  },  () => {
     if (Cypress.env('ui') == "rancher") {
       topLevelMenu.openIfClosed();
 
