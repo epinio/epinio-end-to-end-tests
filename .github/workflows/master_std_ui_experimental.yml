@@ -16,7 +16,7 @@ on:
         default: cypress/included:10.11.0 
       cypress_spec:
         description: Which Cypress test to execute
-        required: true
+        required: false
         type: string
         default: 'menu'
       grep_test_by_name:
