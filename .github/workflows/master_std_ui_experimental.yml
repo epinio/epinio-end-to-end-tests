@@ -15,17 +15,17 @@ on:
         type: string
         default: cypress/included:10.11.0 
       cypress_spec:
-        description: Which Cypress test to execute ()
+        description: Which Cypress test to execute
         required: false
         type: string
-        # default: 'menu'
+        default: "*"
       grep_test_by_name:
-        description: Select specific test(s) by test title or keywords within 
+        description: Select specific test(s) by TEST TITLE or KEYWORDS within 
         required: false
         type: string
         default: ''
       grep_test_by_tag:
-        description: Select spefic test(s) by using tags
+        description: Select spefic test(s) by using TAGS
         required: false
         type: string
         default: ''
