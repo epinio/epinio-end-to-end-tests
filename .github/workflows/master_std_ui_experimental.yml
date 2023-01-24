@@ -5,27 +5,27 @@ on:
   # Variables to set when calling this reusable workflow
     inputs:
       browser:
-        description: "BROWSER where the test will run"
+        description: Browser where the test will run
         required: true
         type: string
         default: chrome
       cypress_docker:
-        description: "CYPRESS DOCKER IMAGE (ensure compatibilty with selected browser)."
+        description: Cypress Docker Image
         required: true
         type: string
         default: cypress/included:10.11.0 
       cypress_spec:
-        description: "CYPRESS SPECS (default: all). Current valid ones: menu, applications, configurations, namespaces"
+        description: Cypress specs (default "all")
         required: false
         type: string
         default: "*"
       grep_test_by_name:
-        description: "GREP TITLE.  Select specific test by TEST TITLE or KEYWORDS within" 
+        description: Grep title
         required: false
         type: string
         default: ''
       grep_test_by_tag:
-        description: "GREP TAGS. Target specific tests using preconfigured tags (@menu-#, @login-#, @ns-#, @config-#, @appl-# ). For multiple selection separate with spaces"
+        description: Grep tags. For multiple selection separate with spaces.
         required: false
         type: string
         default: ''
