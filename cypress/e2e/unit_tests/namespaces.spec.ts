@@ -15,11 +15,11 @@ describe('Namespaces testing', () => {
     }
   });
 
-  it('Push and check an application into the created namespace', () => {
+  it('Push and check an application into the created namespace', { tags: ['@ns-1', '@smoke'] }, () => {
     cy.runNamespacesTest('newNamespace');
   });
 
-  it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', () => {
+  it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', { tags: '@ns-2' }, () => {
     cy.runNamespacesTest('namespaceFilter');
   });
 });

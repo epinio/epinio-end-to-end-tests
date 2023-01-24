@@ -32,7 +32,9 @@ export default defineConfig({
           return null
         },
       })
-      return require('./cypress/plugins/index.ts')(on, config)   
+      require('./cypress/plugins/index.ts')(on, config)   
+      require('@cypress/grep/src/plugin')(config);
+      return config;
     },
     experimentalSessionAndOrigin: true,
     specPattern:

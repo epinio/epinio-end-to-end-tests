@@ -11,6 +11,8 @@ docker run -v $PWD:/e2e -w /e2e                  \
     -e RANCHER_PASSWORD=$RANCHER_PASSWORD        \
     -e SYSTEM_DOMAIN=$EPINIO_SYSTEM_DOMAIN       \
     -e RANCHER_URL=$RANCHER_URL                  \
+    -e "GREP=$GREP"                              \
+    -e "GREPTAGS=$GREPTAGS"                      \
     --add-host host.docker.internal:host-gateway \
     $DOCKER_OPTIONS                              \
     $CYPRESS_DOCKER                              \

@@ -12,7 +12,7 @@ describe('Menu testing', () => {
     cy.visit('/');
   });
 
-  it('Check Epinio menu', () => {
+  it('Check Epinio menu',  { tags: ['@menu-1', '@smoke']  },  () => {
     if (Cypress.env('ui') == "rancher") {
       topLevelMenu.openIfClosed();
 
@@ -27,7 +27,7 @@ describe('Menu testing', () => {
     epinio.checkEpinioNav();
   });
 
-  it('Verify Welcome Screen without Namespaces', () => {
+  it('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
     cy.deleteAll('Namespaces')
     cy.clickEpinioMenu('Applications');
     cy.get('h1').contains('Welcome to Epinio').should('be.visible')
@@ -41,7 +41,7 @@ describe('Menu testing', () => {
     cy.contains(defaultNamespace).should('be.visible');
   });
 
-  it('Check binary links from version in menu', () => {
+  it('Check binary links from version in menu', { tags: '@menu-3' }, () => {
     // Check link in main page is present and works after clicking
     cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/about');
     cy.get('.version.text-muted > a').click();
@@ -109,7 +109,7 @@ describe('Menu testing', () => {
 // We'd need to apply values.yaml with the users first in Edit YAML
 describe('Login with different users', () => {
 
-  it('Check login with admin user', () => {
+  it('Check login with admin user', { tags: '@login-1' }, () => {
     const user_epinio = "admin"
     const pwd_epinio = "password"
     cy.login(user_epinio, pwd_epinio);
@@ -117,7 +117,7 @@ describe('Login with different users', () => {
     cy.contains('Applications').should('be.visible')
   });
 
-  it('Check login with regular user and simple password', () => {
+  it('Check login with regular user and simple password', { tags: '@login-2' }, () => {
     const user_epinio = "epinio"
     const pwd_epinio = "password"
     cy.login(user_epinio, pwd_epinio);
@@ -125,7 +125,7 @@ describe('Login with different users', () => {
     cy.contains('Applications').should('be.visible')
   });
 
-  it('Check login with regular user "user1" and password with special characters', () => {
+  it('Check login with regular user "user1" and password with special characters', { tags: '@login-3' },() => {
     const user_epinio = "user1"
     const pwd_epinio = "Hell@World"
     cy.login(user_epinio, pwd_epinio);
@@ -143,7 +143,7 @@ describe('Login with different users', () => {
     }
   });
 
-  it('Check login with regular user "user2" and password with many special characters', () => {
+  it('Check login with regular user "user2" and password with many special characters', { tags: '@login-4' }, () => {
     const user_epinio = "user2"
     const pwd_epinio = "Hell#@~%/=World"
     cy.login(user_epinio, pwd_epinio);
@@ -161,7 +161,7 @@ describe('Login with different users', () => {
     }
   });
 
-  it('Check login with admin user name with special character (user@test) and password also with special characters', () => {
+  it('Check login with admin user name with special character (user@test) and password also with special characters', { tags: '@login-5' }, () => {
     const user_epinio = "user@test"
     const pwd_epinio = "Hell@World"
     cy.login(user_epinio, pwd_epinio);
@@ -179,7 +179,7 @@ describe('Login with different users', () => {
     }
   });
 
-  it('Check login with admin user name with numbers (0123456789) and password', () => {
+  it('Check login with admin user name with numbers (0123456789) and password', { tags: '@login-6' },() => {
     const user_epinio = "0123456789"
     const pwd_epinio = "password"
     cy.login(user_epinio, pwd_epinio);
