@@ -25,7 +25,7 @@ on:
         type: string
         default: ''
       grep_test_by_tag:
-        description: Grep tags. For multiple selection separate with spaces.
+        description: Grep tags. For multiple selection separate with spaces
         required: false
         type: string
         default: ''

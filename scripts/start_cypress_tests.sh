@@ -5,14 +5,15 @@ set -e
 # Needed to install Cypress plugins
 npm install
 
+[ -v GREP ] && GREP_OPTIONS="-e GREP=$GREP" || GREP_OPTIONS="-e GREP=$GREPTAGS" 
+
 # Start Cypress tests with docker
 docker run -v $PWD:/e2e -w /e2e                  \
     -e RANCHER_USER=$RANCHER_USER                \
     -e RANCHER_PASSWORD=$RANCHER_PASSWORD        \
     -e SYSTEM_DOMAIN=$EPINIO_SYSTEM_DOMAIN       \
     -e RANCHER_URL=$RANCHER_URL                  \
-    -e "GREP=$GREP"                              \
-    -e "GREPTAGS=$GREPTAGS"                      \
+    $GREP_OPTIONS                                \
     --add-host host.docker.internal:host-gateway \
     $DOCKER_OPTIONS                              \
     $CYPRESS_DOCKER                              \
