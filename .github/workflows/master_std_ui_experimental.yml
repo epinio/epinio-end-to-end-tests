@@ -29,6 +29,10 @@ on:
         required: false
         type: string
         default: ''
+      docker_options:
+        description: Set other docker options
+        required: false
+        type: string
 
 jobs:
   E2E-Cypress:
