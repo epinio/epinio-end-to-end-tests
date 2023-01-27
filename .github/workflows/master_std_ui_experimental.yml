@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   # Variables to set when calling this reusable workflow
     inputs:
+      k3s_version:
+        description: k3s version
+        required: true
+        type: string
+        default: v1.24.6+k3s1
       browser:
         description: Browser where the test will run
         required: true
@@ -95,7 +100,7 @@ jobs:
         env:
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
-          K3S_VERSION: v1.24.6+k3s1
+          K3S_VERSION: ${{ inputs.k3s_version }}
           EXT_REG: ${{ inputs.ext_reg }}
           S3: ${{ inputs.s3 }}
           EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
