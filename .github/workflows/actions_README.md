@@ -7,6 +7,7 @@ Besides the workflows running daily for e2e ([Rancher UI E2E tests and Standalon
 Taking the normal [Master Rancher UI workflow](https://github.com/epinio/epinio-end-to-end-tests/blob/main/.github/workflows/master_rancher_ui_workflow.yml) as base, this workflow allows to install epinio using specific branches with diferent epinio versions, rather than the latest one, run specific test spec and later uninstalls epinio and helm chart as in main version. It has the following dispatches on Github UI for further test customization:
 
 - Branch for experimental epinio charts
+- k3s version 
 - Browser where to run the tests
 - Cypress Docker image to use
 - Scenario to test
