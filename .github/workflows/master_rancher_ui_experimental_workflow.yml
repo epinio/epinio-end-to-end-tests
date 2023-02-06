@@ -9,6 +9,11 @@ on:
           description: Add branch for experimental Epinio Charts
           required: false
           default: ''
+        k3s_version:
+          description: k3s version
+          required: true
+          type: string
+          default: v1.24.6+k3s1
         browser:
           description: Web browser to test
           required: true
@@ -60,7 +65,7 @@ jobs:
           DASHBOARD_VERSION: epinio-dev
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
           HELM_VERSION: 3.7.0
-          K3S_VERSION: v1.24.6+k3s1
+          K3S_VERSION: ${{ inputs.k3s_version }}
           EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
           EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
           S3_KEY_ID: ${{ secrets.s3_key_id }}
