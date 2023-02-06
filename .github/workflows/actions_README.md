@@ -27,9 +27,9 @@ Aside from this feature, we included also other dispatches on Github UI for furt
 - Grep by tags
 - Extra options for Docker (mainly for running Firefox tests)
 
-####To run them locally use:
+#### To run them locally use:
 
-######To filter by test title use `--env grep "Test title"`. 
+##### To filter by test title use `--env grep "Test title"`. 
 
 For example:
 ```
@@ -38,7 +38,7 @@ npx cypress run -C cypress.config --env grep "Push and check an application into
 
 Note: the title can be either at `describe` or `it` level.
 
-#####To filter by tags use: `--env grepTags=tag` 
+##### To filter by tags use: `--env grepTags=tag` 
 For example:
 ```
 npx cypress run -C cypress.config.ts  --env grepTags="@smoke" cypress/e2e/unit_tests/*.spec.ts
