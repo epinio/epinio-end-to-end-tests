@@ -45,6 +45,7 @@ fi
 helm upgrade --debug --wait --install -n epinio --create-namespace epinio helm-charts/chart/epinio \
   --set global.domain=${EPINIO_SYSTEM_DOMAIN} \
   --set server.accessControlAllowOrigin="https://${MY_HOSTNAME}" \
+  --set server.disableTracking=true \
   ${INSTALL_OPTIONS} \
   --values ../scripts/values-users.yaml \
   --wait
