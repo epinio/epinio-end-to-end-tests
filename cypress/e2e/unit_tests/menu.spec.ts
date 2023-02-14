@@ -51,7 +51,7 @@ describe('Menu testing', () => {
       cy.log(`Epinio version in ABOUT PAGE is ${version}`);
       // Check "Go back" link
       cy.get('.back-link').should('exist').click();
-      cy.get('span.label.no-icon').eq(0).contains('Applications').should('be.visible');
+      cy.get('span.label.no-icon').eq(1).contains('Applications').should('be.visible');
       // Checks version displayed in about page is the same as in main page
       // Later returns to About page
       cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {

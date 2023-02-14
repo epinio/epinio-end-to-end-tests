@@ -12,13 +12,14 @@ export class Epinio {
    
     // Check all listed options once accordions are opened
     cy.get('li.child.nav-type').should(($lis) => {
-    expect($lis).to.have.length(6);
-    expect($lis.eq(0)).to.contain('Applications');
-    expect($lis.eq(1)).to.contain('Namespaces');
-    expect($lis.eq(2)).to.contain('Instances');
-    expect($lis.eq(3)).to.contain('Catalog');
-    expect($lis.eq(4)).to.contain('Configurations');
-    expect($lis.eq(5)).to.contain('Application Templates');
+    expect($lis).to.have.length(7);
+    expect($lis.eq(0)).to.contain('Dashboard');
+    expect($lis.eq(1)).to.contain('Applications');
+    expect($lis.eq(2)).to.contain('Namespaces');
+    expect($lis.eq(3)).to.contain('Instances');
+    expect($lis.eq(4)).to.contain('Catalog');
+    expect($lis.eq(5)).to.contain('Configurations');
+    expect($lis.eq(6)).to.contain('Application Templates');
     })      
   }
 
