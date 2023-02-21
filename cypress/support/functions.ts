@@ -12,8 +12,10 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     cy.visit('/auth/login');
 
     // Click on local user meanwhile Dex is default login
+    if (ui != "rancher") {
     cy.get('#login-useLocal', {timeout: 10000} ).should('be.visible').click();
     cy.get('#submit', {timeout: 10000}).contains('Log in with Local User').should('be.visible')
+    };
 
     cy.byLabel('Username')
       .focus()
