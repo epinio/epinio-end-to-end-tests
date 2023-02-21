@@ -8,6 +8,8 @@ declare global {
     interface Chainable {
       // Functions declared in functions.ts
       login(username?: string, password?: string, cacheSession?: boolean,): Chainable<Element>;
+      dexLogin(username?: string, password?: string): Chainable<Element>;
+      dexGrantAccess(grantAccess?: boolean,): Chainable<Element>;
       byLabel(label: string,): Chainable<Element>;
       clickButton(label: string,): Chainable<Element>;
       deleteAll(label: string,):Chainable<Element>;

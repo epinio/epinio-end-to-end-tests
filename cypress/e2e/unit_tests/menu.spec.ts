@@ -196,5 +196,22 @@ describe('Login with different users', () => {
       throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
     }
   });
+});
 
-})
+  describe('Dex testing', () => {
+  it('Check Dex login works with granted access', { tags: '@dex-1'}, () => {
+    cy.dexLogin('admin@epinio.io', 'password');
+    cy.dexGrantAccess(true);
+  });
+
+  it('Check Dex deny access', { tags: '@dex-2'}, () => {
+    cy.dexLogin('admin@epinio.io', 'password');
+    cy.dexGrantAccess(false);
+  });
+
+  it('Check users not allowed cannot connect to Dex', { tags: '@dex-3'}, () => {
+    cy.dexLogin('invalid-mail@epinio.io', 'password');
+    cy.contains('Invalid Email Address and password').should('be.visible');
+  });
+});
+
