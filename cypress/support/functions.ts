@@ -11,12 +11,9 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     
     cy.visit('/auth/login');
 
-    // Dex bypass to select local meanwhile Dex screen is not default
-    // Refactor to use only cy.get once Dex is available everywhere
-    cy.get("body").then(($body) => {
-    if ($body.text().includes('Dex')) {
-      cy.get('#login-useLocal', {timeout: 10000} ).should('be.visible').click();
-    }});  
+    // Click on local user meanwhile Dex is default login
+    cy.get('#login-useLocal', {timeout: 10000} ).should('be.visible').click();
+    cy.get('#submit', {timeout: 10000}).contains('Log in with Local User').should('be.visible')
 
     cy.byLabel('Username')
       .focus()
