@@ -27,17 +27,9 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 
     cy.get('button').click();
     cy.wait('@loginReq');
-      if (ui == "rancher") {
-      cy.contains("Get Started", {timeout: 10000}).should('be.visible');
-    } 
-      else{
-          cy.get("body").then(($body) => {
-            if ($body.text().includes('Routes')) {
-              cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.visible');
-            } else if ($body.text().includes('Welcome to Epinio')) {
-              cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
-          }
-        };
+    // Verify Welcome message
+    cy.get('.head-title > h1', {timeout: 4000}).contains('Welcome to Epinio').should('be.visible');
+  };
 
   if (cacheSession) {
     cy.session([username, password], login);
@@ -206,6 +198,34 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
     cy.get('td').contains(name).click();
   });
 });
+
+// Menu functions
+
+// Check Resources on Dashboard page
+Cypress.Commands.add('checkDashboardResources', ({ namespaceNumber, newestNamespaces, appNumber, runningapps, servicesNumber }) => {
+  cy.clickEpinioMenu('Dashboard');
+
+  if (namespaceNumber){
+    cy.get('div.d-header > a > h1').contains('Namespaces ' + namespaceNumber).should('be.visible');
+  };
+  if (newestNamespaces){
+    cy.get('div.d-slot > span > ul > li').eq(0).each( (item, index) => {
+      cy.wrap(item).should('contain.text', newestNamespaces[index]);
+    })
+  };
+  if (appNumber){
+    cy.get('div.d-header > a > h1').eq(1).contains(' Applications ' + appNumber).should('be.visible');
+  };
+  if (runningapps){
+    cy.get('span.numbers-stats').contains(+ runningapps + ' of ' + appNumber + ' Apps ').should('be.visible');
+  };
+  if (servicesNumber){
+    cy.get('div.d-header > a > h1').eq(2).contains(' Services ' + services).should('be.visible');
+  };
+
+});
+
+
 
 // Application functions
 

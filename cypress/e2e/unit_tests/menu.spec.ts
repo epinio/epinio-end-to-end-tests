@@ -27,18 +27,11 @@ describe('Menu testing', () => {
     epinio.checkEpinioNav();
   });
 
-  it('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
-    cy.deleteAll('Namespaces')
-    cy.clickEpinioMenu('Applications');
-    cy.get('h1').contains('Welcome to Epinio').should('be.visible')
-    // Verify creating namespace from Get Started button works
-    cy.get('a.btn.role-secondary').contains('Get started').click()
-    cy.clickButton('Create');
-    const defaultNamespace = 'workspace'
-    cy.typeValue({label: 'Name', value: defaultNamespace});
-    cy.clickButton('Create');
-    // Check that the namespace has effectively been created
-    cy.contains(defaultNamespace).should('be.visible');
+   it('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
+    cy.deleteAll('Namespaces');
+    cy.clickEpinioMenu('Dashboard');
+    cy.checkDashboardResources({namespaceNumber: '0'});
+    cy.get('.head-title > h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible'); 
   });
 
   it('Check binary links from version in menu', { tags: '@menu-3' }, () => {
@@ -102,6 +95,40 @@ describe('Menu testing', () => {
       else {cy.log(`Server version is too long (${version.length} characters) so binary download will not work and it is currently disabled.`)}
     });
   });
+  it('Test buttons and links in dashboard page',  { tags: ['@menu-3', '@smoke']  },  () => {
+    // // Verify Get started and Issues links
+    cy.get('.head-links').contains('Get started').should('have.attr', 'href').and('equal', 'https://epinio.io/')
+    cy.get('.head-links').contains('Issues').should('have.attr', 'href').and('equal', 'https://github.com/epinio/epinio/issues')
+  
+    // NAMESPACES CARD
+    cy.get('div.d-main > div > a > h1').eq(0).contains('Namespaces').should('be.visible').click();
+    cy.get('h1.m-0').contains('Namespaces').should('be.visible');
+    cy.go('back');
+    // Click on card Create Namespace and check redirection
+    cy.clickButton('Create Namespace');
+    cy.get('.btn.role-secondary.mr-10').contains('Cancel ').should('be.visible').click();
+    cy.go('back');
+  
+    // APPLICATIONS CARD
+    cy.get('div.d-main > div > a > h1').eq(1).contains('Applications').should('be.visible').click();
+    cy.get('h1.m-0').contains('Applications').should('be.visible');
+    cy.go('back');
+    // Click on card Deploy application and check redirection
+    cy.clickButton('Deploy Application');
+    cy.get('[data-testid="epinio_app-source_type"]').should('be.visible');
+    cy.go('back');
+  
+    // SERVICES CARD
+    cy.get('div.d-main > div > a > h1').eq(2).contains('Services').should('be.visible').click();
+    cy.get('h1.m-0').contains('Instances').should('be.visible');
+    cy.go('back');
+    // Click on card "Services" and check redirection
+    cy.get('a.link').contains('mysql-dev').click();
+    cy.contains('mysql-dev').should('be.visible');
+    cy.go('back');
+    cy.get('a.link').contains('redis-dev').click();
+    cy.contains('redis-dev').should('be.visible');
+    });
 });
 
 // Note: this test needs to be adapted for Rancher Dashboard
