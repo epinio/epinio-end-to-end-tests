@@ -27,8 +27,15 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 
     cy.get('button').click();
     cy.wait('@loginReq');
-    // Verify Welcome message
-    cy.get('.head-title > h1', {timeout: 15000}).contains('Welcome to Epinio').should('be.visible');
+
+    if (ui == "rancher") {
+      cy.contains("Get Started", {timeout: 10000}).should('be.visible');
+    }
+    else{
+      // Verify Welcome message
+      cy.get('.head-title > h1', {timeout: 15000}).contains('Welcome to Epinio').should('be.visible');
+    };
+
   };
 
   if (cacheSession) {
