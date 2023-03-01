@@ -29,13 +29,22 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     cy.wait('@loginReq');
 
     if (ui == "rancher") {
+      // Checks we have entered in Rancher and we see an element within
       cy.contains("Get Started", {timeout: 10000}).should('be.visible');
     }
     else{
-      // Verify Welcome message
-      cy.get('.head-title > h1', {timeout: 15000}).contains('Welcome to Epinio').should('be.visible');
+      cy.get("body").then(($body) => {
+        // Checks welcome message if we have succesfully logged in. 
+        // (Hence user is in Dashboard page)
+        if ($body.text().includes('Dashboard')) {
+          cy.get('.head-title > h1', {timeout: 15000}).contains('Welcome to Epinio').should('be.visible'); 
+        } 
+        // Here the user is in log in page but we are checking for negative login
+        // We check only the title is present in log in page. 
+        else if ($body.text().includes('Welcome to Epinio')) {
+          cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}
+        });
     };
-
   };
 
   if (cacheSession) {
