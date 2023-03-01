@@ -28,7 +28,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     cy.get('button').click();
     cy.wait('@loginReq');
     // Verify Welcome message
-    cy.get('.head-title > h1', {timeout: 4000}).contains('Welcome to Epinio').should('be.visible');
+    cy.get('.head-title > h1', {timeout: 15000}).contains('Welcome to Epinio').should('be.visible');
   };
 
   if (cacheSession) {
