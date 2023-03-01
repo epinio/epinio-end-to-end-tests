@@ -69,7 +69,7 @@ Cypress.Commands.add('byLabel', (label) => {
 
 // Search button by label
 Cypress.Commands.add('clickButton', (label) => {
-  cy.get('.btn', {timeout: 30000}).contains(label).click();
+  cy.get('.btn', {timeout: 30000}).contains(label).click({force: true});
 });
 
 // Ensure that we are in the desired menu
@@ -220,7 +220,7 @@ Cypress.Commands.add('checkDashboardResources', ({ namespaceNumber, newestNamesp
     cy.get('span.numbers-stats').contains(+ runningapps + ' of ' + appNumber + ' Apps ').should('be.visible');
   };
   if (servicesNumber){
-    cy.get('div.d-header > a > h1').eq(2).contains(' Services ' + services).should('be.visible');
+    cy.get('div.d-header > a > h1').eq(2).contains(' Services ' + servicesNumber).should('be.visible');
   };
 
 });
