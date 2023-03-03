@@ -36,6 +36,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
     case 'multipleInstanceAndContainer':
       cy.createApp({appName: appName, archiveName: 'httpd:latest', instanceNum: 5, sourceType: 'Container Image'});
       cy.checkApp({appName: appName, dontCheckRouteAccess: true});
+      cy.checkDashboardResources({ namespaceNumber: '1', appNumber: '1', runningApps: '1' });
       break;
     case 'customRoute':
       cy.createApp({appName: appName, archiveName: archive, route: customRoute, sourceType: 'Archive'});
@@ -82,6 +83,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
     case 'serviceBindUnbindFromServicePage':
       cy.deleteAll('Services')
       cy.createService({ serviceName: 'mycustom-service-2', catalogType: 'postgresql-dev' })
+      cy.checkDashboardResources({ servicesNumber: '1' });
       cy.createApp({ appName: appName, archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image' });
       cy.bindServiceFromSevicesPage({ appName: appName, serviceName: 'mycustom-service-2', bindingOption: 'bind'});
       cy.bindServiceFromSevicesPage({ appName: appName, serviceName: 'mycustom-service-2', bindingOption: 'unbind'});
@@ -175,7 +177,8 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       cy.createConfiguration({configurationName: "config-2", namespace: "ns-2"});    
       cy.createApp({appName: "testapp-1", namespace: "ns-1", archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image'});
       cy.createApp({appName: "testapp-2", namespace: "ns-2", archiveName: 'httpd:latest', instanceNum: 1, sourceType: 'Container Image'});
-      
+      cy.checkDashboardResources({namespaceNumber: '3', newestNamespaces: ['ns-2', 'ns-1'], appNumber: '2', runningApps: '2' });
+
       // Go to Appplications and filter 2 namespaces in namespace filter
       cy.openNamespacesFilter({location: "Applications"})
       cy.filterNamespacesAndCheck({namespace: "ns-1", elemInNamespaceName: "testapp-1", filterOut: false})

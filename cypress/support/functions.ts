@@ -27,17 +27,25 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 
     cy.get('button').click();
     cy.wait('@loginReq');
-      if (ui == "rancher") {
+
+    if (ui == "rancher") {
+      // Checks we have entered in Rancher and we see an element within
       cy.contains("Get Started", {timeout: 10000}).should('be.visible');
-    } 
-      else{
-          cy.get("body").then(($body) => {
-            if ($body.text().includes('Routes')) {
-              cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.visible');
-            } else if ($body.text().includes('Welcome to Epinio')) {
-              cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}});
-          }
-        };
+    }
+    else{
+      cy.get("body").then(($body) => {
+        // Checks welcome message if we have succesfully logged in. 
+        // (Hence user is in Dashboard page)
+        if ($body.text().includes('Dashboard')) {
+          cy.get('.head-title > h1', {timeout: 15000}).contains('Welcome to Epinio').should('be.visible'); 
+        } 
+        // Here the user is in log in page but we are checking for negative login
+        // We check only the title is present in log in page. 
+        else if ($body.text().includes('Welcome to Epinio')) {
+          cy.get('h1').contains('Welcome to Epinio', {timeout: 4000}).should('be.visible')}
+        });
+    };
+  };
 
   if (cacheSession) {
     cy.session([username, password], login);
@@ -77,7 +85,7 @@ Cypress.Commands.add('byLabel', (label) => {
 
 // Search button by label
 Cypress.Commands.add('clickButton', (label) => {
-  cy.get('.btn', {timeout: 30000}).contains(label).click();
+  cy.get('.btn', {timeout: 30000}).contains(label).click({force: true});
 });
 
 // Ensure that we are in the desired menu
@@ -206,6 +214,34 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
     cy.get('td').contains(name).click();
   });
 });
+
+// Menu functions
+
+// Check Resources on Dashboard page
+Cypress.Commands.add('checkDashboardResources', ({ namespaceNumber, newestNamespaces, appNumber, runningApps, servicesNumber }) => {
+  cy.clickEpinioMenu('Dashboard');
+
+  if (namespaceNumber){
+    cy.get('div.d-header > a > h1').contains('Namespaces ' + namespaceNumber).should('be.visible');
+  };
+  if (newestNamespaces){
+    cy.get('div.d-slot > span > ul > li').eq(0).each( (item, index) => {
+      cy.wrap(item).should('contain.text', newestNamespaces[index]);
+    })
+  };
+  if (appNumber){
+    cy.get('div.d-header > a > h1').eq(1).contains(' Applications ' + appNumber).should('be.visible');
+  };
+  if (runningApps){
+    cy.get('span.numbers-stats').contains(+ runningApps + ' of ' + appNumber + ' Apps ').should('be.visible');
+  };
+  if (servicesNumber){
+    cy.get('div.d-header > a > h1').eq(2).contains(' Services ' + servicesNumber).should('be.visible');
+  };
+
+});
+
+
 
 // Application functions
 
