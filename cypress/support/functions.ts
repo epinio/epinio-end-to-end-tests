@@ -218,7 +218,7 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
 // Menu functions
 
 // Check Resources on Dashboard page
-Cypress.Commands.add('checkDashboardResources', ({ namespaceNumber, newestNamespaces, appNumber, runningapps, servicesNumber }) => {
+Cypress.Commands.add('checkDashboardResources', ({ namespaceNumber, newestNamespaces, appNumber, runningApps, servicesNumber }) => {
   cy.clickEpinioMenu('Dashboard');
 
   if (namespaceNumber){
@@ -232,8 +232,8 @@ Cypress.Commands.add('checkDashboardResources', ({ namespaceNumber, newestNamesp
   if (appNumber){
     cy.get('div.d-header > a > h1').eq(1).contains(' Applications ' + appNumber).should('be.visible');
   };
-  if (runningapps){
-    cy.get('span.numbers-stats').contains(+ runningapps + ' of ' + appNumber + ' Apps ').should('be.visible');
+  if (runningApps){
+    cy.get('span.numbers-stats').contains(+ runningApps + ' of ' + appNumber + ' Apps ').should('be.visible');
   };
   if (servicesNumber){
     cy.get('div.d-header > a > h1').eq(2).contains(' Services ' + servicesNumber).should('be.visible');

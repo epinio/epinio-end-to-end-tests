@@ -27,7 +27,7 @@ describe('Menu testing', () => {
     epinio.checkEpinioNav();
   });
 
-   it('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
+  it('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
     cy.deleteAll('Namespaces');
     cy.clickEpinioMenu('Dashboard');
     cy.checkDashboardResources({namespaceNumber: '0'});
@@ -97,9 +97,9 @@ describe('Menu testing', () => {
     });
   });
   it('Test buttons and links in dashboard page',  { tags: ['@menu-4', '@smoke']  },  () => {
-    // // Verify Get started and Issues links
-    cy.get('.head-links').contains('Get started').should('have.attr', 'href').and('equal', 'https://epinio.io/')
-    cy.get('.head-links').contains('Issues').should('have.attr', 'href').and('equal', 'https://github.com/epinio/epinio/issues')
+    // Verify Get started and Issues links
+    cy.get('.head-links').contains('Get started').should('have.attr', 'href').and('equal', 'https://epinio.io/');
+    cy.get('.head-links').contains('Issues').should('have.attr', 'href').and('equal', 'https://github.com/epinio/epinio/issues');
   
     // NAMESPACES CARD
     cy.get('div.d-main > div > a > h1').eq(0).contains('Namespaces').should('be.visible').click();
@@ -131,14 +131,14 @@ describe('Menu testing', () => {
     cy.contains('redis-dev').should('be.visible');
     });
 
-  it('Verify metrics in Dashboard page',  { tags: ['@menu-5', '@smoke']  },  () => {
+  it('Verify stats in Dashboard page',  { tags: ['@menu-5', '@smoke']  },  () => {
     cy.createApp({appName: 'testapp', archiveName: 'sample-app.tar.gz', sourceType: 'Archive'});
-    cy.createService({ serviceName: 'mycustom-service-1', catalogType: 'postgresql-dev' })
+    cy.createService({ serviceName: 'mycustom-service-1', catalogType: 'postgresql-dev' });
     cy.createNamespace('ns-1');
-    cy.checkDashboardResources({namespaceNumber: '2', newestNamespaces: ['ns-1', 'workspace'], appNumber: '1', runningapps: '1', servicesNumber: '1' });
+    cy.checkDashboardResources({namespaceNumber: '2', newestNamespaces: ['ns-1', 'workspace'], appNumber: '1', runningApps: '1', servicesNumber: '1' });
     cy.deleteNamespace({namespace:'ns-1'});
-    cy.deleteAll('Applications')
-    cy.deleteAll('Services')
+    cy.deleteAll('Applications');
+    cy.deleteAll('Services');
     });
 
 });
