@@ -70,6 +70,8 @@ jobs:
           EXT_REG: ${{ inputs.ext_reg }}
           EXT_REG_USER: ${{ secrets.ext_reg_user }}
           EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          GHCR_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
           S3_KEY_ID: ${{ secrets.s3_key_id }}
           S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         run: |

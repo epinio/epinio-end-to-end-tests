@@ -68,6 +68,8 @@ jobs:
           K3S_VERSION: ${{ inputs.k3s_version }}
           EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
           EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          GHCR_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
           S3_KEY_ID: ${{ secrets.s3_key_id }}
           S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
         run: |

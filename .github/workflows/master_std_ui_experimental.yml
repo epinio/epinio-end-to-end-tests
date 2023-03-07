@@ -105,6 +105,8 @@ jobs:
           S3: ${{ inputs.s3 }}
           EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
           EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          GHCR_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
           S3_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           # EXTRAENV_NAME: SESSION_KEY
