@@ -33,15 +33,6 @@ on:
         description: Runner on which to execute tests
         required: true
         type: string
-    secrets:
-      ext_reg_user:
-        required: false
-      ext_reg_password:
-        required: false
-      s3_key_id:
-        required: false
-      s3_key_secret:
-        required: false
 
 jobs:
   installation:
@@ -68,12 +59,12 @@ jobs:
           HELM_VERSION: 3.7.0
           K3S_VERSION: v1.24.6+k3s1
           EXT_REG: ${{ inputs.ext_reg }}
-          EXT_REG_USER: ${{ secrets.ext_reg_user }}
-          EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+          EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
+          EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
           GHCR_USER: ${{ secrets.GHCR_USER }}
           GHCR_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
-          S3_KEY_ID: ${{ secrets.s3_key_id }}
-          S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
+          S3_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           ## Export information to other jobs
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')
@@ -98,13 +89,13 @@ jobs:
       env:
         CLUSTER_NAME: local
         CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
-        EXT_REG_USER: ${{ secrets.ext_reg_user }}
-        EXT_REG_PASSWORD: ${{ secrets.ext_reg_password }}
+        EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
+        EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
         RANCHER_USER: admin
         RANCHER_PASSWORD: rancherpassword
         RANCHER_URL: https://${{ needs.installation.outputs.MY_HOSTNAME }}/dashboard
-        S3_KEY_ID: ${{ secrets.s3_key_id }}
-        S3_KEY_SECRET: ${{ secrets.s3_key_secret }}
+        S3_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
         UI: rancher
         # EXTRAENV_NAME: SESSION_KEY

@@ -21,8 +21,4 @@ jobs:
       docker_options: '--user 1000'
       runner: ui-e2e-2
       # ext_reg: '1'
-    secrets:
-      ext_reg_user: secrets.EPINIO_DOCKER_USER
-      ext_reg_password: secrets.EPINIO_DOCKER_PASSWORD
-      # s3_key_id: secrets.AWS_ACCESS_KEY_ID
-      # s3_key_secret: secrets.AWS_SECRET_ACCESS_KEY
+    secrets: inherit
