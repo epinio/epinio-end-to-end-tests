@@ -17,6 +17,4 @@ jobs:
       # cypress_test: with_default_options.spec.ts
       cypress_test: menu.spec.ts
       runner: ui-e2e-0
-    secrets:
-      ext_reg_user: secrets.EPINIO_DOCKER_USER
-      ext_reg_password: secrets.EPINIO_DOCKER_PASSWORD
+    secrets: inherit
