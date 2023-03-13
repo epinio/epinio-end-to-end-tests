@@ -935,11 +935,24 @@ Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName =
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', ({ s3, extRegistry, namespace = 'epinio-install' }) => {
+Cypress.Commands.add('epinioInstall', ({ s3, s3gw=false, extRegistry, namespace = 'epinio-install' }) => { 
   cy.clickClusterMenu(['Apps', 'Charts']);
 
   // Make sure we are in the chart screen (test failed here before)
   cy.contains('header', 'Charts', { timeout: 8000 }).should('be.visible');
+
+  // Delete leftovers of other repos if existed.
+  cy.get('a[href="/dashboard/c/local/apps/catalog.cattle.io.app"] > span.count').then(($el) => {
+    if ($el.text().trim() == '0') {
+      cy.log(`All good. No repos installed found. Proceeding with next step`);
+    }
+    else {
+      cy.log(`"${$el.text()}" apps present. It should be 0. Uninstalling now`)
+      cy.epinioUninstall();
+      cy.get('.tab > .closer').click();
+      cy.go('back');
+    }
+  });
 
   // Install epinio-installer chart
   cy.contains('Epinio deploys Kubernetes').click();
@@ -973,6 +986,12 @@ Cypress.Commands.add('epinioInstall', ({ s3, extRegistry, namespace = 'epinio-in
     cy.typeValue({label: 'External registry namespace', value: Cypress.env('external_reg_username'), log: false});
   }
 
+  if (s3gw == true) {
+    cy.contains('a', 'S3 storage').click();
+    cy.contains('Install Minio').click();
+    cy.contains('Install s3gw').should('be.visible').click();
+    };
+
   // Configure s3 storage
   if (s3 === true) {
     cy.contains('a', 'External S3 storage').click();
@@ -995,6 +1014,33 @@ Cypress.Commands.add('epinioInstall', ({ s3, extRegistry, namespace = 'epinio-in
   // cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
   cy.contains('SUCCESS: helm', { timeout: 600000 }).should('be.visible');
   cy.get('.tab > .closer').click();
+});
+
+Cypress.Commands.add('checkEpinioInstallationRancher', () => {
+  if (Cypress.env('experimental_chart_branch') != null) {
+    // Select "All Namespaces" from Namespace filter at the top
+    cy.get('.top > .ns-filter').click({ force: true });
+    cy.get('#all', { timeout: 2000 }).contains('All Namespaces').should('be.visible').click();
+    // Close the namespaces dropdowy
+    cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
+  }
+
+  // WORKAROUND until Epinio icon will be present again in Rancher UI
+  cy.contains('More Resources').click();
+  cy.contains('Networking').click();
+  cy.contains('Ingresses').click();
+  cy.contains('.ingress-target .target > a', 'epinio-ui')
+    .prevAll('a')
+    .invoke('attr', 'href').then( (href) => {
+      cy.origin(href, (href) => {
+      cy.visit('/');
+      cy.get('h1').contains('Welcome to Epinio').should('be.visible')
+      cy.url().then(url => {
+        const tempUrl= url.replace(/^(https:\/\/.*?)\/.*$/, "$1");
+        cy.log(`Epinio URL from ingress: ${tempUrl}`);
+      });
+    });
+  });
 });
 
 // Uninstall Epinio via Helm
