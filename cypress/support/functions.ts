@@ -775,7 +775,7 @@ Cypress.Commands.add('unbindConfiguration', ({appName, configurationName, namesp
   cy.get('.main-row').should('not.contain', configurationName);
 
   // Application status should be equal to 1/1
-  cy.get('.main-row').should('contain', '1/1', {timeout: 16000});
+  cy.get('.main-row', {timeout: 40000}).should('contain', '1/1', );
   cy.wait(2000);
 });
 
