@@ -22,6 +22,13 @@ describe('Epinio installation testing', () => {
     }
   });
 
+  it('Install Epinio with s3gw, check ingress over URL and uninstall it', () => {
+    cy.epinioInstall({ s3: false, s3gw: true, extRegistry: false });
+    cy.checkEpinioInstallationRancher();
+    cy.visit('/c/local/explorer#cluster-events');
+    cy.epinioUninstall();
+  });
+
   it('Install Epinio', () => {
     if (Cypress.env('experimental_chart_branch') != null) {
       cy.epinioInstall({ s3: false, extRegistry: false, namespace: 'None' });
@@ -33,29 +40,7 @@ describe('Epinio installation testing', () => {
   });
 
   it('Verify Epinio over ingress URL', () => {
-    if (Cypress.env('experimental_chart_branch') != null) {
-      // Select "All Namespaces" from Namespace filter at the top
-      cy.get('.top > .ns-filter').click({ force: true });
-      cy.get('#all', { timeout: 2000 }).contains('All Namespaces').should('be.visible').click();
-      // Close the namespaces dropdowy
-      cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
-    }
-
-    // WORKAROUND until Epinio icon will be present again in Rancher UI
-    cy.contains('More Resources').click();
-    cy.contains('Networking').click();
-    cy.contains('Ingresses').click();
-    cy.contains('.ingress-target .target > a', 'epinio-ui')
-      .prevAll('a')
-      .invoke('attr', 'href').then( (href) => {
-        cy.origin(href, (href) => {
-        cy.visit('/');
-        cy.get('h1').contains('Welcome to Epinio').should('be.visible')
-        cy.url().then(url => {
-          const tempUrl= url.replace(/^(https:\/\/.*?)\/.*$/, "$1");
-          cy.log(`Epinio URL from ingress: ${tempUrl}`);
-        });
-      });
-    });
+    cy.checkEpinioInstallationRancher();
   });
+  
 });
