@@ -935,7 +935,7 @@ Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName =
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', ({ s3, s3gw=false, extRegistry, namespace = 'epinio-install' }) => { 
+Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespace = 'epinio-install' }) => {
   cy.clickClusterMenu(['Apps', 'Charts']);
 
   // Make sure we are in the chart screen (test failed here before)
