@@ -23,11 +23,25 @@ helm upgrade --install cert-manager jetstack/cert-manager \
 # Wait for cert-manager deployment to be ready
 kubectl rollout status deployment cert-manager -n cert-manager --timeout=120s
 
+# Logic for psp enabled according to the Kubernetes version
+KUBERNETES_SERVER_VERSION=$(kubectl version -o json | jq -rj '.serverVersion|.major,".",.minor' | tr -d '"')
+
+if [[ $KUBERNETES_SERVER_VERSION -ge 1.25 ]]
+  then
+    echo "Kubernetes Server Version is '${KUBERNETES_SERVER_VERSION}' ≥ '1.25'."
+    echo "Setting flag 'psp.enabled' to 'false'"
+    PSP_ENABLED=falses
+else 
+  echo "Kubernetes Server Version is '${KUBERNETES_SERVER_VERSION}' < '1.25' "
+  echo "Setting flag 'psp.enabled' to 'true'"
+  PSP_ENABLED=true
+fi
+
 # Install Rancher
 helm upgrade --install rancher rancher-latest/rancher \
   --namespace cattle-system \
   --create-namespace \
-  --set global.cattle.psp.enabled=false \
+  --set global.cattle.psp.enabled=${PSP_ENABLED} \
   --set hostname=${MY_HOSTNAME} \
   --version ${RANCHER_VERSION} \
   --set bootstrapPassword=rancherpassword \
