@@ -41,6 +41,11 @@ on:
           required: false
           type: string
           default: ''
+        rancher_version:
+          description: Choose rancher version to deploy (dec)
+          required: true
+          type: string
+          default: '2.7.2-rc7'
 
 jobs:
   installation:
@@ -72,15 +77,18 @@ jobs:
           GHCR_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
           S3_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          RANCHER_VERSION: ${{ inputs.rancher_version }}
         run: |
           ## Export information to other jobs
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')
           MY_IP=$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
           export MY_HOSTNAME=$(hostname)
           export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
+          export RANCHER_VERSION
           echo "MY_IP=${MY_IP}" >> $GITHUB_OUTPUT
           echo "MY_HOSTNAME=${MY_HOSTNAME}" >> $GITHUB_OUTPUT
-          make prepare-e2e-ci-rancher
+          echo "RANCHER_VERSION=${RANCHER_VERSION}" >> $GITHUB_OUTPUT
+          make prepare-e2e-ci-rancher-experimental
 
     outputs:
       MY_HOSTNAME: ${{ steps.installation.outputs.MY_HOSTNAME }}
