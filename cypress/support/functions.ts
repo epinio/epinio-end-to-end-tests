@@ -954,8 +954,8 @@ Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespac
     }
   });
 
-  // Install epinio-installer chart
-  cy.contains('Epinio deploys Kubernetes').click();
+  // Install epinio-installer chart (Not the experimental one)
+  cy.get('.item.has-description.color1 > .description', {timeout: 20000}).contains('Epinio deploys Kubernetes').click();
   cy.contains('Charts: epinio', { matchCase: false }).should('be.visible');
   cy.clickButton('Install');
 
@@ -1048,7 +1048,7 @@ Cypress.Commands.add('epinioUninstall', () => {
   cy.clickClusterMenu(['Apps', 'Installed Apps'])
 
   // Make sure we are in the 'Installed Apps' screen (test failed here before)
-  cy.contains('header', 'Installed Apps', {timeout: 8000}).should('be.visible');
+  cy.contains('Installed Apps', {timeout: 8000}).should('be.visible');
   cy.contains('epinio:').click();
   cy.clickButton('Delete');
   cy.confirmDelete();
