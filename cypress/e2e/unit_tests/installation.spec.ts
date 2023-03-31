@@ -39,7 +39,7 @@ describe('Epinio installation testing', () => {
     }
   });
 
-  it.only('Verify Epinio over ingress URL', () => {
+  it('Verify Epinio over ingress URL', () => {
     cy.checkEpinioInstallationRancher();
   });
   

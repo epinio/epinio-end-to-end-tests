@@ -1027,7 +1027,8 @@ Cypress.Commands.add('checkEpinioInstallationRancher', () => {
 
   // WORKAROUND until Epinio icon will be present again in Rancher UI
   cy.contains('Service Discovery').click();
-  cy.contains('Ingresses').click();
+  cy.wait(1000)
+  cy.get('span.label.no-icon').contains('Ingress').click()
   cy.contains('.ingress-target .target > a', 'epinio-ui')
     .prevAll('a')
     .invoke('attr', 'href').then( (href) => {
