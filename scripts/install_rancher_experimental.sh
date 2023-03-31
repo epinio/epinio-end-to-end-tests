@@ -26,11 +26,10 @@ kubectl rollout status deployment cert-manager -n cert-manager --timeout=120s
 # Logic for psp enabled according to the Kubernetes version
 KUBERNETES_SERVER_VERSION=$(kubectl version -o json | jq -rj '.serverVersion|.major,".",.minor' | tr -d '"')
 
-if [[ $KUBERNETES_SERVER_VERSION -ge 1.25 ]]
-  then
-    echo "Kubernetes Server Version is '${KUBERNETES_SERVER_VERSION}' ≥ '1.25'."
-    echo "Setting flag 'psp.enabled' to 'false'"
-    PSP_ENABLED=falses
+if  (( $(echo "$KUBERNETES_SERVER_VERSION > $1.25" |bc -l) )); then
+  echo "Kubernetes Server Version is '${KUBERNETES_SERVER_VERSION}' ≥ '1.25'."
+  echo "Setting flag 'psp.enabled' to 'false'"
+  PSP_ENABLED=false
 else 
   echo "Kubernetes Server Version is '${KUBERNETES_SERVER_VERSION}' < '1.25' "
   echo "Setting flag 'psp.enabled' to 'true'"
