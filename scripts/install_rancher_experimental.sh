@@ -24,14 +24,13 @@ helm upgrade --install cert-manager jetstack/cert-manager \
 kubectl rollout status deployment cert-manager -n cert-manager --timeout=120s
 
 # Logic for psp enabled according to the Kubernetes version
-KUBERNETES_SERVER_VERSION=$(kubectl version -o json | jq -rj '.serverVersion|.major,".",.minor' | tr -d '"')
-
-if  (( $(echo "$KUBERNETES_SERVER_VERSION > $1.25" |bc -l) )); then
-  echo "Kubernetes Server Version is '${KUBERNETES_SERVER_VERSION}' ≥ '1.25'."
+KUBERNETES_SERVER_VERSION=$(kubectl version -o json | jq -rj '.serverVersion|.minor' | tr -d '"')
+if  (( $(echo "$KUBERNETES_SERVER_VERSION >= 25" ) )); then
+  echo "Kubernetes Server Version is '1.${KUBERNETES_SERVER_VERSION}' ≥ '1.25'."
   echo "Setting flag 'psp.enabled' to 'false'"
   PSP_ENABLED=false
 else 
-  echo "Kubernetes Server Version is '${KUBERNETES_SERVER_VERSION}' < '1.25' "
+  echo "Kubernetes Server Version is '${1.KUBERNETES_SERVER_VERSION}' < '1.25' "
   echo "Setting flag 'psp.enabled' to 'true'"
   PSP_ENABLED=true
 fi
