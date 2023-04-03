@@ -22,7 +22,7 @@ describe('Epinio installation testing', () => {
     }
   });
 
-  it.skip('Install Epinio with s3gw, check ingress over URL and uninstall it', () => {
+  it('Install Epinio with s3gw, check ingress over URL and uninstall it', () => {
     cy.epinioInstall({ s3: false, s3gw: true, extRegistry: false });
     cy.checkEpinioInstallationRancher();
     cy.visit('/c/local/explorer#cluster-events');
