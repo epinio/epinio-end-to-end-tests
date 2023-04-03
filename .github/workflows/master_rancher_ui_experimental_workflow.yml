@@ -42,7 +42,7 @@ on:
           type: string
           default: ''
         rancher_version:
-          description: Choose rancher version to deploy (dec)
+          description: Choose rancher version to deploy
           required: true
           type: string
           default: '2.7.2-rc7'
