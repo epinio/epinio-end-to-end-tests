@@ -38,6 +38,21 @@ on:
         description: Set other docker options
         required: false
         type: string
+      epinio_branch:
+        description: Choose specific branch (default main)
+        required: false
+        type: string
+        default: 'main'
+      helm_version:
+        description: Choose specific helm version (default 3.7.0)
+        required: false
+        type: number
+        default: 3.7.0
+      node_version:
+        description: Choose specific node version (default 16.2.0)
+        required: false
+        type: number
+        default: 16.2.0
 
 jobs:
   E2E-Cypress:
@@ -58,6 +73,7 @@ jobs:
           repository: epinio/epinio
           submodules: recursive
           fetch-depth: 0
+          ref: ${{ inputs.epinio_branch }}
           path: epinio
 
       - name: Checkout Rancher Dashboard repository
@@ -83,7 +99,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.2.0
+          node-version: ${{ inputs.node_version }}
 
       - name: Cache Tools
         uses: actions/cache@v3
@@ -99,7 +115,7 @@ jobs:
         id: installation
         env:
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-          HELM_VERSION: 3.7.0
+          HELM_VERSION: ${{ inputs.helm_version }}
           K3S_VERSION: ${{ inputs.k3s_version }}
           EXT_REG: ${{ inputs.ext_reg }}
           S3: ${{ inputs.s3 }}

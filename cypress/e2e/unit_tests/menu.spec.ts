@@ -106,7 +106,7 @@ describe('Menu testing', () => {
     cy.get('h1.m-0').contains('Namespaces').should('be.visible');
     cy.go('back');
     // Click on card Create Namespace and check redirection
-    cy.clickButton('Create Namespace');
+    cy.get('a.btn.role-secondary', {timeout: 20000}).contains('Create Namespace').should('be.visible').click();
     cy.get('.btn.role-secondary.mr-10').contains('Cancel ').should('be.visible').click();
     cy.go('back');
   
@@ -115,7 +115,7 @@ describe('Menu testing', () => {
     cy.get('h1.m-0').contains('Applications').should('be.visible');
     cy.go('back');
     // Click on card Deploy application and check redirection
-    cy.clickButton('Deploy Application');
+    cy.get('a.btn.role-secondary', {timeout: 20000}).contains('Deploy Application').should('be.visible').click();
     cy.get('[data-testid="epinio_app-source_type"]').should('be.visible');
     cy.go('back');
   
@@ -124,10 +124,10 @@ describe('Menu testing', () => {
     cy.get('h1.m-0').contains('Instances').should('be.visible');
     cy.go('back');
     // Click on card "Services" and check redirection
-    cy.get('a.link').contains('mysql-dev').click();
+    cy.get('a.link', {timeout: 20000}).contains('mysql-dev').should('be.visible').click();
     cy.contains('mysql-dev').should('be.visible');
     cy.go('back');
-    cy.get('a.link').contains('redis-dev').click();
+    cy.get('a.link', {timeout: 20000}).contains('redis-dev').should('be.visible').click();
     cy.contains('redis-dev').should('be.visible');
     });
 

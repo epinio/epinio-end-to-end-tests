@@ -31,7 +31,12 @@ get-ca: ## Configure Cypress to use the epinio-ca
 create-docker-secret: ## Create docker pull secret to avoid the docker hub rate limit
 	@./scripts/create_docker_secret.sh
 
+install-rancher-experimental: ## Install Rancher via Helm with experimental flags
+	@./scripts/install_rancher_experimental.sh
+
 prepare-e2e-ci-rancher: install-k3s install-helm install-rancher create-docker-secret get-ca ## Tests
+
+prepare-e2e-ci-rancher-experimental: install-k3s install-helm install-rancher-experimental create-docker-secret get-ca ## Tests
 
 prepare-e2e-ci-standalone: install-k3s install-helm install-cert-manager create-docker-secret install-epinio get-ca ## Tests
 
