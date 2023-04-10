@@ -25,8 +25,6 @@ kubectl rollout status deployment cert-manager -n cert-manager --timeout=120s
 
 # Logic for psp enabled according to the Kubernetes version
 KUBERNETES_SERVER_VERSION=$(kubectl version -o json | jq -r '.serverVersion|.minor' | tr -d '"')
-thehejik27 minutes ago
-Suggested change:
 
 if  [ "$KUBERNETES_SERVER_VERSION" -ge "25" ] ; then
   echo "Kubernetes Server Version is '1.${KUBERNETES_SERVER_VERSION}' ≥ '1.25'."
