@@ -580,7 +580,9 @@ Cypress.Commands.add('showAppShell', ({appName, namespace='workspace'}) => {
 Cypress.Commands.add('downloadManifest', ({appName}) => {
   cy.clickEpinioMenu('Applications');
   cy.get('.role-multi-action.actions').click();
-  cy.contains('li', 'Download Manifest').click( {force: true} );  
+  cy.contains('li', 'Export App').click( {force: true} );  
+  cy.contains('li', 'Manifest').click( {force: true} );  
+  cy.clickButton('Export')
   // Find downloaded json manifest in download folder & verify name in stdout 
   cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
   .should('contain', appName);
