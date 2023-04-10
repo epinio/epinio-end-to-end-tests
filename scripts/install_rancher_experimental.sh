@@ -31,7 +31,7 @@ if  [ "$KUBERNETES_SERVER_VERSION" -ge "25" ] ; then
   echo "Setting flag 'psp.enabled' to 'false'"
   PSP_ENABLED=false
 else 
-  echo "Kubernetes Server Version is '${1.KUBERNETES_SERVER_VERSION}' < '1.25' "
+  echo "Kubernetes Server Version is '1.${KUBERNETES_SERVER_VERSION}' < '1.25' "
   echo "Setting flag 'psp.enabled' to 'true'"
   PSP_ENABLED=true
 fi
