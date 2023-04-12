@@ -243,12 +243,7 @@ describe('Login with different users', () => {
     // cy.dexGrantAccess(true);
   });
 
-  it.skip('Check Dex deny access', { tags: '@dex-2'}, () => {
-    cy.dexLogin('admin@epinio.io', 'password');
-    cy.dexGrantAccess(false);
-  });
-
-  it('Check users not allowed cannot connect to Dex', { tags: '@dex-3'}, () => {
+  it('Check users not allowed cannot connect to Dex', { tags: '@dex-2'}, () => {
     cy.dexLogin('invalid-mail@epinio.io', 'password', { checkLandingPage : false });
     cy.contains('Invalid Email Address and password').should('be.visible');
   });

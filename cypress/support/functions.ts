@@ -70,18 +70,6 @@ Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'pass
       cy.contains('admin@epinio.io');})}
 })
 
-Cypress.Commands.add('dexGrantAccess', (grantAccess = true ) => { 
-  if (grantAccess == true ){
-    cy.get('button[class="dex-btn theme-btn--success"]').contains('Grant Access', {timeout: 5000}).click({force: true})
-    cy.contains('Welcome to Epinio').should('be.visible')
-    cy.get('.user-image.text-right.hand', {timeout: 5000}).click().then(() => {
-      cy.contains('admin@epinio.io')
-    })}
-  else if (grantAccess == false ) {
-    cy.contains('Cancel').click()
-    cy.contains('Approval rejected', {timeout: 5000}).should('be.visible')
-   }
-})
 
 // Search fields by label
 Cypress.Commands.add('byLabel', (label) => {
