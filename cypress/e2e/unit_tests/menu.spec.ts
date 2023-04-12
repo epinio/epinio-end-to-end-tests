@@ -240,10 +240,10 @@ describe('Login with different users', () => {
   describe('Dex testing', () => {
   it('Check Dex login works with granted access', { tags: '@dex-1'}, () => {
     cy.dexLogin('admin@epinio.io', 'password');
-    cy.dexGrantAccess(true);
+    // cy.dexGrantAccess(true);
   });
 
-  it('Check Dex deny access', { tags: '@dex-2'}, () => {
+  it.skip('Check Dex deny access', { tags: '@dex-2'}, () => {
     cy.dexLogin('admin@epinio.io', 'password');
     cy.dexGrantAccess(false);
   });

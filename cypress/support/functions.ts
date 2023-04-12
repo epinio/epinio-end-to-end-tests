@@ -63,6 +63,10 @@ Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'pass
   cy.get('input#login', {timeout: 5000}).should('be.visible').focus().type(username);
   cy.get('input#password', {timeout: 5000}).should('be.visible').focus().type(password);
   cy.get('#submit-login').click();
+  // Checking redirection to landing page is correct and Dex user is present
+  cy.contains('Welcome to Epinio').should('be.visible')
+  cy.get('.user-image.text-right.hand', {timeout: 5000}).click().then(() => {
+    cy.contains('admin@epinio.io')
 })
 
 Cypress.Commands.add('dexGrantAccess', (grantAccess = true ) => { 
