@@ -249,7 +249,7 @@ describe('Login with different users', () => {
   });
 
   it('Check users not allowed cannot connect to Dex', { tags: '@dex-3'}, () => {
-    cy.dexLogin('invalid-mail@epinio.io', 'password');
+    cy.dexLogin('invalid-mail@epinio.io', 'password', { checkLandingPage : false });
     cy.contains('Invalid Email Address and password').should('be.visible');
   });
 });
