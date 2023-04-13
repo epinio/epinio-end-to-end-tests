@@ -348,6 +348,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   if (addVar === 'wordpress_env_file') {
     cy.get('input[type="file"]').attachFile({filePath: 'read_from_worpress_file.txt'});
+    cy.wait(500)
     // Check the entered values
     cy.get('.key > input').eq(1).should('have.value', 'BP_PHP_VERSION');
     cy.get('.no-resize').eq(1).should('have.value', '8.0.x');
