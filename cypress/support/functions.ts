@@ -55,7 +55,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 });
 
 // Dex login
-Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'password', grantAccess = true ) => {
+Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'password', checkLandingPage = true ) => {
   // Dex connection. Enter username/pwd
   cy.visit('/auth/login')
   cy.get('.btn.bg-primary').contains('Log in with Dex').should('be.visible').click({force : true});
@@ -63,20 +63,13 @@ Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'pass
   cy.get('input#login', {timeout: 5000}).should('be.visible').focus().type(username);
   cy.get('input#password', {timeout: 5000}).should('be.visible').focus().type(password);
   cy.get('#submit-login').click();
-})
-
-Cypress.Commands.add('dexGrantAccess', (grantAccess = true ) => { 
-  if (grantAccess == true ){
-    cy.get('button[class="dex-btn theme-btn--success"]').contains('Grant Access', {timeout: 5000}).click({force: true})
+  // Checking redirection to landing page is correct and Dex user is present
+  if (checkLandingPage == true) {
     cy.contains('Welcome to Epinio').should('be.visible')
     cy.get('.user-image.text-right.hand', {timeout: 5000}).click().then(() => {
-      cy.contains('admin@epinio.io')
-    })}
-  else if (grantAccess == false ) {
-    cy.contains('Cancel').click()
-    cy.contains('Approval rejected', {timeout: 5000}).should('be.visible')
-   }
+      cy.contains('admin@epinio.io');})}
 })
+
 
 // Search fields by label
 Cypress.Commands.add('byLabel', (label) => {
