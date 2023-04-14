@@ -46,7 +46,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'envVarsAndGitUrl':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'ui', sourceType: 'Git URL'});
-      cy.checkApp({appName: appName, checkVar: true});
+      cy.checkApp({appName: appName, checkVar: 2});
       break;
     case 'restartAndRebuild':
       cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});
@@ -58,7 +58,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'allTests':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, customApplicationChart:applicationChart, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
-      cy.checkApp({appName: appName, checkVar: true, route: customRoute});
+      cy.checkApp({appName: appName, checkVar: 2, route: customRoute});
       break;
     case 'downloadManifestAndPushApp':
       cy.createConfiguration({configurationName: configuration});      
@@ -70,7 +70,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.deleteApp({ appName: appName });
       // Create app from manifest solely and check results
       cy.createApp({archiveName: archive, sourceType: 'Archive', manifestName: manifest }); 
-      cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: true, instanceNum: 2});
+      cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: 2, instanceNum: 2});
       break;
     case 'serviceMysqlBindWordpressPushApp':
       cy.deleteAll('Services')
@@ -91,7 +91,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'gitHubAndEnvVar':
       cy.createApp({appName: appName, addVar: 'go_example', sourceType: 'GitHub'});
-      cy.checkApp({appName: appName, checkVar: true});
+      cy.checkApp({appName: appName, checkVar: 2});
       break;
   }
 
@@ -136,7 +136,7 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
 
       // Bind the created configuration to the application and check it
       cy.bindConfiguration({appName: appName, configurationName: configuration});
-      cy.checkApp({appName: appName, checkConfiguration: true, checkVar: true});
+      cy.checkApp({appName: appName, checkConfiguration: true, checkVar: 2});
 
       // Edit the created configuration
       cy.editConfiguration({configurationName: configuration});

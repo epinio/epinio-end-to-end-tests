@@ -19,7 +19,7 @@ export class Epinio {
     expect($lis.eq(3)).to.contain('Instances');
     expect($lis.eq(4)).to.contain('Catalog');
     expect($lis.eq(5)).to.contain('Configurations');
-    expect($lis.eq(6)).to.contain('Application Templates');
+    expect($lis.eq(6)).to.contain('Application Charts');
     })      
   }
 
