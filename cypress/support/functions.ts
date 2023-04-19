@@ -330,11 +330,8 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Add an environment variable
   if (addVar === 'ui') {
     cy.get('.key-value > .footer > .add').click();
-    // Not using typeKeyValue since we need to skip new env var 'EPINIO_APP_DATA'
-    // https://github.com/rancher/dashboard/pull/8334/files/5f6d22775266a60a6e3a4b4b49e3ea83d1f7abff#top
-    // If this is hidden from UI we can use function typeKeyValue again 
-    cy.get('.kv-item.key').eq(1).clear().type('PORT');
-    cy.get('.kv-item.value').eq(1).clear().type('8080');
+    cy.typeKeyValue({key: '.kv-item.key', value: 'PORT'});
+    cy.typeKeyValue({key: '.kv-item.value', value: '8080'});
 
   } else if (addVar === 'file') {
     cy.get('input[type="file"]').attachFile({filePath: envFile});
@@ -342,24 +339,24 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     // Check the entered values
     // Adding small wait to let Cypress find the second input. Can be removed if only 1 exists
     cy.wait(500)
-    cy.get('.key > input', {timeout: 10000 }).eq(1).should('have.value', 'PORT');
-    cy.get('.no-resize', {timeout: 10000 } ).eq(1).should('have.value', '8080');
+    cy.get('.key > input', {timeout: 10000 }).eq(0).should('have.value', 'PORT');
+    cy.get('.no-resize', {timeout: 10000 } ).eq(0).should('have.value', '8080');
   }
 
   if (addVar === 'wordpress_env_file') {
     cy.get('input[type="file"]').attachFile({filePath: 'read_from_worpress_file.txt'});
     cy.wait(500)
     // Check the entered values
-    cy.get('.key > input').eq(1).should('have.value', 'BP_PHP_VERSION');
-    cy.get('.no-resize').eq(1).should('have.value', '8.0.x');
-    cy.get('.key > input').eq(2).should('have.value', 'BP_PHP_SERVER');
-    cy.get('.no-resize').eq(2).should('have.value', 'nginx');
-    cy.get('.key > input').eq(3).should('have.value', 'BP_PHP_WEB_DIR');
-    cy.get('.no-resize').eq(3).should('have.value', 'wordpress ');
-    cy.get('.key > input').eq(4).should('have.value', 'DB_HOST');
-    cy.get('.no-resize').eq(4).should('have.value', 'x8e5ee833a0f2faebaf5c4171baca-mysql');
-    cy.get('.key > input').eq(5).should('have.value', 'SERVICE_NAME');
-    cy.get('.no-resize').eq(5).should('have.value', 'mycustom-service');
+    cy.get('.key > input').eq(0).should('have.value', 'BP_PHP_VERSION');
+    cy.get('.no-resize').eq(0).should('have.value', '8.0.x');
+    cy.get('.key > input').eq(1).should('have.value', 'BP_PHP_SERVER');
+    cy.get('.no-resize').eq(1).should('have.value', 'nginx');
+    cy.get('.key > input').eq(2).should('have.value', 'BP_PHP_WEB_DIR');
+    cy.get('.no-resize').eq(2).should('have.value', 'wordpress ');
+    cy.get('.key > input').eq(3).should('have.value', 'DB_HOST');
+    cy.get('.no-resize').eq(3).should('have.value', 'x8e5ee833a0f2faebaf5c4171baca-mysql');
+    cy.get('.key > input').eq(4).should('have.value', 'SERVICE_NAME');
+    cy.get('.no-resize').eq(4).should('have.value', 'mycustom-service');
   }
 
   if (addVar === 'go_example') {
