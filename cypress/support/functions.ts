@@ -248,13 +248,13 @@ Cypress.Commands.add('selectSourceType', ({ sourceType, archiveName, gitUsername
     case 'Archive':
       cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});   
       break; 
-    case 'GitLab' : case 'GitHub' :
-      cy.loadGitRepo({ gitUsername : gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit })
+    case 'GitLab': case 'GitHub':
+      cy.loadGitRepo({ gitUsername: gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit });
       break;
   };
 });
 
-Cypress.Commands.add('open3dotsMenu', ({ name, selection  }) => {
+Cypress.Commands.add('open3dotsMenu', ({ name, selection }) => {
   // Open 3 dots button
   cy.contains('tr.main-row', name).within(() => {
     cy.get('.icon.icon-actions', {timeout: 5000}).click()

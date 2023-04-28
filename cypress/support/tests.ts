@@ -104,7 +104,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   }
 
   // Delete the tested application
-  // cy.deleteApp({appName: appName});
+  cy.deleteApp({appName: appName});
 });
 
 // Configurations tests
