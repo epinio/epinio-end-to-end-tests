@@ -19,9 +19,11 @@ declare global {
       typeValue(label: string, value: string, noLabel?: boolean, log?: boolean): Chainable<Element>;
       typeKeyValue(key: string, value: string,): Chainable<Element>;
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
+      open3dotsMenu(name: string, selection?: string): Chainable<Element>;
+      loadGitRepo(gitUsername?: string, gitRepo?: string, gitBranch?: string, gitCommit?: string): Chainable<Element>;
       checkDashboardResources(namespaceNumber?: string, newestNamespaces?: string, appNumber?: string, runningApps?: string, servicesNumber?: string, ): Chainable<Element>;
-      createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, customApplicationChart?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string, serviceName?: string, catalogType?: string, namespace?: string,): Chainable<Element>;
-      checkApp(appName: string, namespace?: string, route?: string, checkVar?: number, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number, serviceName?: string, checkCreatedApp?: string ): Chainable<Element>;
+      createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, customApplicationChart?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string, serviceName?: string, catalogType?: string, namespace?: string, gitUsername?: string, gitRepo?: string, gitBranch?: string, gitCommit?: string ): Chainable<Element>;
+      checkApp(appName: string, namespace?: string, route?: string, checkVar?: number, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number, serviceName?: string, checkCreatedApp?: string, checkCommit?: string, checkIcon?: string ): Chainable<Element>;
       deleteApp(appName: string, state?: string,): Chainable<Element>;
       restartApp(appName: string, namespace?: string,): Chainable<Element>;
       rebuildApp(appName: string, namespace?: string,): Chainable<Element>;

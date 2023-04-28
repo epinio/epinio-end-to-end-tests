@@ -90,13 +90,21 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.deleteService({ serviceName: 'mycustom-service-2' }); 
       break;
     case 'gitHubAndEnvVar':
-      cy.createApp({appName: appName, addVar: 'go_example', sourceType: 'GitHub'});
+      cy.createApp({appName: 'githubapp', addVar: 'go_example', sourceType: 'GitHub', gitUsername: 'epinio', gitRepo: 'example-go', gitBranch: 'main', gitCommit: 'e84b2a7'});
       cy.checkApp({appName: appName, checkVar: 2});
+      break;
+    case 'pushGitlabAndUpdateSources':
+      cy.createApp({appName: appName, sourceType: 'GitLab', gitUsername: 'richard-cox', gitRepo: 'epinio-sample-app', gitBranch: 'main', gitCommit: '07d2dd79' });
+      cy.checkApp({appName: appName, checkCommit: '07d2dd7'});
+      cy.updateAppSource({name: appName, sourceType: 'GitLab', gitUsername: 'richard-cox', gitRepo: 'epinio-sample-app', gitBranch: 'main', gitCommit: 'bb688311' })
+      cy.checkApp({appName: appName, checkCommit: 'bb68831', checkIcon: 'gitlab'});
+      cy.updateAppSource({name: appName, archiveName: archive, sourceType: 'Archive'});
+      cy.checkApp({appName: appName, checkIcon: 'file'});
       break;
   }
 
   // Delete the tested application
-  cy.deleteApp({appName: appName});
+  // cy.deleteApp({appName: appName});
 });
 
 // Configurations tests
