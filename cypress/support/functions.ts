@@ -150,8 +150,10 @@ Cypress.Commands.add('checkStageStatus', ({numIndex, sourceType, timeout=6000, s
         and it hides the success badge of step 3...
         So we have to wait last step done before continuing */
         cy.get('.tab-label', {timeout: 100000}).should('contain', 'testapp - App Logs');
-        if (sourceType != 'Git URL' && sourceType != 'GitHub') cy.contains('Development Server (http://0.0.0.0:8080) started', {timeout: timeout});
-        cy.get('.tab > .closer').click();
+
+        if (sourceType != 'Git URL' && sourceType != 'GitHub' && sourceType != 'GitLab')
+          cy.contains('Development Server (http://0.0.0.0:8080) started', {timeout: timeout});
+          cy.get('.tab > .closer').click();
       }      
   }
   cy.get(getScope, {timeout: 35000}).contains(status).should('be.visible');
@@ -208,6 +210,86 @@ Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
   });
 });
 
+// Load GitHub or Gitlab source type repos
+Cypress.Commands.add('loadGitRepo', ({ gitUsername, gitRepo, gitBranch, gitCommit }) => {
+  cy.get('.labeled-input.edit.has-tooltip',{timeout:5000}).contains('label', 'Username / Organization').should('be.visible')
+
+  // Typing a bit slower to avoid fetching too early
+  cy.get('.labeled-input.edit.has-tooltip > input[type="text"]',{timeout:5000}).focus().clear().type(gitUsername,{delay:250, force:true})
+
+  // Selecting Repository
+  cy.contains('label', 'Repository ').should('be.visible').click();
+  cy.contains(gitRepo).click();
+
+  // Selecting Branch
+  cy.contains('label', 'Branch').should('be.visible').click();
+  cy.contains(gitBranch,{timeout:5000}).should('be.visible').click();
+  
+  // Selecting commit based on commit name
+  cy.get(`tr[data-node-id=${gitCommit}] > td`, {timeout:5000}).eq(0).should('be.visible').click();
+});
+
+// Load apps based on their source types
+Cypress.Commands.add('selectSourceType', ({ sourceType, archiveName, gitUsername, gitRepo, gitBranch, gitCommit }) => {
+  // Adding explicit wait here to attempt avoid failure in CI
+  cy.wait(2000)
+  cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click( {force: true} );
+  cy.wait(1000)
+  cy.contains(sourceType, {timeout: 10000}).should('be.visible').click({force: true});
+
+  switch (sourceType) {
+    case 'Container Image':
+      cy.typeValue({label: 'Image', value: archiveName}); 
+      break;
+    case 'Git URL':
+      cy.typeValue({label: 'URL', value: archiveName});
+      cy.typeValue({label: 'Branch', value: 'main'}); 
+      break;
+    case 'Archive':
+      cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});   
+      break; 
+    case 'GitLab': case 'GitHub':
+      cy.loadGitRepo({ gitUsername: gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit });
+      break;
+  };
+});
+
+Cypress.Commands.add('open3dotsMenu', ({ name, selection }) => {
+  // Open 3 dots button
+  cy.contains('tr.main-row', name).within(() => {
+    cy.get('.icon.icon-actions', {timeout: 5000}).click()
+  });
+
+  // Open edit config and select option
+  cy.get('.list-unstyled.menu > li > span', {timeout: 15000}).contains(selection).click();
+});
+
+Cypress.Commands.add('updateAppSource', ({ name, sourceType, archiveName, gitUsername, gitRepo, gitBranch, gitCommit }) => {
+  // Ensure we are in Applications
+  cy.clickEpinioMenu('Applications');
+
+  // Open 3 dots button
+  cy.open3dotsMenu({ name: name, selection: 'Edit Config'})
+
+  // Select source update desired
+  cy.selectSourceType({ sourceType: sourceType, archiveName: archiveName, gitUsername: gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit });
+  cy.clickButton('Update Source');
+
+  // Check that each steps are succesfully done
+  cy.checkStageStatus({numIndex: 1});
+  cy.checkStageStatus({numIndex: 2, timeout: 240000, sourceType, name});
+  if (sourceType !== 'Container Image') {
+    cy.checkStageStatus({numIndex: 3, timeout: 240000, sourceType});
+    cy.checkStageStatus({numIndex: 4, timeout: 240000});
+  }
+
+  // Application is created!
+  cy.clickButton('Done');
+  // Give some time to the application to be ready
+  cy.wait(6000);
+});
+
+
 // Menu functions
 
 // Check Resources on Dashboard page
@@ -239,7 +321,7 @@ Cypress.Commands.add('checkDashboardResources', ({ namespaceNumber, newestNamesp
 // Application functions
 
 // Create an Epinio application
-Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName, serviceName, catalogType, namespace='workspace'}) => {
+Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPaketoImage, customApplicationChart, route, addVar, instanceNum=1, configurationName, shouldBeDisabled, manifestName, serviceName, catalogType, namespace='workspace', gitUsername, gitRepo, gitBranch, gitCommit}) => {
   var envFile = 'read_from_file.env';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Applications');
@@ -247,37 +329,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Select the Source Type if needed
   if (sourceType) {
-    // Adding explicit wait here to attempt avoid failure in CI
-    cy.wait(5000)
-    cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click( {force: true} );
-    cy.wait(1000)
-    cy.contains(sourceType, {timeout: 10000}).should('be.visible').click({force: true});
-    switch (sourceType) {
-      case 'Container Image':
-        cy.typeValue({label: 'Image', value: archiveName}); 
-        break;
-      case 'Git URL':
-        cy.typeValue({label: 'URL', value: archiveName});
-        cy.typeValue({label: 'Branch', value: 'main'}); 
-        break;
-      case 'Archive':
-        cy.get(' button[data-testid="epinio_app-source_archive_file"] input[type="file"]').attachFile({filePath: archiveName, encoding: 'base64', mimeType: 'application/octet-stream'});   
-        break; 
-      case 'GitHub':
-        cy.get('.labeled-input.edit.has-tooltip',{timeout:5000}).contains('label', 'Username / Organization').should('be.visible')
-        // Typing a bit slower to avoid fetching too early
-        cy.get('.labeled-input.edit.has-tooltip > input[type="text"]',{timeout:5000}).type('epinio',{delay:250, force:true})
-        // Function 'typeValue' not working here
-        // Selecting Repository
-        cy.get('.labeled-select.edit.hoverable',{timeout:5000}).contains('label', 'Repository').should('be.visible').click();
-        cy.contains('example-go').click();
-        // Selecting Branch
-        cy.get('.labeled-select.edit.hoverable',{timeout:5000}).contains('label', 'Branch').should('be.visible').click();
-        cy.contains('main',{timeout:5000}).should('be.visible').click();
-        // Selecting last commit. Currently at the top of the list.
-        cy.get('span.radio-custom',{timeout:5000}).first().should('be.visible').click();
-        break;
-    };
+    cy.selectSourceType({ sourceType: sourceType, archiveName: archiveName, gitUsername: gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit });
   };
 
   if (manifestName) {
@@ -403,7 +455,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 });
 
 // Ensure that the application is up and running
-Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum, serviceName, checkCreatedApp}) => {
+Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkVar, checkConfiguration, dontCheckRouteAccess, instanceNum, serviceName, checkCreatedApp, checkCommit, checkIcon}) => {
   cy.clickEpinioMenu('Applications');
 
   // Go to application details
@@ -447,6 +499,18 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
     // Take a screenshot and go back to previous page
     cy.screenshot()
     cy.go('back')
+  }
+
+  if (checkCommit) {
+    //Check deployed commit matches control one
+    cy.get('div.repo-info-revision > span').contains(checkCommit).should('be.visible');
+  }
+
+  if (checkIcon) {
+    //Check Icon of deployed app
+    //Allowed values for checkIcon: file (for file, folder and git url),
+    //gitlab, github and  docker (for images), 
+    cy.get(`.icon.icon-fw.icon-${checkIcon}`).should('be.visible');
   }
 
   // Check binded configurations

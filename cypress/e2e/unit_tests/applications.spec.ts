@@ -49,6 +49,11 @@ describe('Applications testing', () => {
   it('Create postgress service, bind/unbind app from service page', { tags: '@appl-8' },  () => {
     cy.runApplicationsTest('serviceBindUnbindFromServicePage');
   });
+
+  it('Push Gitlab app and update sources', { tags: '@appl-9' }, () => {
+    cy.runApplicationsTest('pushGitlabAndUpdateSources');
+  });
+
   // Remove skip when this is fixed: https://github.com/epinio/ui/issues/160
   it.skip('Push application with Github Source type and env vars and check it',  () => {
     cy.runApplicationsTest('gitHubAndEnvVar');
