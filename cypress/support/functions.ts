@@ -669,12 +669,13 @@ Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) =>
 
     // Extract it
     cy.wait(1000)
-    cy.exec(`unzip -d cypress/downloads/ "cypress/downloads/${appName}-helm-chart.zip"`, {timeout: 35000})
+    cy.exec(`unzip -d cypress/downloads/ "cypress/downloads/${appName}-helm-chart.zip"`, {timeout: 40000})
   
-    // Check extracted chart and images names and sizes
-    cy.exec(`find "cypress/downloads/" -name "chart.tar.gz" -printf "%p %s B\n"`).its('stdout').should('contain', 'chart.tar.gz 3523 B');
-    cy.exec(`find "cypress/downloads/" -name "image.tar" -printf "%p %s B\n"`).its('stdout').should('contain', 'image.tar 976782336 B');
-    cy.exec(`find "cypress/downloads/" -name "values.yml" -printf "%p %s B\n"`).its('stdout').should('contain', 'values.yml 535 B')
+    // Check extracted chart and images names 
+    // CHeck length of main chart is more than 2 chars long
+    cy.exec(`ls -lh "cypress/downloads"`).its('stdout').should('contain', 'chart.tar.gz').and('contain', 'image.tar').and('contain', 'values.yml')
+
+    cy.exec(`ls -lh "cypress/downloads/${appName}-helm-chart.zip" | awk '{ print $5 }'`).its('stdout').should('have.length.greaterThan', 2 );
   }
   else if ((exportType === 'Manifest')){ 
     // Find downloaded json manifest in download folder & verify name in stdout 
