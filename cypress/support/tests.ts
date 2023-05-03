@@ -65,7 +65,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive', route: customRoute,  instanceNum: 2, addVar: 'ui', configurationName: configuration });   
       cy.checkApp({appName: appName , checkConfiguration: true, route:customRoute, instanceNum: 2}); 
       // Downloading manifest      
-      cy.downloadManifest({ appName: appName });
+      cy.downloadManifestChartsAndImages({ appName: appName, exportType: 'Manifest' })
       // Delete app prior uploading from manifest
       cy.deleteApp({ appName: appName });
       // Create app from manifest solely and check results
@@ -100,6 +100,12 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, checkCommit: 'bb68831', checkIcon: 'gitlab'});
       cy.updateAppSource({name: appName, archiveName: archive, sourceType: 'Archive'});
       cy.checkApp({appName: appName, checkIcon: 'file'});
+      break;
+    case 'downloadChartsAndImages':
+      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});
+      cy.checkApp({appName: appName, checkIcon: 'file'});
+      cy.downloadManifestChartsAndImages({ appName: appName, exportType: 'Chart and Images' })
+      cy.findExtractCheck({appName: appName, exportType: 'Chart and Images'})
       break;
   }
 

@@ -637,17 +637,53 @@ Cypress.Commands.add('showAppShell', ({appName, namespace='workspace'}) => {
   cy.get('.tab > .closer').click();
 });
 
-// Downloading manifest 
-Cypress.Commands.add('downloadManifest', ({appName}) => {
+// Downloading manifest or Chart adn Images (from Export app functionality)
+Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='Manifest'}) => {
+  // Get to export app button and click
   cy.clickEpinioMenu('Applications');
   cy.get('.role-multi-action.actions').click();
-  cy.contains('li', 'Export App').click( {force: true} );  
-  cy.contains('li', 'Manifest').click( {force: true} );  
-  cy.clickButton('Export')
-  // Find downloaded json manifest in download folder & verify name in stdout 
-  cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
-  .should('contain', appName);
-})  
+  cy.contains('li', 'Export App').click({ force: true });  
+  cy.contains('span', exportType).click({ force: true }); 
+
+  if (exportType === 'Chart and Images') {
+    cy.get('div[class="banner info"]').should('be.visible');
+    cy.clickButton('Export')
+    // Wait for download completion. Improve if possible.
+    cy.wait(35000)
+    cy.contains('Export App').should('not.exist');
+  }
+  else if ((exportType === 'Manifest')){ 
+    cy.clickButton('Export')
+    // Find downloaded json manifest in download folder & verify name in stdout.
+    // Called in this command but can be called also in tests.ts
+    cy.findExtractCheck({appName: appName, exportType: 'Manifest'})
+  }
+
+})
+
+Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) => {
+  if (exportType === 'Chart and Images') {
+    // Find downloaded Chart and images zip file in download folder and verify name in stdout 
+    cy.exec(`find "cypress/downloads/" -name "${appName}*-helm-chart.zip"`).its('stdout')
+    .should('contain', appName);
+
+    // Extract it
+    cy.wait(1000)
+    cy.exec(`unzip -d cypress/downloads/ "cypress/downloads/${appName}-helm-chart.zip"`, {timeout: 35000})
+  
+    // Check extracted chart and images names and sizes
+    cy.exec(`find "cypress/downloads/" -name "chart.tar.gz" -printf "%p %s B\n"`).its('stdout').should('contain', 'chart.tar.gz 3523 B');
+    cy.exec(`find "cypress/downloads/" -name "image.tar" -printf "%p %s B\n"`).its('stdout').should('contain', 'image.tar 976782336 B');
+    cy.exec(`find "cypress/downloads/" -name "values.yml" -printf "%p %s B\n"`).its('stdout').should('contain', 'values.yml 535 B')
+  }
+  else if ((exportType === 'Manifest')){ 
+    // Find downloaded json manifest in download folder & verify name in stdout 
+    cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
+    .should('contain', appName);
+  }
+
+})
+
 
 // Namespace functions
 

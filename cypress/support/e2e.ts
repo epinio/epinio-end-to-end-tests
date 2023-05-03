@@ -29,7 +29,8 @@ declare global {
       rebuildApp(appName: string, namespace?: string,): Chainable<Element>;
       showAppLog(appName: string, namespace?: string,): Chainable<Element>;
       showAppShell(appName: string, namespace?: string,): Chainable<Element>;
-      downloadManifest(appName: string): Chainable<Element>;
+      downloadManifestChartsAndImages(appName: string, exportType?: string): Chainable<Element>;
+      findExtractCheck(appName?: string, exportType?: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       openNamespacesFilter(location: string, namespace?: string, appName?: string, configurationName?: string,): Chainable<Element>;

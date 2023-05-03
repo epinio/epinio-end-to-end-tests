@@ -54,6 +54,10 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('pushGitlabAndUpdateSources');
   });
 
+  it('Download app export data', { tags: '@appl-10' }, () => {
+    cy.runApplicationsTest('downloadChartsAndImages');
+  });
+
   // Remove skip when this is fixed: https://github.com/epinio/ui/issues/160
   it.skip('Push application with Github Source type and env vars and check it',  () => {
     cy.runApplicationsTest('gitHubAndEnvVar');
