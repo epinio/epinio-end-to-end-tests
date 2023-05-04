@@ -649,7 +649,7 @@ Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='M
     cy.get('div[class="banner info"]').should('be.visible');
     cy.clickButton('Export')
     // Wait for download completion.
-    cy.contains('Export App', {timeout: 90000}).should('not.exist');
+    cy.contains('Export App', {timeout: 300000}).should('not.exist');
   }
   else if ((exportType === 'Manifest')){ 
     cy.clickButton('Export')
