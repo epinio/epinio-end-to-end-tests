@@ -23,8 +23,7 @@ install-epinio: ## Install Epinio with Helm
 	@./scripts/install_epinio.sh
 
 install-unzip: ## Instal unzip if needed
-	sudo apt install unzip -y
-
+	sudo zypper install unzip
 uninstall-epinio: ## Uninstall Epinio with Helm
 	/usr/local/bin/helm uninstall epinio -n epinio
 
