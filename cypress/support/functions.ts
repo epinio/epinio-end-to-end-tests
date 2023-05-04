@@ -673,7 +673,6 @@ Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) =>
     // Check extracted chart and images names 
     // CHeck length of main chart is more than 2 chars long
     cy.exec(`ls -lh "cypress/downloads"`).its('stdout').should('contain', 'chart.tar.gz').and('contain', 'image.tar').and('contain', 'values.yml')
-
     cy.exec(`ls -lh "cypress/downloads/${appName}-helm-chart.zip" | awk '{ print $5 }'`).its('stdout').should('have.length.greaterThan', 2 );
   }
   else if ((exportType === 'Manifest')){ 

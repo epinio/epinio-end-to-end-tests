@@ -102,10 +102,10 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, checkIcon: 'file'});
       break;
     case 'downloadChartsAndImages':
-      cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});
-      cy.checkApp({appName: appName, checkIcon: 'file'});
-      cy.downloadManifestChartsAndImages({ appName: appName, exportType: 'Chart and Images' })
-      cy.findExtractCheck({appName: appName, exportType: 'Chart and Images'})
+      cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'go_example', sourceType: 'Git URL'});
+      cy.checkApp({appName: appName, checkVar: 2, checkIcon: 'file'});
+      cy.downloadManifestChartsAndImages({ appName: appName, exportType: 'Chart and Images' });
+      cy.findExtractCheck({appName: appName, exportType: 'Chart and Images'});
       break;
   }
 
