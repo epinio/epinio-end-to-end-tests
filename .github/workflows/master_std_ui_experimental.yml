@@ -95,6 +95,7 @@ jobs:
           SETUP_GO_VERSION: '^1.20'
         with:
           go-version: ${{ env.SETUP_GO_VERSION }}
+          cache-dependency-path: ~/actions-runner/_work/_tool/go/${{ env.SETUP_GO_VERSION }}/x64/src/go.sum
 
       - name: Install Node
         uses: actions/setup-node@v3
