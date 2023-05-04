@@ -22,6 +22,9 @@ install-cert-manager: ## Install dependencies needed by Epinio
 install-epinio: ## Install Epinio with Helm
 	@./scripts/install_epinio.sh
 
+install-unzip: ## Instal unzip if needed
+	sudo apt install unzip -y
+
 uninstall-epinio: ## Uninstall Epinio with Helm
 	/usr/local/bin/helm uninstall epinio -n epinio
 

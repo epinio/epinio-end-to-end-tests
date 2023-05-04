@@ -135,6 +135,7 @@ jobs:
           export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
           echo "MY_IP=${MY_IP}" >> $GITHUB_OUTPUT
           make prepare-e2e-ci-standalone
+          make install-unzip
 
       - name: Patch epinio-ui with latest QA image
         env:
