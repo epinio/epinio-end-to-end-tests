@@ -648,9 +648,8 @@ Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='M
   if (exportType === 'Chart and Images') {
     cy.get('div[class="banner info"]').should('be.visible');
     cy.clickButton('Export')
-    // Wait for download completion. Improve if possible.
-    cy.wait(35000)
-    cy.contains('Export App').should('not.exist');
+    // Wait for download completion.
+    cy.contains('Export App', {timeout: 90000}).should('not.exist');
   }
   else if ((exportType === 'Manifest')){ 
     cy.clickButton('Export')
@@ -664,8 +663,8 @@ Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='M
 Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) => {
   if (exportType === 'Chart and Images') {
     // Find downloaded Chart and images zip file in download folder and verify name in stdout 
-    cy.exec(`find "cypress/downloads/" -name "${appName}*-helm-chart.zip"`).its('stdout')
-    .should('contain', appName);
+    cy.exec(`find "cypress/downloads/" -name "${appName}-helm-chart.zip"`).its('stdout')
+    .should('contain', `${appName}-helm-chart.zip`);
 
     // Extract it
     cy.wait(1000)
