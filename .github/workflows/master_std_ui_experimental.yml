@@ -90,11 +90,12 @@ jobs:
           path: ui-backend 
 
       - name: Setup Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         env:
-          SETUP_GO_VERSION: '^1.18.0'
+          SETUP_GO_VERSION: '^1.20'
         with:
           go-version: ${{ env.SETUP_GO_VERSION }}
+          cache: false
 
       - name: Install Node
         uses: actions/setup-node@v3
