@@ -661,9 +661,6 @@ Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='M
 })
 
 Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) => {
-  // Install unzip prior using it
-  cy.exec('sudo apt-get install unzip -y')
-  
   if (exportType === 'Chart and Images') {
     // Find downloaded Chart and images zip file in download folder and verify name in stdout 
     cy.exec(`find "cypress/downloads/" -name "${appName}-helm-chart.zip"`).its('stdout')
