@@ -176,6 +176,7 @@ jobs:
           SETUP_GO_VERSION: '^1.20'
         with:
           go-version: ${{ env.SETUP_GO_VERSION }}
+          cache: false
 
       - name: Patch epinio-server
         env:
