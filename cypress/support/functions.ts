@@ -662,12 +662,13 @@ Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='M
 
 Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) => {
   if (exportType === 'Chart and Images') {
-    // Find downloaded Chart and images zip file in download folder and verify name in stdout 
-    cy.exec(`find "cypress/downloads/" -name "${appName}-helm-chart.zip"`).its('stdout')
+    // // Find downloaded Chart and images zip file in download folder and verify name in stdout 
+    cy.wait(5000)
+    cy.exec('find  -name "testapp-helm-chart.zip"')
+    cy.exec(`find "cypress/downloads/" -name "${appName}-helm-chart.zip"`, {timeout: 30000}).its('stdout')
     .should('contain', `${appName}-helm-chart.zip`);
 
     // Extract it
-    cy.wait(1000)
     cy.exec(`unzip -d cypress/downloads/ "cypress/downloads/${appName}-helm-chart.zip"`, {timeout: 40000})
   
     // Check extracted chart and images names 
