@@ -18,5 +18,4 @@ docker run -v $PWD:/e2e -w /e2e                  \
     $CYPRESS_DOCKER                              \
     -C /e2e/$CYPRESS_CFG                         \
     -b $BROWSER                                  \
-    -s /e2e/$SPEC                                \
-    -v /usr/bin/unzip:/usr/local/bin/unzip
+    -s /e2e/$SPEC
