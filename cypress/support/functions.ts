@@ -637,17 +637,50 @@ Cypress.Commands.add('showAppShell', ({appName, namespace='workspace'}) => {
   cy.get('.tab > .closer').click();
 });
 
-// Downloading manifest 
-Cypress.Commands.add('downloadManifest', ({appName}) => {
+// Downloading manifest or Chart adn Images (from Export app functionality)
+Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='Manifest'}) => {
+  // Get to export app button and click
   cy.clickEpinioMenu('Applications');
   cy.get('.role-multi-action.actions').click();
-  cy.contains('li', 'Export App').click( {force: true} );  
-  cy.contains('li', 'Manifest').click( {force: true} );  
-  cy.clickButton('Export')
-  // Find downloaded json manifest in download folder & verify name in stdout 
-  cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
-  .should('contain', appName);
-})  
+  cy.contains('li', 'Export App').click({ force: true });  
+  cy.contains('span', exportType).click({ force: true }); 
+
+  if (exportType === 'Chart and Images') {
+    cy.get('div[class="banner info"]').should('be.visible');
+    cy.clickButton('Export')
+    // Wait for download completion.
+    cy.contains('Export App', {timeout: 300000}).should('not.exist');
+  }
+  else if ((exportType === 'Manifest')){ 
+    cy.clickButton('Export')
+    // Find downloaded json manifest in download folder & verify name in stdout.
+    // Called in this command but can be called also in tests.ts
+    cy.findExtractCheck({appName: appName, exportType: 'Manifest'})
+  }
+
+})
+
+Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) => {
+  if (exportType === 'Chart and Images') {
+    // // Find downloaded Chart and images zip file in download folder and verify name in stdout 
+    cy.wait(5000)
+    cy.exec(`find "cypress/downloads/" -name "${appName}-helm-chart.zip"`, {timeout: 30000}).its('stdout')
+    .should('contain', `${appName}-helm-chart.zip`);
+
+    // Check it is not empty file.
+    cy.exec(`ls -lh "cypress/downloads/${appName}-helm-chart.zip" | awk '{ print $5 }'`).its('stdout').should('have.length.greaterThan', 2 );
+    
+    // Todo: Extract and check content
+
+  }
+  else if ((exportType === 'Manifest')){ 
+    // Find downloaded json manifest in download folder & verify name in stdout 
+    cy.exec(`find "cypress/downloads/" -name "workspace-${appName}*"`).its('stdout')
+    .should('contain', appName);
+  }
+
+})
+
 
 // Namespace functions
 
