@@ -41,6 +41,12 @@ INSTALL_OPTIONS+="
   "
 fi
 
+if [[ -v EPINIO_VERSION ]]; then
+INSTALL_OPTIONS+="
+   --version=${EPINIO_VERSION} \
+  "
+fi
+
 # Install Epinio
 helm upgrade --debug --wait --install -n epinio --create-namespace epinio helm-charts/chart/epinio \
   --set global.domain=${EPINIO_SYSTEM_DOMAIN} \

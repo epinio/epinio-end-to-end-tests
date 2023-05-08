@@ -46,6 +46,10 @@ on:
           required: true
           type: string
           default: '2.7.2-rc7'
+        epinio_version:
+          description: Enter desired Epinio version (default latest) 
+          required: false
+          type: string
 
 jobs:
   installation:
@@ -84,9 +88,11 @@ jobs:
           MY_IP=$(ip a s ${ETH_DEV} | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
           export MY_HOSTNAME=$(hostname)
           export EPINIO_SYSTEM_DOMAIN="${MY_IP}.omg.howdoi.website"
+          export EPINIO_VERSION
           echo "MY_IP=${MY_IP}" >> $GITHUB_OUTPUT
           echo "MY_HOSTNAME=${MY_HOSTNAME}" >> $GITHUB_OUTPUT
           echo "RANCHER_VERSION=${RANCHER_VERSION}" >> $GITHUB_OUTPUT
+          echo "EPINIO_VERSION"=$EPINIO_VERSION >> $GITHUB_OUTPUT
           make prepare-e2e-ci-rancher-experimental
 
     outputs:
