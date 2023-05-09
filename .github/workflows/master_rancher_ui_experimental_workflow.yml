@@ -82,6 +82,7 @@ jobs:
           S3_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           RANCHER_VERSION: ${{ inputs.rancher_version }}
+          EPINIO_VERSION: ${{ inputs.epinio_version }}
         run: |
           ## Export information to other jobs
           ETH_DEV=$(ip route | awk '/default via / { print $5 }')

@@ -24,11 +24,11 @@ on:
         required: false
         type: string
         default: "*"
-      grep_test_by_name:
-        description: Grep title
-        required: false
-        type: string
-        default: ''
+      # grep_test_by_name:
+      #   description: Grep title
+      #   required: false
+      #   type: string
+      #   default: ''
       grep_test_by_tag:
         description: Grep tags. For multiple selection separate with spaces
         required: false
