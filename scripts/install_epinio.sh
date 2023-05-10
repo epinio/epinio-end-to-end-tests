@@ -42,13 +42,17 @@ INSTALL_OPTIONS+="
 fi
 
 if [[ -v EPINIO_VERSION ]]; then
-INSTALL_OPTIONS+="
-   --version=${EPINIO_VERSION} \
-  "
+INSTALL_OPTIONS="--version=${EPINIO_VERSION}"
+  echo "using CHARTt=epinio/epinio"
+  echo "using EPINIO_VERSION=${EPINIO_VERSION}"
+  CHART="epinio/epinio"
+else
+  echo "using CHART=helm-charts/chart/epinio"
+  CHART="helm-charts/chart/epinio"
 fi
 
 # Install Epinio
-helm upgrade --debug --wait --install -n epinio --create-namespace epinio helm-charts/chart/epinio \
+helm upgrade --debug --wait --install -n epinio --create-namespace epinio ${CHART} \
   --set global.domain=${EPINIO_SYSTEM_DOMAIN} \
   --set server.accessControlAllowOrigin="https://${MY_HOSTNAME}" \
   --set server.disableTracking=true \

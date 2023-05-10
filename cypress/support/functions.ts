@@ -1010,8 +1010,14 @@ Cypress.Commands.add('deleteService', ({ serviceName }) => {
 
 // Add the Epinio Helm repo
 Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName = 'main' }) => {
-  cy.clickClusterMenu(['Apps', 'Repositories']);
+  cy.get('.user-image.text-right.hand').click()
+  cy.get('a[href="/dashboard/prefs"]').contains('Preferences').should('be.visible').click();
+  cy.contains('Include Prerelease Versions').should('exist').click();
+  cy.get('.back-link').click()
+  cy.wait(500);
 
+  // Function starts
+  cy.clickClusterMenu(['Apps', 'Repositories']);
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', { timeout: 8000 }).should('be.visible');
   cy.contains('Create').should('be.visible');
