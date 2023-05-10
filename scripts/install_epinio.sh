@@ -64,7 +64,9 @@ helm upgrade --debug --wait --install -n epinio --create-namespace epinio ${CHAR
 kubectl rollout status deployment epinio-server -n epinio --timeout=480s
 
 # Patch Epinio pod, mandatory to use the 'main' version!
+if [[ ! -v EPINIO_VERSION ]]; then
 make patch-epinio-deployment
+fi
 
 # Show Epinio info, could be useful for debugging
 sleep 20
