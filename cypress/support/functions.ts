@@ -1008,15 +1008,20 @@ Cypress.Commands.add('deleteService', ({ serviceName }) => {
 
 // Epinio installation functions
 
+// Allow to select pre-release versions
+Cypress.Commands.add('allowRancherPreReleaseVersions', () => {
+  cy.get('div.user-image.text-right.hand', {timeout: 15000}).should('exist').click({ force: true });
+  cy.wait(500)
+  cy.contains('a', 'Preferences', {timeout: 15000}).should('be.visible').click({ force: true });
+  cy.contains('Include Prerelease Versions', {timeout: 15000}).should('exist').click({ force: true });
+  cy.get('.back-link').click({force: true})
+  cy.wait(500);
+  cy.contains('Cluster Dashboard', {timeout: 15000}).should('be.visible');
+});
+
 // Add the Epinio Helm repo
 Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName = 'main' }) => {
-  cy.get('.user-image.text-right.hand').click()
-  cy.get('a[href="/dashboard/prefs"]').contains('Preferences').should('be.visible').click();
-  cy.contains('Include Prerelease Versions').should('exist').click();
-  cy.get('.back-link').click()
-  cy.wait(500);
-
-  // Function starts
+    // Function starts
   cy.clickClusterMenu(['Apps', 'Repositories']);
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', { timeout: 8000 }).should('be.visible');
