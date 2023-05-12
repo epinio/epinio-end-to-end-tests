@@ -1010,13 +1010,12 @@ Cypress.Commands.add('deleteService', ({ serviceName }) => {
 
 // Allow to select pre-release versions
 Cypress.Commands.add('allowRancherPreReleaseVersions', () => {
-  cy.get('div.user-image.text-right.hand', {timeout: 15000}).should('exist').click({ force: true });
-  cy.wait(500)
-  cy.contains('a', 'Preferences', {timeout: 15000}).should('be.visible').click({ force: true });
+  // Using visit here instead of clicking in prefs to avoid issues in CI
+  cy.visit('/prefs')
   cy.contains('Include Prerelease Versions', {timeout: 15000}).should('exist').click({ force: true });
-  cy.get('.back-link').click({force: true})
   cy.wait(500);
-  cy.contains('Cluster Dashboard', {timeout: 15000}).should('be.visible');
+  cy.visit('/c/local/explorer')
+  cy.contains('Cluster').should('be.visible')
 });
 
 // Add the Epinio Helm repo
