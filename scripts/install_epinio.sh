@@ -41,6 +41,8 @@ INSTALL_OPTIONS+="
   "
 fi
 
+# Use specific Epinio version if called
+# If not, use latest Epinio version
 if [[ -v EPINIO_VERSION ]]; then
 INSTALL_OPTIONS="--version=${EPINIO_VERSION}"
   echo "using CHARTt=epinio/epinio"
@@ -63,7 +65,8 @@ helm upgrade --debug --wait --install -n epinio --create-namespace epinio ${CHAR
 # Wait for Epinio deployment to be ready
 kubectl rollout status deployment epinio-server -n epinio --timeout=480s
 
-# Patch Epinio pod, mandatory to use the 'main' version!
+# Patch Epinio pod if no targeting specific versions
+# mandatory to use the 'main' version!
 if [[ ! -v EPINIO_VERSION ]]; then
 make patch-epinio-deployment
 fi
