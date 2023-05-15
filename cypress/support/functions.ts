@@ -1008,10 +1008,20 @@ Cypress.Commands.add('deleteService', ({ serviceName }) => {
 
 // Epinio installation functions
 
+// Allow to select pre-release versions
+Cypress.Commands.add('allowRancherPreReleaseVersions', () => {
+  // Using visit here instead of clicking in prefs to avoid issues in CI
+  cy.visit('/prefs')
+  cy.contains('Include Prerelease Versions', {timeout: 15000}).should('exist').click({ force: true });
+  cy.wait(500);
+  cy.visit('/c/local/explorer')
+  cy.contains('Cluster').should('be.visible')
+});
+
 // Add the Epinio Helm repo
 Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName = 'main' }) => {
+  // Function starts
   cy.clickClusterMenu(['Apps', 'Repositories']);
-
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', { timeout: 8000 }).should('be.visible');
   cy.contains('Create').should('be.visible');
