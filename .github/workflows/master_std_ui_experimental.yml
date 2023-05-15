@@ -8,7 +8,7 @@ on:
         description: k3s version
         required: true
         type: string
-        default: v1.24.6+k3s1
+        default: v1.25.9+k3s1
       browser:
         description: Browser where the test will run
         required: true
@@ -42,7 +42,7 @@ on:
         description: Choose specific helm version (default 3.7.0)
         required: false
         type: number
-        default: 3.7.0
+        default: 3.12.0
       node_version:
         description: Choose specific node version (default 16.2.0)
         required: false
