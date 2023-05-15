@@ -1020,7 +1020,7 @@ Cypress.Commands.add('allowRancherPreReleaseVersions', () => {
 
 // Add the Epinio Helm repo
 Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName = 'main' }) => {
-    // Function starts
+  // Function starts
   cy.clickClusterMenu(['Apps', 'Repositories']);
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', { timeout: 8000 }).should('be.visible');

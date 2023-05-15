@@ -45,12 +45,12 @@ fi
 # If not, use latest Epinio version
 if [[ -v EPINIO_VERSION ]]; then
 INSTALL_OPTIONS="--version=${EPINIO_VERSION}"
-  echo "using CHARTt=epinio/epinio"
+  echo "using CHART=epinio/epinio"
   echo "using EPINIO_VERSION=${EPINIO_VERSION}"
   CHART="epinio/epinio"
 else
   echo "using CHART=helm-charts/chart/epinio"
-  CHART="helm-charts/chart/epinio"
+  CHART="helm-charts/chart/epinio/"
 fi
 
 # Install Epinio
