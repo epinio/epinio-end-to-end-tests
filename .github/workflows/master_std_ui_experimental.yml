@@ -39,7 +39,7 @@ on:
         type: string
         default: 'main'
       helm_version:
-        description: Choose specific helm version (default 3.7.0)
+        description: Choose specific helm version (default 3.12.0)
         required: false
         type: number
         default: 3.12.0
