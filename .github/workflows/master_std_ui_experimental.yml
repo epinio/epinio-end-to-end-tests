@@ -39,15 +39,15 @@ on:
         type: string
         default: 'main'
       helm_version:
-        description: Choose specific helm version (default 3.7.0)
+        description: Choose specific helm version (default 3.12.0)
         required: false
-        type: number
-        default: 3.12.0
+        type: string
+        default: '3.12.0'
       node_version:
         description: Choose specific node version (default 16.2.0)
         required: false
-        type: number
-        default: 16.2.0
+        type: string
+        default: '16.2.0'
       epinio_version:
         description: Enter desired Epinio version (default latest) 
         required: false
