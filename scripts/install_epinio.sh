@@ -69,8 +69,8 @@ kubectl rollout status deployment epinio-server -n epinio --timeout=480s
 # Patch Epinio pod if no targeting specific versions
 # mandatory to use the 'main' version!
 if [[ -z $EPINIO_VERSION ]]; then
-echo "Patching"
-make patch-epinio-deployment
+  echo "Patching"
+  make patch-epinio-deployment
 fi
 
 # Show Epinio info, could be useful for debugging
