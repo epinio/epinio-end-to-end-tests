@@ -221,13 +221,16 @@ Cypress.Commands.add('loadGitRepo', ({ gitUsername, gitRepo, gitBranch, gitCommi
 
   // Selecting Repository
   cy.contains('label', 'Repository ').should('be.visible').click();
+  cy.wait(500) // Adding 0.5s s wait for better reach and load the options.
   cy.contains(gitRepo).click();
 
   // Selecting Branch
   cy.contains('label', 'Branch').should('be.visible').click();
+  cy.wait(500) // Adding 0.5s s wait for better reach and load the options.
   cy.contains(gitBranch,{timeout:5000}).should('be.visible').click();
   
   // Selecting commit based on commit name
+  cy.wait(500) // Adding 0.5s wait for better reach and load the options.
   cy.get(`tr[data-node-id=${gitCommit}] > td`, {timeout:5000}).eq(0).should('be.visible').click();
 });
 
