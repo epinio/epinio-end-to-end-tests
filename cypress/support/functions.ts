@@ -415,8 +415,8 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   if (addVar === 'go_example') {
     cy.get('.key-value > .footer > .add').click();
-    cy.typeKeyValue({key: '.kv-item.key', value: 'BP_KEEP_FILES'});
-    cy.typeKeyValue({key: '.kv-item.value', value: 'static/*'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'BP_KEEP_FILES'});
+    cy.typeKeyValue({key: '.kv-item.value > textarea', value: 'static/*'});
   }
   
   // Set the desired number of instances
@@ -813,8 +813,8 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
     cy.get('.key > input').should('have.value', 'config_var');
     cy.get('.no-resize').should('have.value', 'config_value');
   } else {
-    cy.typeKeyValue({key: '.kv-item.key', value: 'test_data'});
-    cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'test_data'});
+    cy.typeKeyValue({key: '.kv-item.value > textarea', value: 'test_value'});
   }
 
   // We need this little trick before clicking on 'Create' (why?)
