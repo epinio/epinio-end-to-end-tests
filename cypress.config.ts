@@ -38,7 +38,7 @@ export default defineConfig({
       require('@cypress/grep/src/plugin')(config);
       return config;
     },
-    experimentalSessionAndOrigin: true,
+    // experimentalSessionAndOrigin: true,
     specPattern:
       'cypress/e2e/unit_tests/*.spec.ts',
   },
