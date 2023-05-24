@@ -220,17 +220,18 @@ Cypress.Commands.add('loadGitRepo', ({ gitUsername, gitRepo, gitBranch, gitCommi
   cy.get('.labeled-input.edit.has-tooltip > input[type="text"]',{timeout:5000}).focus().clear().type(gitUsername,{delay:250, force:true})
 
   // Selecting Repository
+  cy.wait(1000)
   cy.contains('label', 'Repository ').should('be.visible').click();
-  cy.wait(500) // Adding 0.5s s wait for better reach and load the options.
-  cy.contains(gitRepo).click();
+  cy.contains(gitRepo,{timeout:5000}).click();
 
   // Selecting Branch
+  cy.wait(1000)
   cy.contains('label', 'Branch').should('be.visible').click();
   cy.wait(500) // Adding 0.5s s wait for better reach and load the options.
   cy.contains(gitBranch,{timeout:5000}).should('be.visible').click();
   
   // Selecting commit based on commit name
-  cy.wait(500) // Adding 0.5s wait for better reach and load the options.
+  cy.wait(1000)
   cy.get(`tr[data-node-id=${gitCommit}] > td`, {timeout:5000}).eq(0).should('be.visible').click();
 });
 
@@ -239,7 +240,7 @@ Cypress.Commands.add('selectSourceType', ({ sourceType, archiveName, gitUsername
   // Adding explicit wait here to attempt avoid failure in CI
   cy.wait(3000)
   cy.get('.labeled-select.hoverable').contains('Source Type', {timeout: 10000}).should('be.visible').click( {force: true} );
-  cy.wait(1000)
+  cy.wait(1500)
   cy.contains(sourceType, {timeout: 10000}).should('be.visible').click({force: true});
 
   switch (sourceType) {
