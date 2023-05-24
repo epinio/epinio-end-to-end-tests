@@ -46,7 +46,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'envVarsAndGitUrl':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'ui', sourceType: 'Git URL'});
-      cy.checkApp({appName: appName, checkVar: 2});
+      cy.checkApp({appName: appName, checkVar: 1});
       break;
     case 'restartAndRebuild':
       cy.createApp({appName: appName, archiveName: archive, sourceType: 'Archive'});
@@ -58,7 +58,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'allTests':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, customApplicationChart:applicationChart, instanceNum: 5, addVar: 'ui', route: customRoute, sourceType: 'Git URL'});
-      cy.checkApp({appName: appName, checkVar: 2, route: customRoute});
+      cy.checkApp({appName: appName, checkVar: 1, route: customRoute});
       break;
     case 'downloadManifestAndPushApp':
       cy.createConfiguration({configurationName: configuration});      
@@ -70,7 +70,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.deleteApp({ appName: appName });
       // Create app from manifest solely and check results
       cy.createApp({archiveName: archive, sourceType: 'Archive', manifestName: manifest }); 
-      cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: 2, instanceNum: 2});
+      cy.checkApp({appName: appName , checkConfiguration: true, route: customRoute, checkVar: 1, instanceNum: 2});
       break;
     case 'serviceMysqlBindWordpressPushApp':
       cy.deleteAll('Services')
@@ -91,7 +91,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'gitHubAndEnvVar':
       cy.createApp({appName: 'githubapp', addVar: 'go_example', sourceType: 'GitHub', gitUsername: 'epinio', gitRepo: 'example-go', gitBranch: 'main', gitCommit: 'e84b2a7'});
-      cy.checkApp({appName: appName, checkVar: 2});
+      cy.checkApp({appName: appName, checkVar: 1});
       break;
     case 'pushGitlabAndUpdateSources':
       cy.createApp({appName: appName, sourceType: 'GitLab', gitUsername: 'richard-cox', gitRepo: 'epinio-sample-app', gitBranch: 'main', gitCommit: '07d2dd79' });
@@ -103,7 +103,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'downloadChartsAndImages':
       cy.createApp({appName: appName, archiveName: gitUrl, customPaketoImage: paketobuild, addVar: 'go_example', sourceType: 'Git URL'});
-      cy.checkApp({appName: appName, checkVar: 2, checkIcon: 'file'});
+      cy.checkApp({appName: appName, checkVar: 1, checkIcon: 'file'});
       cy.downloadManifestChartsAndImages({ appName: appName, exportType: 'Chart and Images' });
       cy.findExtractCheck({appName: appName, exportType: 'Chart and Images'});
       break;
@@ -150,7 +150,7 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
 
       // Bind the created configuration to the application and check it
       cy.bindConfiguration({appName: appName, configurationName: configuration});
-      cy.checkApp({appName: appName, checkConfiguration: true, checkVar: 2});
+      cy.checkApp({appName: appName, checkConfiguration: true, checkVar: 1});
 
       // Edit the created configuration
       cy.editConfiguration({configurationName: configuration});
