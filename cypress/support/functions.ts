@@ -58,6 +58,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'password', checkLandingPage = true ) => {
   // Dex connection. Enter username/pwd
   cy.visit('/auth/login')
+  cy.wait(1500)
   cy.get('.btn.bg-primary').contains('Log in with SSO').should('be.visible').click({force : true});
   // Log into Dex Account
   cy.get('input#login', {timeout: 5000}).should('be.visible').focus().type(username);
