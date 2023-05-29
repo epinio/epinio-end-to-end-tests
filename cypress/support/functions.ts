@@ -176,6 +176,8 @@ Cypress.Commands.overwrite('type', (originalFn, subject, text, options = {}) => 
   return originalFn(subject, text, options);
 });
 
+// NOT NEEDED AFTER ADJUSTMENTS IN CYPRESS 12
+// KEEPING IT HERE FOR A BIT IN CASE IS NEEDED IN FUTURE
 // Add a delay between command without using cy.wait()
 // https://github.com/cypress-io/cypress/issues/249#issuecomment-443021084
 // const COMMAND_DELAY = 1000;
@@ -208,7 +210,6 @@ Cypress.Commands.add('typeKeyValue', ({key, value}) => {
 Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
   var dataNodeId = '[data-node-id="' + type + '/' + namespace + '/' + name + '"]';
   cy.get(dataNodeId).each(() => {
-    // cy.get('td').contains(name).click();
     cy.contains(name).click();
   });
 });
