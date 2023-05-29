@@ -17,11 +17,16 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     cy.get('#submit', {timeout: 10000}).contains('Log in with Local User').should('be.visible')
     };
 
+    // Adding wait to ensure not missing login
+    cy.wait(1500)
+
     cy.byLabel('Username')
+      .click()
       .focus()
       .type(username, {log: false});
 
     cy.byLabel('Password')
+      .click()
       .focus()
       .type(password, {log: false});
 
@@ -1029,6 +1034,7 @@ Cypress.Commands.add('allowRancherPreReleaseVersions', () => {
 // Add the Epinio Helm repo
 Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName = 'main' }) => {
   // Function starts
+  cy.wait(2000)
   cy.clickClusterMenu(['Apps', 'Repositories']);
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', { timeout: 8000 }).should('be.visible');
