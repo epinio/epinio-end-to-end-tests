@@ -24,7 +24,7 @@ on:
           required: true
           type: string
           # Default working cypress image for Chrome browser 
-          default: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+          default: cypress/included:cypress-12.12.0-node-18.16.0-chrome-113.0.5672.92-1-ff-113.0-edge-113.0.1774.35-1
         cypress_test:
           description: Scenario to test (once Epinio is installed)
           required: true
