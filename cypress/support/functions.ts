@@ -58,6 +58,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
 Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'password', checkLandingPage = true ) => {
   // Dex connection. Enter username/pwd
   cy.visit('/auth/login')
+  cy.wait(1500)
   cy.get('.btn.bg-primary').contains('Log in with SSO').should('be.visible').click({force : true});
   // Log into Dex Account
   cy.get('input#login', {timeout: 5000}).should('be.visible').focus().type(username);
@@ -78,6 +79,7 @@ Cypress.Commands.add('byLabel', (label) => {
 
 // Search button by label
 Cypress.Commands.add('clickButton', (label) => {
+  cy.wait(1000)
   cy.get('.btn', {timeout: 30000}).contains(label).click({force: true});
 });
 
@@ -174,21 +176,23 @@ Cypress.Commands.overwrite('type', (originalFn, subject, text, options = {}) => 
   return originalFn(subject, text, options);
 });
 
+// NOT NEEDED AFTER ADJUSTMENTS IN CYPRESS 12
+// KEEPING IT HERE FOR A BIT IN CASE IS NEEDED IN FUTURE
 // Add a delay between command without using cy.wait()
 // https://github.com/cypress-io/cypress/issues/249#issuecomment-443021084
-const COMMAND_DELAY = 1000;
+// const COMMAND_DELAY = 1000;
 
-for (const command of ['visit', 'click', 'trigger', 'type', 'clear', 'reload', 'contains']) {
-    Cypress.Commands.overwrite(command, (originalFn, ...args) => {
-        const origVal = originalFn(...args);
+// for (const command of ['visit', 'click', 'trigger', 'type', 'clear', 'reload', 'contains']) {
+//     Cypress.Commands.overwrite(command, (originalFn, ...args) => {
+//         const origVal = originalFn(...args);
 
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(origVal);
-            }, COMMAND_DELAY);
-        });
-    });
-}; 
+//         return new Promise((resolve) => {
+//             setTimeout(() => {
+//                 resolve(origVal);
+//             }, COMMAND_DELAY);
+//         });
+//     });
+// }; 
 
 // Make sure we are in the desired menu inside a cluster (local by default)
 // You can access submenu by giving submenu name in the array
@@ -205,8 +209,8 @@ Cypress.Commands.add('typeKeyValue', ({key, value}) => {
 // Get the detail of an element
 Cypress.Commands.add('getDetail', ({name, type, namespace='workspace'}) => {
   var dataNodeId = '[data-node-id="' + type + '/' + namespace + '/' + name + '"]';
-  cy.get(dataNodeId).within(() => {
-    cy.get('td').contains(name).click();
+  cy.get(dataNodeId).each(() => {
+    cy.contains(name).click();
   });
 });
 
@@ -225,6 +229,7 @@ Cypress.Commands.add('loadGitRepo', ({ gitUsername, gitRepo, gitBranch, gitCommi
   // Selecting Branch
   cy.wait(1000)
   cy.contains('label', 'Branch').should('be.visible').click();
+  cy.wait(500) // Adding 0.5s s wait for better reach and load the options.
   cy.contains(gitBranch,{timeout:5000}).should('be.visible').click();
   
   // Selecting commit based on commit name
@@ -385,8 +390,8 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Add an environment variable
   if (addVar === 'ui') {
     cy.get('.key-value > .footer > .add').click();
-    cy.typeKeyValue({key: '.kv-item.key', value: 'PORT'});
-    cy.typeKeyValue({key: '.kv-item.value', value: '8080'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'PORT'});
+    cy.typeKeyValue({key: '.kv-item.value > textarea', value: '8080'});
 
   } else if (addVar === 'file') {
     cy.get('input[type="file"]').attachFile({filePath: envFile});
@@ -416,8 +421,8 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   if (addVar === 'go_example') {
     cy.get('.key-value > .footer > .add').click();
-    cy.typeKeyValue({key: '.kv-item.key', value: 'BP_KEEP_FILES'});
-    cy.typeKeyValue({key: '.kv-item.value', value: 'static/*'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'BP_KEEP_FILES'});
+    cy.typeKeyValue({key: '.kv-item.value > textarea', value: 'static/*'});
   }
   
   // Set the desired number of instances
@@ -814,8 +819,8 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
     cy.get('.key > input').should('have.value', 'config_var');
     cy.get('.no-resize').should('have.value', 'config_value');
   } else {
-    cy.typeKeyValue({key: '.kv-item.key', value: 'test_data'});
-    cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'test_data'});
+    cy.typeKeyValue({key: '.kv-item.value > textarea', value: 'test_value'});
   }
 
   // We need this little trick before clicking on 'Create' (why?)
