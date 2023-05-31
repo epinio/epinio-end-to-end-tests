@@ -71,29 +71,33 @@ describe('Menu testing', () => {
         }
         // Downloading using wget to issues with Github when clicking
         // Scoping download solely to Linux amd
-        cy.exec('mkdir -p cypress/downloads');
-        cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O cypress/downloads/epinio-linux-x86_64`, { failOnNonZeroExit: false }).then((result) => {
-          if (result.code != 0) {
-            cy.task('log', '### ERROR: Could not download binary. Probably an error on Github ###');
-          }
-          cy.task('log', '### Stderr for download binary command starts here.');
-          cy.task('log', result.stderr);
-        });
+
+        ////////// COMMENTED OUT UNTIL EPINIO VERSION 1.9.0 IS RELEASED //////////
+        // cy.exec('mkdir -p cypress/downloads');
+        // cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O cypress/downloads/epinio-linux-x86_64`, { failOnNonZeroExit: false }).then((result) => {
+        //   if (result.code != 0) {
+        //     cy.task('log', '### ERROR: Could not download binary. Probably an error on Github ###');
+        //   }
+        //   cy.task('log', '### Stderr for download binary command starts here.');
+        //   cy.task('log', result.stderr);
+        // });
 
         // Check link "See all packages" and visit binary page
         // Check version number in binary page matches the one in Epinio
-        cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
-          cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`);
-          // Giving a bit of time beween latest time hitting github and now
-          cy.wait(2000);
-          cy.origin('https://github.com', { args: { version } }, ({ version }) => {
-            cy.visit(`/epinio/epinio/releases/tag/${version}`, { timeout: 15000 });
-            cy.get('.d-inline.mr-3', { timeout: 15000 }).contains(`${version}`).should('be.visible');
-            cy.screenshot(`epinio-bin-repo-${version}`, { timeout: 15000 });
-          });
-        });
+        // cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
+        //   cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`);
+        //   // Giving a bit of time beween latest time hitting github and now
+        //   cy.wait(2000);
+        //   cy.origin('https://github.com', { args: { version } }, ({ version }) => {
+        //     cy.visit(`/epinio/epinio/releases/tag/${version}`, { timeout: 15000 });
+        //     cy.get('.d-inline.mr-3', { timeout: 15000 }).contains(`${version}`).should('be.visible');
+        //     cy.screenshot(`epinio-bin-repo-${version}`, { timeout: 15000 });
+        //   });
+      //   });
       }
-      else {cy.log(`Server version is too long (${version.length} characters) so binary download will not work and it is currently disabled.`)}
+      // else {cy.log(`Server version is too long (${version.length} characters) so binary download will not work and it is currently disabled.`)}
+
+       ////////// COMMENTED OUT UNTIL EPINIO VERSION 1.9.0 IS RELEASED //////////
     });
   });
   it('Test buttons and links in dashboard page',  { tags: ['@menu-4', '@smoke']  },  () => {
