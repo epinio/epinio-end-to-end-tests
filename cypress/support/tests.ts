@@ -27,7 +27,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
   const gitUrl = 'https://github.com/epinio/example-go';
   const gitUrlWordpress = 'https://github.com/epinio/example-wordpress';
   const configuration = 'configuration01';
-  const manifest = 'manifest.json';
+  const manifest = 'manifest.yaml';
   const customService = 'mycustom-service';
   const customCatalog = 'mysql-dev';
 
