@@ -18,7 +18,7 @@ on:
         description: Cypress Docker Image
         required: true
         type: string
-        default: cypress/included:12.12.0 
+        default: cypress/included:10.11.0 
       cypress_spec:
         description: Cypress specs (default "all")
         required: false
@@ -44,10 +44,10 @@ on:
         type: string
         default: '3.12.0'
       node_version:
-        description: Choose specific node version (default 16.16.0)
+        description: Choose specific node version (default 16.2.0)
         required: false
         type: string
-        default: '16.16.0'
+        default: '16.2.0'
       epinio_version:
         description: Enter desired Epinio version (default latest) 
         required: false
