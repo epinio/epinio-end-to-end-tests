@@ -5,8 +5,8 @@ name: STD-UI-Latest-Firefox
 on:
   workflow_dispatch:
   
-  schedule:
-    - cron: '0 2 * * *'
+  # schedule:
+  #   - cron: '0 2 * * *'
 
 jobs:
 # I keep the following tests commented out in case someone want to enable them later.

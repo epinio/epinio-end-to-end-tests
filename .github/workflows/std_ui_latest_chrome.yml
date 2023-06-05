@@ -5,8 +5,8 @@ name: STD-UI-Latest-Chrome
 on:
   workflow_dispatch:
   
-  schedule:
-    - cron: '0 4 * * *'
+  # schedule:
+  #   - cron: '0 4 * * *'
 
 # I do not know if I can refactor with a matrix in a reusable workflow?
 jobs:
