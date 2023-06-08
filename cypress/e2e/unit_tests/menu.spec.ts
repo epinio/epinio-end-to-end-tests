@@ -43,16 +43,16 @@ describe('Menu testing', () => {
     // Test in ABOUT page starts here
     cy.get('table > tr > td:nth-child(2)').eq(0).invoke('text').then(version => {
       cy.log(`Epinio version in ABOUT PAGE is ${version}`);
-     
+
       // Slice version to 6 chars if more found (Epinio Server Versions)
       if (version.length > 6) {
         cy.log(`More than 6 chars found in ${version}`)
-        cy.log(`Slicing ${version} to ${version.slice(0,6)}`)
-        version = version.slice(0,6);
+        cy.log(`Slicing ${version} to ${version.slice(0, 6)}`)
+        version = version.slice(0, 6);
       }
-   
+
       // Check Epinio link has correct href
-      cy.get('a[href="https://github.com/epinio/epinio"]', {timeout: 10000}).should('contain', 'Epinio');
+      cy.get('a[href="https://github.com/epinio/epinio"]', { timeout: 10000 }).should('contain', 'Epinio');
 
       // Check "Go back" link
       cy.get('.back-link').should('exist').click();
@@ -63,10 +63,10 @@ describe('Menu testing', () => {
       cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
         cy.log(`Epinio version in MAIN UI is ${version_main}`);
         cy.visit('/epinio/c/default/about');
-        
-      // Check back button turns into home if refreshed
-      cy.reload()
-      cy.get('a.back-link', {timeout: 5000}).contains('Home').should('be.visible');
+
+        // Check back button turns into home if refreshed
+        cy.reload();
+        cy.get('a.back-link', { timeout: 5000 }).contains('Home').should('be.visible');
       });
     });
   });
@@ -80,21 +80,21 @@ describe('Menu testing', () => {
 
       // Slice version to 6 chars if more found (Epinio Server Versions)
       if (version.length > 6) {
-      cy.log(`More than 6 chars found in ${version}`)
-      cy.log(`Slicing ${version} to ${version.slice(0,6)}`)
-      version = version.slice(0,6);
-    }
+        cy.log(`More than 6 chars found in ${version}`)
+        cy.log(`Slicing ${version} to ${version.slice(0, 6)}`)
+        version = version.slice(0, 6);
+      }
 
       // Verify amount of binaries in the page
       cy.get('tr.link > td > a').should('have.length', 3);
       const binOsNames = ['darwin-x86_64', 'linux-x86_64', 'windows-x86_64.zip'];
 
       for (let i = 0; i < binOsNames.length; i++) {
-
-      // Verify binaries names and version match the one in the page
-      cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
-        .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
+        // Verify binaries names and version match the one in the page
+        cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
+          .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
       }
+
       // Downloading using wget to issues with Github when clicking
       // Scoping download solely to Linux amd
       cy.exec('mkdir -p cypress/downloads');
