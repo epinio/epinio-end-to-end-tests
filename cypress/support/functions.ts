@@ -1046,7 +1046,6 @@ Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName =
 
   // Ensure created repo is in active state
   cy.get('span.badge-state.bg-success', {timeout: 30000}).eq(0).contains('Active').should('be.visible');
-  cy.pause()
 });
 
 // Install Epinio via Helm
@@ -1057,7 +1056,15 @@ Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespac
   cy.contains('header', 'Charts', { timeout: 8000 }).should('be.visible');
 
   // Delete leftovers of other repos if existed.
-  cy.get('a[href="/dashboard/c/local/apps/catalog.cattle.io.app"] > span.count').then(($el) => {
+  // Ensure we are in local namespace to count only non-essenctial apps
+  cy.get('.top > .ns-filter').click({ force: true });
+    cy.get('#all_user', { timeout: 2000 }).contains('Only User Namespaces').should('be.visible').click();
+    // Close the namespaces dropdowy
+    cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
+  // Reload to ensure installed apps are refreshed
+    cy.reload()
+
+  cy.get('a[href="/dashboard/c/local/apps/catalog.cattle.io.app"] > span.count', {timeout: 20000}).then(($el) => {
     if ($el.text().trim() == '0') {
       cy.log(`All good. No repos installed found. Proceeding with next step`);
     }
@@ -1138,10 +1145,12 @@ Cypress.Commands.add('checkEpinioInstallationRancher', () => {
     cy.get('#all', { timeout: 2000 }).contains('All Namespaces').should('be.visible').click();
     // Close the namespaces dropdowy
     cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
+    cy.reload()
   }
 
   // Ensure app is installed
-  cy.get('span.label.no-icon').contains('Installed Apps').click();
+  // Visiting directly installed apps in case Apps header is folded
+  cy.visit('c/local/apps/catalog.cattle.io.app')
   cy.get('span.badge-state.bg-success', {timeout: 30000}).contains('Deployed').should('be.visible')
 
   // WORKAROUND until Epinio icon will be present again in Rancher UI
