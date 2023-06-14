@@ -1043,6 +1043,10 @@ Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName =
     cy.typeValue({ label: 'Index URL', value: repoUrl });
   }
   cy.clickButton('Create');
+
+  // Ensure created repo is in active state
+  cy.get('span.badge-state.bg-success', {timeout: 30000}).eq(0).contains('Active').should('be.visible');
+  cy.pause()
 });
 
 // Install Epinio via Helm
@@ -1135,6 +1139,10 @@ Cypress.Commands.add('checkEpinioInstallationRancher', () => {
     // Close the namespaces dropdowy
     cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
   }
+
+  // Ensure app is installed
+  cy.get('span.label.no-icon').contains('Installed Apps').click();
+  cy.get('span.badge-state.bg-success', {timeout: 30000}).contains('Deployed').should('be.visible')
 
   // WORKAROUND until Epinio icon will be present again in Rancher UI
   cy.contains('Service Discovery').click();
