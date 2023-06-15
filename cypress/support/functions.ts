@@ -34,7 +34,7 @@ Cypress.Commands.add('login', (username = Cypress.env('username'), password = Cy
     }
     else{
       cy.get("body").then(($body) => {
-        // Checks welcome message if we have succesfully logged in. 
+        // Checks welcome message if we have successfully logged in. 
         // (Hence user is in Dashboard page)
         if ($body.text().includes('Dashboard')) {
           cy.get('.head-title > h1', {timeout: 15000}).contains('Welcome to Epinio').should('be.visible'); 
@@ -86,7 +86,7 @@ Cypress.Commands.add('clickEpinioMenu', (label) => {
   cy.get('.header').contains('Advanced').click( {force: true} );
   cy.get('.label').contains(label).click( {force: true} );
   cy.location('pathname').should('include', '/' + label.toLocaleLowerCase());
-  // This will check application menu regardles if it has namespaces
+  // This will check application menu regardless if it has namespaces
   cy.get("body").then(($body) => {
     if ($body.text().includes('Routes')) {
       cy.contains('.m-0', 'Applications', {timeout: 20000}).should('be.visible');
@@ -110,7 +110,7 @@ Cypress.Commands.add('confirmDelete', (namespace) => {
 });
 
 Cypress.Commands.add('deleteAll', (label) => {
-  // Must be present in Configurations, Aplications or Namespaces page first
+  // Must be present in Configurations, Applications or Namespaces page first
   if (label == 'Services') {
     cy.get('div.header').contains('Services').click({force: true});
     cy.get('span.label.no-icon').contains('Instances').click({force: true});
@@ -278,7 +278,7 @@ Cypress.Commands.add('updateAppSource', ({ name, sourceType, archiveName, gitUse
   cy.selectSourceType({ sourceType: sourceType, archiveName: archiveName, gitUsername: gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit });
   cy.clickButton('Update Source');
 
-  // Check that each steps are succesfully done
+  // Check that each steps are successfully done
   cy.checkStageStatus({numIndex: 1});
   cy.checkStageStatus({numIndex: 2, timeout: 240000, sourceType, name});
   if (sourceType !== 'Container Image') {
@@ -350,7 +350,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   // Use a custom Application Chart
   if (customApplicationChart) {
-    // For now we asume Advance Settings is opened customPaketoImage
+    // For now we assume Advance Settings is opened customPaketoImage
     // This is to avoid closing Advance Settings.
     // If at any point we want to use this function alone logic should be added
     cy.get('[data-testid="epinio_app-source_appchart"] > div > div >  .vs__selected').contains(' standard (Epinio standard deployment)').should('be.visible').click()
@@ -443,7 +443,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Start application creation
   cy.clickButton('Create');
 
-  // Check that each steps are succesfully done
+  // Check that each steps are successfully done
   cy.checkStageStatus({numIndex: 1});
   cy.checkStageStatus({numIndex: 2, timeout: 240000, sourceType, appName});
   if (sourceType !== 'Container Image') {
@@ -640,7 +640,7 @@ Cypress.Commands.add('showAppShell', ({appName, namespace='workspace'}) => {
   cy.get('.tab > .closer').click();
 });
 
-// Downloading manifest or Chart adn Images (from Export app functionality)
+// Downloading manifest or Chart and Images (from Export app functionality)
 Cypress.Commands.add('downloadManifestChartsAndImages', ({appName, exportType='Manifest'}) => {
   // Get to export app button and click
   cy.clickEpinioMenu('Applications');
@@ -905,7 +905,7 @@ Cypress.Commands.add('bindConfiguration', ({appName, configurationName, namespac
   // And save
   cy.clickButton('Save');
   // Strange sporadic issues happen here
-  // The wait call seems to improve test realibility
+  // The wait call seems to improve test reliability
   cy.wait(6000);
 });
 
@@ -1056,10 +1056,10 @@ Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespac
   cy.contains('header', 'Charts', { timeout: 8000 }).should('be.visible');
 
   // Delete leftovers of other repos if existed.
-  // Ensure we are in local namespace to count only non-essenctial apps
+  // Ensure we are in 'Only User Namespaces' option in Rancher namespaces dropdown to count only non-essential apps
   cy.get('.top > .ns-filter').click({ force: true });
     cy.get('#all_user', { timeout: 2000 }).contains('Only User Namespaces').should('be.visible').click();
-    // Close the namespaces dropdowy
+    // Close the namespaces dropdown
     cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
   // Reload to ensure installed apps are refreshed
     cy.reload()
@@ -1131,7 +1131,7 @@ Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespac
     cy.get('.CodeMirror textarea').type('{ctrl+end}{enter}extraEnv:{enter}  - name: ' + Cypress.env('extraEnvName') + '{enter}  value: \'' + Cypress.env('extraEnvValue') + '\'', { force: true });
   }
 
-  // Install and check we get successfull installation message with a timeout long enough
+  // Install and check we get successful installation message with a timeout long enough
   cy.clickButton('Install');
   // cy.contains('SUCCESS: helm install', { timeout: 600000 }).should('be.visible');
   cy.contains('SUCCESS: helm', { timeout: 600000 }).should('be.visible');
