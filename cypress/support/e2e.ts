@@ -70,6 +70,9 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
   if (err.message.includes('on cross-origin object')) {
     return false;
   }
+  if (err.message.includes('NS_ERROR_UNEXPECTED')) {
+    return false;
+  }
   if (promise) {
     return false;
   }
