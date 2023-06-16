@@ -6,7 +6,6 @@ export default defineConfig({
   viewportHeight: 954,
   defaultCommandTimeout: 10000,
   pageLoadTimeout:30000,
-  chromeWebSecurity: false,
   // numTestsKeptInMemory:25,
   reporter: 'mochawesome',
   reporterOptions: {
