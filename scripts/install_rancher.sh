@@ -43,7 +43,6 @@ helm upgrade --install rancher rancher-latest/rancher \
   --set global.cattle.psp.enabled=${PSP_ENABLED} \
   --set hostname=${MY_HOSTNAME} \
   --set bootstrapPassword=rancherpassword \
-  --set replicas=1 \
   --set "extraEnv[0].name=CATTLE_UI_DASHBOARD_INDEX" \
   --set "extraEnv[0].value=https://releases.rancher.com/dashboard/${DASHBOARD_VERSION}/index.html" \
   --set "extraEnv[1].name=CATTLE_UI_OFFLINE_PREFERRED" \
