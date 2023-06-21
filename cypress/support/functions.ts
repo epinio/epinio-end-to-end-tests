@@ -1029,7 +1029,7 @@ Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName =
   // Function starts
   cy.clickClusterMenu(['Apps', 'Repositories']);
   // Ensuring overlay screen with 'Loading' is not present 
-  cy.contains('Loading', {timeout: 60000}).should('not.exist')
+  cy.contains('Loading', {timeout: 35000}).should('not.exist')
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories', { timeout: 8000 }).should('be.visible');
   cy.contains('Create').should('be.visible');
@@ -1181,7 +1181,7 @@ Cypress.Commands.add('epinioUninstall', () => {
   // Make sure we are in the 'Installed Apps' screen (test failed here before)
   cy.contains('Installed Apps', {timeout: 8000}).should('be.visible');
   // Ensuring overlay screen with 'Loading' is not present 
-  cy.contains('Loading', {timeout: 60000}).should('not.exist')
+  cy.contains('Loading', {timeout: 35000}).should('not.exist')
   cy.contains('epinio:').click();
   cy.clickButton('Delete');
   cy.confirmDelete();
