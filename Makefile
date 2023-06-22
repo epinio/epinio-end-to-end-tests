@@ -34,11 +34,11 @@ create-docker-secret: ## Create docker pull secret to avoid the docker hub rate 
 install-rancher-experimental: ## Install Rancher via Helm with experimental flags
 	@./scripts/install_rancher_experimental.sh
 
-prepare-e2e-ci-rancher: install-k3s install-helm install-rancher create-docker-secret get-ca ## Tests
+prepare-e2e-ci-rancher: create-docker-secret install-k3s install-helm install-rancher get-ca ## Tests
 
-prepare-e2e-ci-rancher-experimental: install-k3s install-helm install-rancher-experimental create-docker-secret get-ca ## Tests
+prepare-e2e-ci-rancher-experimental: create-docker-secret install-k3s install-helm install-rancher-experimental get-ca ## Tests
 
-prepare-e2e-ci-standalone: install-k3s install-helm install-cert-manager create-docker-secret install-epinio get-ca ## Tests
+prepare-e2e-ci-standalone: create-docker-secret install-k3s install-helm install-cert-manager install-epinio get-ca ## Tests
 
 patch-epinio-ui:
 	@./scripts/patch_epinio-ui.sh
