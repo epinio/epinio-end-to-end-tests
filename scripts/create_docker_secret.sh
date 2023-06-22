@@ -1,16 +1,23 @@
 #!/bin/bash
 
-set -ex
+DOCKER_TOKEN=$(echo -n "$EXT_REG_USER:$EXT_REG_PASSWORD" | base64)
+GHCR_TOKEN=$(echo -n "$GHCR_USER:$GHCR_PASSWORD" | base64)
 
-# Create docker pull secret to avoid the docker hub rate limit
-kubectl create secret docker-registry regcred \
-  --docker-server https://index.docker.io/v1/ \
-  --docker-username $EXT_REG_USER \
-  --docker-password $EXT_REG_PASSWORD
-# Create ghcr.io pull secret to avoid the container pull rate limit
-kubectl create secret docker-registry regcred-ghcr \
-  --docker-server ghcr.io \
-  --docker-username $GHCR_USER \
-  --docker-password $GHCR_PASSWORD
-# Use the secrets/credentials in default sa
-kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name":"regcred"},{"name":"regcred-ghcr"}]}'
+sudo mkdir -p /etc/rancher/k3s
+sudo tee /etc/rancher/k3s/registries.yaml << EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://registry-1.docker.io"
+  ghcr.io:
+    endpoint:
+      - "https://ghcr.io"
+
+configs:
+  "registry-1.docker.io":
+    auth:
+      auth: $DOCKER_TOKEN
+  "ghcr.io":
+    auth:
+      auth: $GHCR_TOKEN
+EOF
