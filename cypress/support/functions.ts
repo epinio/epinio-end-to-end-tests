@@ -417,8 +417,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   if (addVar === 'go_example') {
     cy.get('.key-value > .footer > .add').click();
     cy.typeKeyValue({key: '.kv-item.key > input', value: 'BP_KEEP_FILES'});
-    // cy.typeKeyValue({key: '.kv-item.value', value: 'static/*'});
-    cy.get('div[data-testid="code-mirror-multiline-field"]').click().type('static/*')
+    cy.typeKeyValue({key: '.kv-item.value', value: 'static/*'});
   }
   
   // Set the desired number of instances
