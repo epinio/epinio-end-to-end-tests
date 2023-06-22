@@ -386,8 +386,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   if (addVar === 'ui') {
     cy.get('.key-value > .footer > .add').click();
     cy.typeKeyValue({key: '.kv-item.key > input', value: 'PORT'});
-    // cy.typeKeyValue({key: '.kv-item.value', value: '8080'});
-    cy.get('div[data-testid="code-mirror-multiline-field"]').click().type('8080')
+    cy.typeKeyValue({key: '.kv-item.value', value: '8080'});
 
   } else if (addVar === 'file') {
     cy.get('input[type="file"]').attachFile({filePath: envFile});
@@ -814,7 +813,7 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
 
     // Check the entered values
     cy.get('.key > input').should('have.value', 'config_var');
-    cy.get('.no-resize').should('have.value', 'config_value');
+    cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value');
   } else {
     cy.typeKeyValue({key: '.kv-item.key > input', value: 'test_data'});
     // cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
@@ -924,11 +923,11 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
   cy.get('header').should('contain', 'Configurations:').and('contain', configurationName);
 
   // Select the 3dots button and edit the configuration
-  cy.get('.role-multi-action').click();
+  cy.get('button.role-multi-action').click();
   cy.contains('Edit Config').click();
-  cy.get('.no-resize').type('_add');
+  cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value');
   cy.clickButton('Save'); 
-  cy.get('header').should('contain', 'Configurations:').and('contain', configurationName).and('not.contain', 'Saving');
+  cy.contains('Saving').should('not.exist')
   // For some reason if at this points changes screen and we attempt to delete the app,
   // it will crash. A bit of extra time,helps to prevent this.
   cy.wait(6000)
