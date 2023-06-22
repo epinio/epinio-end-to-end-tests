@@ -812,10 +812,12 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
 
     // Check the entered values
     cy.get('.key > input').should('have.value', 'config_var');
+    // Here we use alternative locator due to field contains also upload element
     cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value');
   } else {
     cy.typeKeyValue({key: '.kv-item.key > input', value: 'test_data'});
-    // cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+    // Using alternative locator as clear cannot be easily used 
+    // due to upload element present within element
     cy.get('div[data-testid="code-mirror-multiline-field"]').click().type('test_value')
   }
 
@@ -924,7 +926,7 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
   // Select the 3dots button and edit the configuration
   cy.get('button.role-multi-action').click();
   cy.contains('Edit Config').click();
-  cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value');
+  cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value').type('_add');
   cy.clickButton('Save'); 
   cy.contains('Saving').should('not.exist')
   // For some reason if at this points changes screen and we attempt to delete the app,
