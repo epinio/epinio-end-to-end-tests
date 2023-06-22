@@ -1180,9 +1180,6 @@ Cypress.Commands.add('epinioUninstall', () => {
 
   // Make sure we are in the 'Installed Apps' screen (test failed here before)
   cy.contains('Installed Apps', {timeout: 8000}).should('be.visible');
-  // Adding a bit of time to settle and reload later
-  cy.wait(2000);
-  cy.reload();
   // Ensuring overlay screen with 'Loading' is not present 
   cy.contains('Loading', {timeout: 35000}).should('not.exist')
   cy.contains('epinio:').click();
