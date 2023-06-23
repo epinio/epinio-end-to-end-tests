@@ -37,35 +37,58 @@ describe('Menu testing', () => {
 
   it('Check "About" page and main links', { tags: '@menu-3' }, () => {
     // Check link in main page is present and works after clicking
-    cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/c/default/about');
-    cy.get('.version.text-muted > a').click();
+    // cy.log('#### 1.- Checking about href ####');
+    console.log('#### 1.- Checking about href ####')
+    cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/c/default/about').debug();
+    cy.screenshot('1');
+    cy.log('#### 2.- Clicking on link ####');
+    cy.screenshot('2');
+    cy.get('.version.text-muted > a').click().debug();
 
     // Test in ABOUT page starts here
+    cy.log('#### 3.- About Page ####')
     cy.get('table > tr > td:nth-child(2)').eq(0).invoke('text').then(version => {
       cy.log(`Epinio version in ABOUT PAGE is ${version}`);
+      cy.screenshot('3')
 
       // Slice version to 6 chars if more found (Epinio Server Versions)
+      cy.log('#### 4.- Slicing Chars ####')
       if (version.length > 6) {
         cy.log(`More than 6 chars found in ${version}`)
         cy.log(`Slicing ${version} to ${version.slice(0, 6)}`)
         version = version.slice(0, 6);
       }
+      cy.screenshot('4')
 
       // Check Epinio link has correct href
+      cy.log('#### 5.- Checking href has Epinio ####')
       cy.get('a[href="https://github.com/epinio/epinio"]', { timeout: 10000 }).should('contain', 'Epinio');
+      cy.screenshot('5')
 
       // Check "Go back" link
+      cy.log('#### 6.- Going back ####')
       cy.get('.back-link').should('exist').click();
       cy.get('span.label.no-icon').eq(1).contains('Applications').should('be.visible');
+      cy.screenshot('6')
 
       // Checks version displayed in about page is the same as in main page ()
       // Later returns to About page
       cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
         cy.log(`Epinio version in MAIN UI is ${version_main}`);
-        cy.visit('/epinio/c/default/about');
+        // cy.pause()
+        cy.log('#### 7.- Checked version in main page ####')
+        cy.screenshot('7')
+        // cy.visit('/epinio/c/default/about');
+        cy.get('.version.text-muted > a').click()
+        cy.contains('See all packages', {timeout: 15000}).should('be.visible')
+        // cy.wait(2000)
+        cy.log('#### 8.- Confirming we have returned to about page ####')
+        cy.screenshot('8')
 
         // Check back button turns into home if refreshed
         cy.reload();
+        cy.log('#### 9.- Page reload ####')
+        cy.screenshot('9')
         cy.get('a.back-link', { timeout: 5000 }).contains('Home').should('be.visible');
       });
     });
