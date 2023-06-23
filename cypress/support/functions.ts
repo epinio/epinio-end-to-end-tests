@@ -385,7 +385,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
   // Add an environment variable
   if (addVar === 'ui') {
     cy.get('.key-value > .footer > .add').click();
-    cy.typeKeyValue({key: '.kv-item.key', value: 'PORT'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'PORT'});
     cy.typeKeyValue({key: '.kv-item.value', value: '8080'});
 
   } else if (addVar === 'file') {
@@ -416,7 +416,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
 
   if (addVar === 'go_example') {
     cy.get('.key-value > .footer > .add').click();
-    cy.typeKeyValue({key: '.kv-item.key', value: 'BP_KEEP_FILES'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'BP_KEEP_FILES'});
     cy.typeKeyValue({key: '.kv-item.value', value: 'static/*'});
   }
   
@@ -812,10 +812,13 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
 
     // Check the entered values
     cy.get('.key > input').should('have.value', 'config_var');
-    cy.get('.no-resize').should('have.value', 'config_value');
+    // Here we use alternative locator due to field contains also upload element
+    cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value');
   } else {
-    cy.typeKeyValue({key: '.kv-item.key', value: 'test_data'});
-    cy.typeKeyValue({key: '.kv-item.value', value: 'test_value'});
+    cy.typeKeyValue({key: '.kv-item.key > input', value: 'test_data'});
+    // Using alternative locator as clear cannot be easily used 
+    // due to upload element present within element
+    cy.get('div[data-testid="code-mirror-multiline-field"]').click().type('test_value')
   }
 
   // We need this little trick before clicking on 'Create' (why?)
@@ -921,11 +924,11 @@ Cypress.Commands.add('editConfiguration', ({configurationName, namespace='worksp
   cy.get('header').should('contain', 'Configurations:').and('contain', configurationName);
 
   // Select the 3dots button and edit the configuration
-  cy.get('.role-multi-action').click();
+  cy.get('button.role-multi-action').click();
   cy.contains('Edit Config').click();
-  cy.get('.no-resize').type('_add');
+  cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value').type('_add');
   cy.clickButton('Save'); 
-  cy.get('header').should('contain', 'Configurations:').and('contain', configurationName).and('not.contain', 'Saving');
+  cy.contains('Saving').should('not.exist')
   // For some reason if at this points changes screen and we attempt to delete the app,
   // it will crash. A bit of extra time,helps to prevent this.
   cy.wait(6000)
