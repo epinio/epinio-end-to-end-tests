@@ -39,11 +39,10 @@ describe('Menu testing', () => {
     // Check link in main page is present and works after clicking
     // cy.log('#### 1.- Checking about href ####');
     console.log('#### 1.- Checking about href ####')
-    cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/c/default/about').debug();
-    cy.screenshot('1');
+    cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/c/default/about');
     cy.log('#### 2.- Clicking on link ####');
     cy.screenshot('2');
-    cy.get('.version.text-muted > a').click().debug();
+    cy.get('.version.text-muted > a').click();
 
     // Test in ABOUT page starts here
     cy.log('#### 3.- About Page ####')
