@@ -62,7 +62,8 @@ describe('Menu testing', () => {
       // Later returns to About page
       cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
         cy.log(`Epinio version in MAIN UI is ${version_main}`);
-        cy.visit('/epinio/c/default/about');
+        cy.get('.version.text-muted > a', {timeout: 15000}).click()
+        cy.contains('See all packages', {timeout: 15000}).should('be.visible')
 
         // Check back button turns into home if refreshed
         cy.reload();
