@@ -26,4 +26,8 @@ describe('Configuration testing', () => {
   it('Bind a created configuration to an existing application, edit configuration and delete all', { tags: '@config-2' }, () => {
     cy.runConfigurationsTest('bindConfigurationOnApp');
   });
+
+  it('Create configuration from file', { tags: '@config-3' }, () => {
+    cy.runConfigurationsTest('createConfigfromFile');
+  });
 });

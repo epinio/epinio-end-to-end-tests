@@ -159,6 +159,10 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
       cy.deleteApp({appName: appName});
       cy.deleteConfiguration({configurationName: configuration});
       break;
+    case 'createConfigfromFile':
+      // Create another new configuration uploading a file
+      cy.createConfiguration({configurationName: configuration, fromFileUpload: true});
+      break;
   }
 });
 

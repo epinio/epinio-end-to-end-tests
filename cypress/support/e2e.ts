@@ -37,7 +37,7 @@ declare global {
       filterNamespacesAndCheck(namespace: string, elemInNamespaceName?: string, filterOut?: boolean,): Chainable<Element>;
       checkOutcomeFilteredNamespaces(expectedNumFilteredNamespaces: number, expectedNumElemInNamespaces: number, expectedNameElementInNamespaces?:string,): Chainable<Element>;
       selectNamespaceinComboBox(namespace: string,): Chainable<Element>;    
-      createConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
+      createConfiguration(configurationName: string, fromFile?: boolean, fromFileUpload?: boolean, namespace?: string,): Chainable<Element>;
       editConfiguration(configurationName: string, fromFile?: boolean, namespace?: string,): Chainable<Element>;
       deleteConfiguration(configurationName: string, namespace?: string,): Chainable<Element>;
       bindConfiguration(appName: string, configurationName: string, namespace?: string,): Chainable<Element>;
