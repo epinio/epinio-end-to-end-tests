@@ -122,7 +122,6 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
   switch (testName) {
     case 'newAppWithConfiguration':
       // Create a new configuration
-      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createConfiguration({configurationName: configuration});
 
       // Create an application with the newly created configuration and check it
@@ -137,11 +136,9 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
       cy.deleteApp({appName: appName});
       
       // Delete the created configuration
-      cy.deleteConfiguration({configurationName: configuration});
       break;
     case 'bindConfigurationOnApp':
       // Create another new configuration
-      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createConfiguration({configurationName: configuration, fromFile: true});
 
       // Create an application *WITHOUT* any configuration
@@ -157,9 +154,14 @@ Cypress.Commands.add('runConfigurationsTest', (testName: string) => {
 
       // Delete the tested application and the configuration
       cy.deleteApp({appName: appName});
-      cy.deleteConfiguration({configurationName: configuration});
       break;
+    case 'createConfigfromFile':
+      // Create another new configuration uploading a file
+      cy.createConfiguration({configurationName: configuration, fromFileUpload: true});
+      break;
+    
   }
+  cy.deleteConfiguration({configurationName: configuration});
 });
 
 // Namespaces tests
