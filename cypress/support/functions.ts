@@ -791,7 +791,7 @@ Cypress.Commands.add('selectNamespaceinComboBox', ({namespace}) => {
 // Configurations functions
 
 // Create a configuration
-Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, namespace='workspace'}) => {
+Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, fromFileUpload, namespace='workspace'}) => {
   var configurationFile = 'read_from_file.configuration';  // File to use for the "Read from File" test
 
   cy.clickEpinioMenu('Configurations');
@@ -814,7 +814,13 @@ Cypress.Commands.add('createConfiguration', ({configurationName, fromFile, names
     cy.get('.key > input').should('have.value', 'config_var');
     // Here we use alternative locator due to field contains also upload element
     cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'config_value');
-  } else {
+  } 
+  else if (fromFileUpload === true) {
+    cy.get('button.file-selector > input').eq(0).selectFile('cypress/fixtures/upload_config_name', {force: true});
+    cy.get('.key > input').should('have.value', 'upload_config_name' );
+    cy.get('div[data-testid="code-mirror-multiline-field"]').should('contain.text', 'upload_config_value');
+  }
+  else {
     cy.typeKeyValue({key: '.kv-item.key > input', value: 'test_data'});
     // Using alternative locator as clear cannot be easily used 
     // due to upload element present within element
