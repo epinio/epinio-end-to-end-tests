@@ -698,6 +698,48 @@ Cypress.Commands.add('createNamespace', (namespace) => {
   cy.contains(namespace).should('be.visible');
 });
 
+// Create an Epinio namespace directly from a Service (configuration,instances,... )
+Cypress.Commands.add('createNamespaceFromResource', (namespace) => {
+  if (namespace === 'ns-from-application'){
+    // Namespace from application requires  a source first
+    // Using Container image as sample
+    cy.get('.labeled-select').click();
+    cy.contains('Container Image', {timeout: 120000}).click();
+    cy.typeValue({label: 'Image', value: 'httpd:latest'}); 
+    cy.clickButton('Next');
+    }  
+
+    if (namespace === 'ns-from-configuration'){
+    cy.get("input[placeholder='e.g. foo']").type('foo')
+    cy.get('div[data-testid="code-mirror-multiline-field"]').type('bar')}
+
+    else if (namespace === 'ns-from-instance'){
+    cy.get("input[placeholder='Select the type of Service to create']").click()
+    cy.get('ul>li').contains('mysql-dev (A MySQL service that can be used during development').click()
+    }
+
+    // Open Namespace dropdown and select new Namespace
+    cy.get('div.vs__selected-options').eq(0).click()
+    cy.get('li.vs__dropdown-option').contains('Create a New Namespace').click({force: true})
+    // Add Namespace and rest of values
+    cy.typeValue({label: 'Namespace', value: namespace});
+    cy.get("input[placeholder='A unique name']").type(`samplename-${namespace}`)
+
+    if (namespace === 'ns-from-application'){
+      cy.clickButton('Next');
+      cy.clickButton('Create');
+      // We don't need to wait for the app to be fully deployed 
+      // so we go straight to namespaces to check it has been created.
+      cy.clickEpinioMenu('Namespaces');
+    } 
+    else {
+      cy.clickButton('Create');
+    }
+ 
+    // Check that the namespace has effectively been created
+    cy.contains(namespace).should('be.visible');
+});
+
 // Delete an Epinio namespace
 Cypress.Commands.add('deleteNamespace', ({namespace, appName}) => {
   cy.clickEpinioMenu('Namespaces');

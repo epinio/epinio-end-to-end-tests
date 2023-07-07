@@ -22,4 +22,9 @@ describe('Namespaces testing', () => {
   it('Test namespace filter with 3 namespaces, 2 apps and 2 configurations', { tags: '@ns-2' }, () => {
     cy.runNamespacesTest('namespaceFilter');
   });
+
+  it('Create a Namespace from multiple services', () => {
+    cy.runNamespacesTest('newNamespaceFromResource');
+  });
+  
 });

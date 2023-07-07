@@ -32,6 +32,7 @@ declare global {
       downloadManifestChartsAndImages(appName: string, exportType?: string): Chainable<Element>;
       findExtractCheck(appName?: string, exportType?: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
+      createNamespaceFromResource(namespace: string): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
       openNamespacesFilter(location: string, namespace?: string, appName?: string, configurationName?: string,): Chainable<Element>;
       filterNamespacesAndCheck(namespace: string, elemInNamespaceName?: string, filterOut?: boolean,): Chainable<Element>;
