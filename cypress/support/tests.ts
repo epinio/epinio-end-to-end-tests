@@ -177,7 +177,6 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
   switch (testName) {
     case 'newNamespace':
       // Create a new namespace
-      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createNamespace(namespace);
 
       // Create an application on the new namespace and check it
