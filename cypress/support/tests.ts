@@ -170,11 +170,13 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
   const archive = 'sample-app.tar.gz';
   const defaultNamespace = 'workspace';
   const namespace = 'mynamespace';
+  const nsFromConfiguration = 'ns-from-configuration'
+  const nsFromInstance = 'ns-from-instance'
+  const nsFromApplication = 'ns-from-application'
 
   switch (testName) {
     case 'newNamespace':
       // Create a new namespace
-      cy.wait(5000); // Workaround for https://github.com/rancher/dashboard/issues/5240
       cy.createNamespace(namespace);
 
       // Create an application on the new namespace and check it
@@ -217,5 +219,22 @@ Cypress.Commands.add('runNamespacesTest', (testName: string) => {
       cy.checkOutcomeFilteredNamespaces({expectedNumFilteredNamespaces: 0, expectedNumElemInNamespaces: 2, expectedNameElementInNamespaces: "config-2"})
       break;
       
+    case 'newNamespaceFromResource':
+      // Create Namespace from configuration   
+      cy.clickEpinioMenu('Configurations');
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(nsFromConfiguration);
+
+      // Create Namespace from instances
+      cy.get('div.header > i').eq(0).click();
+      cy.contains('Instances').click(); 
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(nsFromInstance);
+
+      // Create Namespace from application
+      cy.clickEpinioMenu('Applications');
+      cy.clickButton('Create');
+      cy.createNamespaceFromResource(nsFromApplication);
+      break;
   }
 });
