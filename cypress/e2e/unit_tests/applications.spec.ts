@@ -50,7 +50,7 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('serviceBindUnbindFromServicePage');
   });
 
-  it('Push Gitlab app and update sources', { tags: '@appl-9' }, () => {
+  it('Push Gitlab app, redeploy from commit and update sources', { tags: '@appl-9' }, () => {
     cy.runApplicationsTest('pushGitlabAndUpdateSources');
   });
 

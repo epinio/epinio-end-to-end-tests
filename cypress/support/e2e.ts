@@ -31,6 +31,7 @@ declare global {
       showAppShell(appName: string, namespace?: string,): Chainable<Element>;
       downloadManifestChartsAndImages(appName: string, exportType?: string): Chainable<Element>;
       findExtractCheck(appName?: string, exportType?: string): Chainable<Element>;
+      redeployFromCommit(gitCommit: string): Chainable<Element>;
       createNamespace(namespace: string,): Chainable<Element>;
       createNamespaceFromResource(namespace: string): Chainable<Element>;
       deleteNamespace(namespace: string, appName?: string,): Chainable<Element>;
