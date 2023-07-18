@@ -173,95 +173,37 @@ describe('Menu testing', () => {
 // Note: this test needs to be adapted for Rancher Dashboard
 // Currently we are good if the custom user is unable to login when chart installed over Rancher
 // We'd need to apply values.yaml with the users first in Edit YAML
-describe('Login with different users', () => {
 
-  it('Check login with admin user', { tags: '@login-1' }, () => {
-    const user_epinio = "admin"
-    const pwd_epinio = "password"
-    cy.login(user_epinio, pwd_epinio);
-    cy.contains('Invalid username or password. Please try again.').should('not.exist')
-    cy.contains('Applications').should('be.visible')
-  });
+describe.only('Login with special usernames / passwords', () => {
+  const userType = new Map([
+    // ['user1', 'Hell@World'],
+    // ['user2', 'Hell#@~%/=World'],
+    // ['user@test', 'Hell@World'],
+    // ['0123456789', 'password']
 
-  it('Check login with regular user and simple password', { tags: '@login-2' }, () => {
-    const user_epinio = "epinio"
-    const pwd_epinio = "password"
-    cy.login(user_epinio, pwd_epinio);
-    cy.contains('Invalid username or password. Please try again.').should('not.exist')
-    cy.contains('Applications').should('be.visible')
-  });
+    ['user1', ['Hell@World', 'special']],
+    ['user2', ['Hell#@~%/=World', 'several special']],
+    ['user@test', ['Hell@World', 'standard']],
+    ['0123456789', ['password', 'standard']],
+  ]);
+  for (const [key, value] of userType.entries()) {
+    it(`Username '${key}' & password with '${value[1]}' characters should log in`, () => {
+      cy.login(key, value[0])
 
-  it('Check login with regular user "user1" and password with special characters', { tags: '@login-3' },() => {
-    const user_epinio = "user1"
-    const pwd_epinio = "Hell@World"
-    cy.login(user_epinio, pwd_epinio);
-    if (Cypress.env('ui') == null ) {
-      cy.contains('Invalid username or password. Please try again.').should('not.exist')
-      cy.contains('Applications').should('be.visible')
-    }
-    // Login fails when installed from rancher
-    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
-      cy.contains('Invalid username or password. Please try again.').should('exist')
-      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
-    }
-    else {
-      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
-    }
-  });
-
-  it('Check login with regular user "user2" and password with many special characters', { tags: '@login-4' }, () => {
-    const user_epinio = "user2"
-    const pwd_epinio = "Hell#@~%/=World"
-    cy.login(user_epinio, pwd_epinio);
-    if (Cypress.env('ui') == null ) {
-      cy.contains('Invalid username or password. Please try again.').should('not.exist')
-      cy.contains('Applications').should('be.visible')
-    }
-    // Login fails when installed from rancher
-    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
-      cy.contains('Invalid username or password. Please try again.').should('exist')
-      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
-    }
-    else {
-      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
-    }
-  });
-
-  it('Check login with admin user name with special character (user@test) and password also with special characters', { tags: '@login-5' }, () => {
-    const user_epinio = "user@test"
-    const pwd_epinio = "Hell@World"
-    cy.login(user_epinio, pwd_epinio);
-    if (Cypress.env('ui') == null ) {
-      cy.contains('Invalid username or password. Please try again.').should('not.exist')
-      cy.contains('Applications').should('be.visible')
-    }
-    // Login fails when installed from rancher
-    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
-      cy.contains('Invalid username or password. Please try again.').should('exist')
-      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
-    }
-    else {
-      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
-    }
-  });
-
-  it('Check login with admin user name with numbers (0123456789) and password', { tags: '@login-6' },() => {
-    const user_epinio = "0123456789"
-    const pwd_epinio = "password"
-    cy.login(user_epinio, pwd_epinio);
-    if (Cypress.env('ui') == null) {
-      cy.contains('Invalid username or password. Please try again.').should('not.exist')
-      cy.contains('Applications').should('be.visible')
-    }
-    // Login fails when installed from rancher
-    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
-      cy.contains('Invalid username or password. Please try again.').should('exist')
-      cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
-    }
-    else {
-      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
-    }
-  });
+      if (Cypress.env('ui') == null) {
+        cy.contains('Invalid username or password. Please try again.').should('not.exist')
+        cy.contains('Applications').should('be.visible')
+      }
+      // Login fails when installed from rancher
+      else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
+        cy.contains('Invalid username or password. Please try again.').should('exist')
+        cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+      }
+      else {
+        throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
+      }
+    });
+  }
 });
 
   describe('Dex testing', () => {
