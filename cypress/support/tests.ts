@@ -94,8 +94,8 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.checkApp({appName: appName, checkVar: 1});
       break;
     case 'pushGitlabAndUpdateSources':
-      cy.createApp({appName: appName, sourceType: 'GitLab', gitUsername: 'richard-cox', gitRepo: 'epinio-sample-app', gitBranch: 'main', gitCommit: '07d2dd79' });
-      cy.checkApp({appName: appName, checkCommit: '07d2dd7'}); 
+      cy.createApp({appName: appName, sourceType: 'GitLab', gitUsername: 'richard-cox', gitRepo: 'epinio-sample-app', gitBranch: 'main', gitCommit: '07d2dd79'});
+      cy.checkApp({appName: appName, checkCommit: '07d2dd7'});
       cy.redeployFromCommit({gitCommit: 'bb688311'});
       cy.checkApp({appName: appName, checkCommit: 'bb68831', checkIcon: 'gitlab'});
       cy.updateAppSource({name: appName, archiveName: archive, sourceType: 'Archive'});
