@@ -684,6 +684,21 @@ Cypress.Commands.add('findExtractCheck', ({ appName, exportType='Manifest' }) =>
 
 })
 
+Cypress.Commands.add('redeployFromCommit', ({gitCommit}) => {
+  cy.contains('Git commits').click(); // Select Git commit tab
+  cy.open3dotsMenu({ name: gitCommit, selection: 'Redeploy'}) // Redeploy to desired commit
+  // Checking for commit selection to be displayed
+  cy.get(`tr.main-row[data-node-id=${gitCommit}] > td > label > span[aria-checked="true"]`).should('be.visible')
+  cy.clickButton('Update Source');
+  // Waiting for update screen to be lodaded.
+  cy.contains('Edit:').should('be.visible');
+  // Wait for button 'Done' to be enabled ( or 'not disabled')
+  cy.get('button.btn.role-primary[disabled]', {timeout: 120000}).should('not.exist')
+  // Close all tabs to clear screen
+  cy.get('.tab > .closer').click({ multiple: true });
+  // Application is created!
+  cy.clickButton('Done');
+})
 
 // Namespace functions
 
