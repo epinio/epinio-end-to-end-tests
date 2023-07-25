@@ -124,38 +124,28 @@ describe('Menu testing', () => {
 
  
   it('Test buttons and links in dashboard page',  { tags: ['@menu-5', '@smoke']  },  () => {
-    // Verify Get started and Issues links
-    cy.get('.head-links').contains('Get started').should('have.attr', 'href').and('equal', 'https://epinio.io/');
-    cy.get('.head-links').contains('Issues').should('have.attr', 'href').and('equal', 'https://github.com/epinio/epinio/issues');
-  
-    // NAMESPACES CARD
-    cy.get('div.d-main > div > a > h1').eq(0).contains('Namespaces').should('be.visible').click();
-    cy.get('h1.m-0').contains('Namespaces').should('be.visible');
+    
+    
+    // Click create / deploy buttons and check landing redirection and return
+    cy.clickButton('Create Namespace');
+    cy.checkElementVisibility('.btn.role-secondary.mr-10', 'Cancel');
     cy.go('back');
-    // Click on card Create Namespace and check redirection
-    cy.get('a.btn.role-secondary', {timeout: 20000}).contains('Create Namespace').should('be.visible').click();
-    cy.get('.btn.role-secondary.mr-10').contains('Cancel ').should('be.visible').click();
+    cy.clickButton('Deploy Application');
+    cy.checkElementVisibility('[data-testid="epinio_app-source_type"]', 'Folder');
     cy.go('back');
-  
-    // APPLICATIONS CARD
-    cy.get('div.d-main > div > a > h1').eq(1).contains('Applications').should('be.visible').click();
-    cy.get('h1.m-0').contains('Applications').should('be.visible');
+    cy.clickButton('Create Instance');
+    cy.checkElementVisibility( 'body','Catalog Service');
     cy.go('back');
-    // Click on card Deploy application and check redirection
-    cy.get('a.btn.role-secondary', {timeout: 20000}).contains('Deploy Application').should('be.visible').click();
-    cy.get('[data-testid="epinio_app-source_type"]').should('be.visible');
-    cy.go('back');
-  
-    // SERVICES CARD
-    cy.get('div.d-main > div > a > h1').eq(2).contains('Services').should('be.visible').click();
-    cy.get('h1.m-0').contains('Instances').should('be.visible');
-    cy.go('back');
-    // Click on card "Services" and check redirection
-    cy.get('a.link', {timeout: 20000}).contains('mysql-dev').should('be.visible').click();
-    cy.contains('mysql-dev').should('be.visible');
-    cy.go('back');
-    cy.get('a.link', {timeout: 20000}).contains('redis-dev').should('be.visible').click();
-    cy.contains('redis-dev').should('be.visible');
+
+    // Check namespaces, applications and services links
+    cy.checkLink('namespaces','/epinio/c/default/namespaces', 'workspace');
+    cy.checkLink('applications','/epinio/c/default/applications', 'Last Deployed By');
+    cy.checkLink('services','/epinio/c/default/services', 'Catalog Service');
+    // Check rest of Dashboard links
+    cy.checkLink('Get started','https://epinio.io/');
+    cy.checkLink('Issues','https://github.com/epinio/epinio/issues');
+    cy.checkLink('mysql-dev','/services/create?service=mysql-dev', 'A MySQL service');
+    cy.checkLink('redis-dev','/services/create?service=redis-dev', 'A Redis service'); 
     });
 
   it('Verify stats in Dashboard page',  { tags: ['@menu-6', '@smoke']  },  () => {
@@ -174,7 +164,7 @@ describe('Menu testing', () => {
 // Currently we are good if the custom user is unable to login when chart installed over Rancher
 // We'd need to apply values.yaml with the users first in Edit YAML
 
-describe.only('Login with special usernames / passwords', () => {
+describe('Login with special usernames / passwords', () => {
   const userType = new Map([
     // ['user1', 'Hell@World'],
     // ['user2', 'Hell#@~%/=World'],
