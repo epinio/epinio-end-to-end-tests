@@ -292,6 +292,42 @@ Cypress.Commands.add('updateAppSource', ({ name, sourceType, archiveName, gitUse
   cy.wait(6000);
 });
 
+Cypress.Commands.add('checkElementVisibility', (locator, elementName) => {
+  // If unclear what locator to put, use 'body'
+  cy.get(locator).contains(elementName, { matchCase: false }).should('be.visible');
+});
+
+Cypress.Commands.add('checkNoBrokenLinks', (  ) => {
+  cy.get("a").each($a => {
+    const message = $a.text();
+    const hreflinks = $a.prop('href')
+  
+    expect($a, message).to.have.attr("href").not.contain("undefined");
+    
+    cy.request(hreflinks).then((response) => {
+      expect(response.status).to.eq(200)
+      expect(response.body).to.have.length.greaterThan(50)
+    })
+  });
+});
+
+Cypress.Commands.add('checkLink', (nameInLink, url, checkLandingLocator, goBack=true) => {
+  cy.contains('a', nameInLink, { matchCase: false }).should('have.attr', 'href').and('include', url);
+  
+  cy.request(url).then((response) => {
+  expect(response.status).to.eq(200)
+  expect(response.body).to.have.length.greaterThan(100)
+  
+  if (checkLandingLocator){
+    cy.contains('a', nameInLink, { matchCase: false }).click()
+    cy.contains(checkLandingLocator, { matchCase: false }).should('be.visible');
+    // Return to previous page if true (default)
+    if (goBack === true){
+      cy.go('back'); 
+      };
+    };
+  });
+});
 
 // Menu functions
 

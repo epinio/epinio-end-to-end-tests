@@ -21,6 +21,9 @@ declare global {
       getDetail(name: string, type: string, namespace?: string): Chainable<Element>;
       open3dotsMenu(name: string, selection?: string): Chainable<Element>;
       loadGitRepo(gitUsername?: string, gitRepo?: string, gitBranch?: string, gitCommit?: string): Chainable<Element>;
+      checkElementVisibility(locator?: string, elementName?:string): Chainable<Element>;
+      checkNoBrokenLinks(): Chainable<Element>;
+      checkLink(nameInLink: string, url?: string, checkLandingLocator?: string, goBack?: boolean): Chainable<Element>;
       checkDashboardResources(namespaceNumber?: string, newestNamespaces?: string, appNumber?: string, runningApps?: string, servicesNumber?: string, ): Chainable<Element>;
       createApp(appName: string, archiveName: string, sourceType: string, customPaketoImage?: string, customApplicationChart?: string, route?: string, addVar?: string, instanceNum?: number, configurationName?: string, shouldBeDisabled?: boolean, manifestName?: string, serviceName?: string, catalogType?: string, namespace?: string, gitUsername?: string, gitRepo?: string, gitBranch?: string, gitCommit?: string ): Chainable<Element>;
       checkApp(appName: string, namespace?: string, route?: string, checkVar?: number, checkConfiguration?: boolean, dontCheckRouteAccess?: boolean, instanceNum?: number, serviceName?: string, checkCreatedApp?: string, checkCommit?: string, checkIcon?: string ): Chainable<Element>;
