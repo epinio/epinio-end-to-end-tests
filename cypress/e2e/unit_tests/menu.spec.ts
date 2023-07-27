@@ -36,90 +36,25 @@ describe('Menu testing', () => {
   });
 
   it('Check "About" page and main links', { tags: '@menu-3' }, () => {
-    // Check link in main page is present and works after clicking
-    cy.get('.version.text-muted > a').should('have.attr', 'href').and('include', '/epinio/c/default/about');
-    cy.get('.version.text-muted > a').click();
+    // Check link on main page to about page, then goes there and check more links
+    cy.checkLink('v','/epinio/c/default/about', 'about', false);
+    cy.checkLink('Epinio','https://github.com/epinio/epinio');
+  
+    // Check version between main and about page
+    cy.aboutPageFunction({compareVersionVsMainPage: true});
 
-    // Test in ABOUT page starts here
-    cy.get('table > tr > td:nth-child(2)').eq(0).invoke('text').then(version => {
-      cy.log(`Epinio version in ABOUT PAGE is ${version}`);
-
-      // Slice version to 6 chars if more found (Epinio Server Versions)
-      if (version.length > 6) {
-        cy.log(`More than 6 chars found in ${version}`)
-        cy.log(`Slicing ${version} to ${version.slice(0, 6)}`)
-        version = version.slice(0, 6);
-      }
-
-      // Check Epinio link has correct href
-      cy.get('a[href="https://github.com/epinio/epinio"]', { timeout: 10000 }).should('contain', 'Epinio');
-
-      // Check "Go back" link
-      cy.get('.back-link').should('exist').click();
-      cy.get('span.label.no-icon').eq(1).contains('Applications').should('be.visible');
-
-      // Checks version displayed in about page is the same as in main page ()
-      // Later returns to About page
-      cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
-        cy.log(`Epinio version in MAIN UI is ${version_main}`);
-        cy.get('.version.text-muted > a', {timeout: 15000}).click()
-        cy.contains('See all packages', {timeout: 15000}).should('be.visible')
-
-        // Check back button turns into home if refreshed
-        cy.reload();
-        cy.get('a.back-link', { timeout: 5000 }).contains('Home').should('be.visible');
-      });
-    });
+    // Returns to about page, refresh and checks 'Back' turns into 'Home'
+    cy.checkLink('v','/epinio/c/default/about', 'about', false);
+    cy.reload();
+    cy.checkElementVisibility('.back-link', 'Home')
   });
 
-  it.skip('Check binaries, version related links and downloads from About menu', { tags: '@menu-4' }, () => {
+
+  it('Check binaries, version related links and downloads from About menu', { tags: '@menu-4' }, () => {
     // Go to About page
     cy.get('.version.text-muted > a').click();
-
-    // Test in ABOUT page starts here
-    cy.get('table > tr > td:nth-child(2)').eq(0).invoke('text').then(version => {
-
-      // Slice version to 6 chars if more found (Epinio Server Versions)
-      if (version.length > 6) {
-        cy.log(`More than 6 chars found in ${version}`)
-        cy.log(`Slicing ${version} to ${version.slice(0, 6)}`)
-        version = version.slice(0, 6);
-      }
-
-      // Verify amount of binaries in the page
-      cy.get('tr.link > td > a').should('have.length', 3);
-      const binOsNames = ['darwin-x86_64', 'linux-x86_64', 'windows-x86_64.zip'];
-
-      for (let i = 0; i < binOsNames.length; i++) {
-        // Verify binaries names and version match the one in the page
-        cy.get('tr.link > td > a').contains(binOsNames[i]).and('have.attr', 'href')
-          .and('include', `https://github.com/epinio/epinio/releases/download/${version}/epinio-${binOsNames[i]}`);
-      }
-
-      // Downloading using wget to issues with Github when clicking
-      // Scoping download solely to Linux amd
-      cy.exec('mkdir -p cypress/downloads');
-      cy.exec(`wget -qS  https://github.com/epinio/epinio/releases/download/${version}/epinio-linux-x86_64 -O cypress/downloads/epinio-linux-x86_64`, { failOnNonZeroExit: false }).then((result) => {
-        if (result.code != 0) {
-          cy.task('log', '### ERROR: Could not download binary. Probably an error on Github ###');
-        }
-        cy.task('log', '### Stderr for download binary command starts here.');
-        cy.task('log', result.stderr);
-      });
-
-      // Check link "See all packages" and visit binary page
-      // Check version number in binary page matches the one in Epinio
-      cy.get('.mt-5').contains('See all packages').invoke('attr', 'href').as('href_repo').then(() => {
-        cy.get('@href_repo').should('eq', `https://github.com/epinio/epinio/releases/tag/${version}`);
-        // Giving a bit of time beween latest time hitting github and now
-        cy.wait(2000);
-        cy.origin('https://github.com', { args: { version } }, ({ version }) => {
-          cy.visit(`/epinio/epinio/releases/tag/${version}`, { timeout: 15000 });
-          cy.get('.d-inline.mr-3', { timeout: 15000 }).contains(`${version}`).should('be.visible');
-          cy.screenshot(`epinio-bin-repo-${version}`, { timeout: 15000 });
-        });
-      });
-    });
+    // Check binaries number, download them and chek See All Package page
+    cy.aboutPageFunction({checkBinariesNumberInAboutPage: true, downloadBinaries: true, checkSeeAllPackagePage: true}) 
   });
 
  
