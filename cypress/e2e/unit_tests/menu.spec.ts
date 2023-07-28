@@ -111,25 +111,51 @@ describe('Login with special usernames / passwords', () => {
     ['user@test', ['Hell@World', 'standard']],
     ['0123456789', ['password', 'standard']],
   ]);
-  for (const [key, value] of userType.entries()) {
-    it(`Username '${key}' & password with '${value[1]}' characters should log in`, () => {
-      cy.login(key, value[0])
+  // for (const [key, value] of userType.entries()) {
+  //   it(`Username '${key}' & password with '${value[1]}' characters should log in`, () => {
+  //     cy.login(key, value[0])
+
+  //     if (Cypress.env('ui') == null) {
+  //       cy.contains('Invalid username or password. Please try again.').should('not.exist')
+  //       cy.contains('Applications').should('be.visible')
+  //     }
+  //     // Login fails when installed from rancher
+  //     else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
+  //       cy.contains('Invalid username or password. Please try again.').should('exist')
+  //       cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+  //     }
+  //     else {
+  //       throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
+  //     }
+  //   });
+  // }
+
+    for (const [key, value] of userType.entries()) {
 
       if (Cypress.env('ui') == null) {
-        cy.contains('Invalid username or password. Please try again.').should('not.exist')
-        cy.contains('Applications').should('be.visible')
+
+        it(`Username '${key}' & password with '${value[1]}' characters should log in`, () => {
+          cy.login(key, value[0])
+          cy.contains('Invalid username or password. Please try again.').should('not.exist')
+          cy.contains('Applications').should('be.visible')
+        })
       }
+     
       // Login fails when installed from rancher
       else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
-        cy.contains('Invalid username or password. Please try again.').should('exist')
-        cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+        it(`Username '${key}' & password with '${value[1]}' characters should not log in unless values-users.yaml is applied (negative testing)`, () => {
+          cy.login(key, value[0])
+          cy.contains('Invalid username or password. Please try again.').should('exist')
+          cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
+        })
       }
+
       else {
         throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
       }
-    });
+    };
   }
-});
+);
 
   describe('Dex testing', () => {
   it('Check Dex login works with granted access', { tags: '@dex-1'}, () => {
