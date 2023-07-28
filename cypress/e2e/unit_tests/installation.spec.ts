@@ -24,7 +24,7 @@ describe('Epinio installation testing', () => {
     }
   });
 
-  it.skip('Install Epinio with s3gw, check ingress over URL and uninstall it', () => {
+  it('Install Epinio with s3gw, check ingress over URL and uninstall it', () => {
     if (Cypress.env('experimental_chart_branch') != null) {
       cy.epinioInstall({ s3: false, s3gw: true, extRegistry: false, namespace: 'None' });
     }
