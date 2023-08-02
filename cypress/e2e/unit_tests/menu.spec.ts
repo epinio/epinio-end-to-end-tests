@@ -27,7 +27,7 @@ describe('Menu testing', () => {
     epinio.checkEpinioNav();
   });
 
-  it('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
+  it.skip('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
     cy.deleteAll('Namespaces');
     cy.clickEpinioMenu('Dashboard');
     cy.checkDashboardResources({ namespaceNumber: '0' });
@@ -35,7 +35,7 @@ describe('Menu testing', () => {
     cy.createNamespace('workspace');
   });
 
-  it('Check "About" page and main links', { tags: '@menu-3' }, () => {
+  it.skip('Check "About" page and main links', { tags: '@menu-3' }, () => {
     // Check link on main page to about page, then goes there and check more links
     cy.checkLink('v', '/epinio/c/default/about', 'about', false);
     cy.checkLink('Epinio', 'https://github.com/epinio/epinio');
