@@ -27,7 +27,7 @@ describe('Menu testing', () => {
     epinio.checkEpinioNav();
   });
 
-  it.skip('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
+  it('Verify Welcome Screen without Namespaces', { tags: '@menu-2' }, () => {
     cy.deleteAll('Namespaces');
     cy.clickEpinioMenu('Dashboard');
     cy.checkDashboardResources({ namespaceNumber: '0' });
@@ -35,7 +35,7 @@ describe('Menu testing', () => {
     cy.createNamespace('workspace');
   });
 
-  it.skip('Check "About" page and main links', { tags: '@menu-3' }, () => {
+  it('Check "About" page and main links', { tags: '@menu-3' }, () => {
     // Check link on main page to about page, then goes there and check more links
     cy.checkLink('v', '/epinio/c/default/about', 'about', false);
     cy.checkLink('Epinio', 'https://github.com/epinio/epinio');
@@ -44,8 +44,11 @@ describe('Menu testing', () => {
     cy.aboutPageFunction({ compareVersionVsMainPage: true });
 
     // Returns to about page, refresh and checks 'Back' turns into 'Home'
-    cy.checkLink('v', '/epinio/c/default/about', 'about', false);
-    cy.reload();
+    cy.checkLink('v', '/epinio/c/default/about', 'about', false).then(() => {
+      cy.log('Reloading Page')
+      cy.reload({ timeout: 20000} );
+    })
+    
     cy.checkElementVisibility('.back-link', 'Home')
   });
 
@@ -66,6 +69,7 @@ describe('Menu testing', () => {
     cy.clickButton('Deploy Application');
     cy.checkElementVisibility('[data-testid="epinio_app-source_type"]', 'Folder');
     cy.go('back');
+    cy.checkElementVisibility('body', 'Create Instance');
     cy.clickButton('Create Instance');
     cy.checkElementVisibility('body', 'Catalog Service');
     cy.go('back');
