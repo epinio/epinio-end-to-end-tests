@@ -319,8 +319,13 @@ Cypress.Commands.add('checkLink', (nameInLink, url, checkLandingLocator, goBack=
   expect(response.body).to.have.length.greaterThan(100)
   
   if (checkLandingLocator){
-    cy.contains('a', nameInLink, { matchCase: false }).click()
-    cy.contains(checkLandingLocator, { matchCase: false }).should('be.visible');
+    // cy.contains('a', nameInLink, { matchCase: false }).click()
+    // cy.contains(checkLandingLocator, { matchCase: false }).should('be.visible');
+    cy.contains('a', nameInLink, { matchCase: false }).click().then(() => {
+      cy.log('Checking landing locator')
+      cy.contains(checkLandingLocator, { matchCase: false }).should('be.visible');
+    })
+    
     // Return to previous page if true (default)
     if (goBack === true){
       cy.go('back'); 
