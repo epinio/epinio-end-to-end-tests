@@ -44,10 +44,14 @@ describe('Menu testing', () => {
     cy.aboutPageFunction({ compareVersionVsMainPage: true });
 
     // Returns to about page, refresh and checks 'Back' turns into 'Home'
-    cy.checkLink('v', '/epinio/c/default/about', 'about', false).then(() => {
-      cy.log('Reloading Page')
-      cy.reload({ timeout: 20000} );
-    })
+    cy.checkLink('v', '/epinio/c/default/about', 'about', false)
+    // Adding wait because reloads may break severely rest of tests
+    // if executed before previous comand is completed
+    cy.wait(10000)
+    
+    cy.log('Reloading Page')
+    cy.reload({ timeout: 20000} );
+    
     
     cy.checkElementVisibility('.back-link', 'Home')
   });
