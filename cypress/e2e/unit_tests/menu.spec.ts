@@ -44,8 +44,15 @@ describe('Menu testing', () => {
     cy.aboutPageFunction({ compareVersionVsMainPage: true });
 
     // Returns to about page, refresh and checks 'Back' turns into 'Home'
-    cy.checkLink('v', '/epinio/c/default/about', 'about', false);
-    cy.reload();
+    cy.checkLink('v', '/epinio/c/default/about', 'about', false)
+    // Adding wait because reloads may break severely rest of tests
+    // if executed before previous comand is completed
+    cy.wait(10000)
+    
+    cy.log('Reloading Page')
+    cy.reload({ timeout: 20000} );
+    
+    
     cy.checkElementVisibility('.back-link', 'Home')
   });
 
@@ -66,6 +73,7 @@ describe('Menu testing', () => {
     cy.clickButton('Deploy Application');
     cy.checkElementVisibility('[data-testid="epinio_app-source_type"]', 'Folder');
     cy.go('back');
+    cy.checkElementVisibility('body', 'Create Instance');
     cy.clickButton('Create Instance');
     cy.checkElementVisibility('body', 'Catalog Service');
     cy.go('back');
