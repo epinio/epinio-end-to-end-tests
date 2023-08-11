@@ -1298,7 +1298,7 @@ Cypress.Commands.add('epinioInstall', ({ s3Storage, extRegistry, namespace = 'ep
       cy.contains('S3 use SSL').click();
       break;
     default:
-     cy.log('Using default s3Storage (Minio)');
+      cy.log('Using default s3Storage (Minio)');
   }
 
   // Add ExtraEnv values on bottom of values yaml if present, careful here, editor does indentation
