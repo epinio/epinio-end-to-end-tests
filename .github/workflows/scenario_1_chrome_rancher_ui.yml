@@ -18,3 +18,17 @@ jobs:
       cypress_test: menu.spec.ts
       runner: ui-e2e-0
     secrets: inherit
+
+  rancher-chrome-s3gw:
+    # Epinio installation with s3gw and with simple app deployment '@appl-1' test only
+    # It should be triggered on different runner than the other job to speed it up
+    uses: ./.github/workflows/master_rancher_ui_workflow.yml
+    with:
+      browser: chrome
+      cypress_image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      cypress_install_test: installation.spec.ts
+      cypress_test: applications.spec.ts
+      grep_test_by_tag: @appl-1
+      s3_store_type: s3gw
+      runner: ui-e2e
+    secrets: inherit

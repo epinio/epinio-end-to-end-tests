@@ -1234,8 +1234,8 @@ Cypress.Commands.add('epinioInstall', ({ s3Storage, extRegistry, namespace = 'ep
     cy.get('#all_user', { timeout: 2000 }).contains('Only User Namespaces').should('be.visible').click();
     // Close the namespaces dropdown
     cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
-  // Reload to ensure installed apps are refreshed
-  //  cy.reload()
+    // Reload to ensure installed apps are refreshed
+    cy.reload()
 
   cy.get('a[href="/dashboard/c/local/apps/catalog.cattle.io.app"] > span.count', {timeout: 20000}).then(($el) => {
     if ($el.text().trim() == '0') {

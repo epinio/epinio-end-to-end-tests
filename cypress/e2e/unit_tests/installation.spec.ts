@@ -13,7 +13,7 @@ describe('Epinio installation testing', () => {
     cy.get('.clusters').contains(Cypress.env('cluster')).click()
   });
 
-  it.skip('Add the Epinio helm repo', () => {
+  it('Add the Epinio helm repo', () => {
     if (Cypress.env('experimental_chart_branch') != null) {
       cy.allowRancherPreReleaseVersions();
       cy.addHelmRepo({ repoName: 'epinio-experimental', repoUrl: 'https://github.com/epinio/charts.git', repoType: 'git', branchName: Cypress.env('experimental_chart_branch') });
