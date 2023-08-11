@@ -28,7 +28,7 @@ jobs:
       cypress_image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       cypress_install_test: installation.spec.ts
       cypress_test: applications.spec.ts
-      grep_test_by_tag: @appl-1
+      grep_test_by_tag: '@appl-1'
       s3_store_type: s3gw
       runner: ui-e2e
     secrets: inherit
