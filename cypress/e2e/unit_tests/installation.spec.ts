@@ -24,31 +24,19 @@ describe('Epinio installation testing', () => {
     }
   });
 
-  it('Install Epinio with s3gw, check ingress over URL and uninstall it', () => {
-    if (Cypress.env('experimental_chart_branch') != null) {
-      cy.epinioInstall({ s3: false, s3gw: true, extRegistry: false, namespace: 'None' });
-    }
-    else {
-      // Boolean must be forced to false otherwise code is failing
-      cy.epinioInstall({ s3: false, s3gw: true, extRegistry: false });
-    }
-    cy.checkEpinioInstallationRancher();
-    cy.visit('/c/local/explorer#cluster-events');
-    cy.epinioUninstall();
-  });
-
   it('Install Epinio', () => {
     if (Cypress.env('experimental_chart_branch') != null) {
-      cy.epinioInstall({ s3: false, extRegistry: false, namespace: 'None' });
+      cy.epinioInstall({ s3Storage: Cypress.env('s3Storage'), extRegistry: false, namespace: 'None' });
     }
     else {
       // Boolean must be forced to false otherwise code is failing
-      cy.epinioInstall({ s3: false, extRegistry: false });
+      cy.epinioInstall({ s3Storage: Cypress.env('s3Storage'), extRegistry: false });
     }
   });
 
   it('Verify Epinio over ingress URL', () => {
     cy.checkEpinioInstallationRancher();
+    cy.visit('/c/local/explorer#cluster-events');
   });
   
 });

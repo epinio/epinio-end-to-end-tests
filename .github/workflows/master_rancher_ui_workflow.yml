@@ -33,6 +33,16 @@ on:
         description: Runner on which to execute tests
         required: true
         type: string
+      grep_test_by_tag:
+        description: Grep tags. For multiple selection separate with spaces
+        required: false
+        type: string
+        default: ''
+      s3_store_type:
+        description: Select s3Storage type for installation (s3gw, s3, <none> = minio)
+        required: false
+        type: string
+        default: ''
 
 jobs:
   installation:
@@ -98,6 +108,7 @@ jobs:
         S3_KEY_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
         UI: rancher
+        S3_STORE_TYPE: ${{ inputs.s3_store_type }}
         # EXTRAENV_NAME: SESSION_KEY
         # EXTRAENV_VALUE: 12345
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
@@ -209,6 +220,7 @@ jobs:
         SYSTEM_DOMAIN: ${{ needs.installation.outputs.MY_IP }}.omg.howdoi.website
         # set UI value to something else than 'rancher'
         UI: epinio-rancher
+        GREPTAGS: ${{ inputs.grep_test_by_tag }}
       options: --add-host ${{ needs.installation.outputs.MY_HOSTNAME }}:${{ needs.installation.outputs.MY_IP }} --ipc=host ${{ inputs.docker_options }}
     steps:
       - name: Cypress run

@@ -1222,7 +1222,7 @@ Cypress.Commands.add('addHelmRepo', ({ repoName, repoUrl, repoType, branchName =
 });
 
 // Install Epinio via Helm
-Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespace = 'epinio-install' }) => {
+Cypress.Commands.add('epinioInstall', ({ s3Storage, extRegistry, namespace = 'epinio-install' }) => {
   cy.clickClusterMenu(['Apps', 'Charts']);
 
   // Make sure we are in the chart screen (test failed here before)
@@ -1234,7 +1234,7 @@ Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespac
     cy.get('#all_user', { timeout: 2000 }).contains('Only User Namespaces').should('be.visible').click();
     // Close the namespaces dropdown
     cy.get('.top > .ns-filter > .ns-dropdown.ns-open').click({ force: true });
-  // Reload to ensure installed apps are refreshed
+    // Reload to ensure installed apps are refreshed
     cy.reload()
 
   cy.get('a[href="/dashboard/c/local/apps/catalog.cattle.io.app"] > span.count', {timeout: 20000}).then(($el) => {
@@ -1281,21 +1281,24 @@ Cypress.Commands.add('epinioInstall', ({ s3, s3gw = false, extRegistry, namespac
     cy.typeValue({label: 'External registry namespace', value: Cypress.env('external_reg_username'), log: false});
   }
 
-  if (s3gw == true) {
-    cy.contains('a', 'S3 storage').click();
-    cy.contains('Install Minio').click();
-    cy.contains('Install s3gw').should('be.visible').click();
-    };
-
-  // Configure s3 storage
-  if (s3 === true) {
-    cy.contains('a', 'External S3 storage').click();
-    cy.contains('Use an external s3 storage').click();
-    cy.typeValue({label: 'S3 endpoint', value: 's3.amazonaws.com'});
-    cy.typeValue({label: 'S3 access key id', value: Cypress.env('s3_key_id'), log: false});
-    cy.typeValue({label: 'S3 access key secret', value: Cypress.env('s3_key_secret'), log: false});
-    cy.typeValue({label: 'S3 bucket', value: 'epinio-ci'});
-    cy.contains('S3 use SSL').click();
+  switch (s3Storage) {
+    case 's3gw':
+      cy.contains('a', 'S3 storage').click();
+      cy.contains('Install Minio').click();
+      cy.contains('Install s3gw').should('be.visible').click();
+      break;
+    case 's3':
+      // Configure external AWS S3 storage
+      cy.contains('a', 'S3 storage').click();
+      cy.contains('Install Minio').click();
+      cy.typeValue({label: 'S3 endpoint', value: 's3.amazonaws.com'});
+      cy.typeValue({label: 'S3 access key id', value: Cypress.env('s3_key_id'), log: false});
+      cy.typeValue({label: 'S3 access key secret', value: Cypress.env('s3_key_secret'), log: false});
+      cy.typeValue({label: 'S3 bucket', value: 'epinio-ci'});
+      cy.contains('S3 use SSL').click();
+      break;
+    default:
+      cy.log('Using default s3Storage (Minio)');
   }
 
   // Add ExtraEnv values on bottom of values yaml if present, careful here, editor does indentation
