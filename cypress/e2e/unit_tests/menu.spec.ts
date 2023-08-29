@@ -70,6 +70,7 @@ describe('Menu testing', () => {
     cy.clickButton('Create Namespace');
     cy.checkElementVisibility('.btn.role-secondary.mr-10', 'Cancel');
     cy.go('back');
+    cy.checkElementVisibility('body', 'Deploy Application');
     cy.clickButton('Deploy Application');
     cy.checkElementVisibility('[data-testid="epinio_app-source_type"]', 'Folder');
     cy.go('back');
