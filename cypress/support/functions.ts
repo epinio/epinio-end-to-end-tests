@@ -117,6 +117,8 @@ Cypress.Commands.add('deleteAll', (label) => {
   }
   else {
     cy.clickEpinioMenu(label)
+    // Ensuring table is loaded prior further deletion steps
+    cy.get('table.sortable-table.top-divider').should('contain.text', 'Name');
     cy.get('h1',{timeout: 35000}).contains(label).should('be.visible')
   };
   cy.log(`## DElETION OF ALL ${label} STARTS HERE ##`)
@@ -273,6 +275,9 @@ Cypress.Commands.add('updateAppSource', ({ name, sourceType, archiveName, gitUse
 
   // Open 3 dots button
   cy.open3dotsMenu({ name: name, selection: 'Edit Config'})
+
+  // Check for source page to be visible
+  cy.checkElementVisibility('body', 'Provide the source');
 
   // Select source update desired
   cy.selectSourceType({ sourceType: sourceType, archiveName: archiveName, gitUsername: gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit });
