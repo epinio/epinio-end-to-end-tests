@@ -117,6 +117,8 @@ Cypress.Commands.add('deleteAll', (label) => {
   }
   else {
     cy.clickEpinioMenu(label)
+    // Ensuring table is loaded prior further deletion steps
+    cy.get('table.sortable-table.top-divider').should('contain.text', 'Name');
     cy.get('h1',{timeout: 35000}).contains(label).should('be.visible')
   };
   cy.log(`## DElETION OF ALL ${label} STARTS HERE ##`)
