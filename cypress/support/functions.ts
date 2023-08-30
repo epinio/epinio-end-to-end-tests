@@ -274,6 +274,9 @@ Cypress.Commands.add('updateAppSource', ({ name, sourceType, archiveName, gitUse
   // Open 3 dots button
   cy.open3dotsMenu({ name: name, selection: 'Edit Config'})
 
+  // Check for source page to be visible
+  cy.checkElementVisibility('body', 'Provide the source');
+
   // Select source update desired
   cy.selectSourceType({ sourceType: sourceType, archiveName: archiveName, gitUsername: gitUsername , gitRepo: gitRepo, gitBranch: gitBranch, gitCommit: gitCommit });
   cy.clickButton('Update Source');
