@@ -847,7 +847,7 @@ Cypress.Commands.add('createNamespaceFromResource', (namespace) => {
 
     // Open Namespace dropdown and select new Namespace
     cy.get('div.vs__selected-options').eq(0).click()
-    cy.get('li.vs__dropdown-option').contains('Create a New Namespace').click({force: true})
+    cy.get('li.vs__dropdown-option').contains('Create a new Namespace').click({force: true})
     // Add Namespace and rest of values
     cy.typeValue({label: 'Namespace', value: namespace});
     cy.get("input[placeholder='A unique name']").type(`samplename-${namespace}`)
