@@ -16,9 +16,6 @@ install-k3s: ## Install K3s with default options
 	## Wait for K3s to start (could be improved?)
 	timeout 2m bash -c "until ! kubectl get pod -A 2>/dev/null | grep -Eq 'ContainerCreating|CrashLoopBackOff'; do sleep 1; done"
 
-install-cert-manager: ## Install dependencies needed by Epinio
-	@./scripts/install_cert-manager.sh
-
 install-epinio: ## Install Epinio with Helm
 	@./scripts/install_epinio.sh
 
@@ -88,12 +85,13 @@ delete-cluster:
 	k3d cluster delete $(CLUSTER_NAME)
 
 install-cert-manager:
-	kubectl create namespace cert-manager
 	helm repo add jetstack https://charts.jetstack.io
 	helm repo update
-	helm install cert-manager --namespace cert-manager jetstack/cert-manager \
+	helm upgrade --install cert-manager --namespace cert-manager jetstack/cert-manager \
+		--create-namespace \
 		--set installCRDs=true \
-		--set extraArgs[0]=--enable-certificate-owner-ref=true
+		--set extraArgs[0]=--enable-certificate-owner-ref=true \
+		--wait
 
 deploy-epinio:
 	helm repo add epinio https://epinio.github.io/helm-charts
