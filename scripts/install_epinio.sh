@@ -74,11 +74,8 @@ if [[ -z $EPINIO_VERSION ]]; then
 fi
 
 # Show Epinio info, could be useful for debugging
-sleep 20
+kubectl wait pods -n epinio -l app.kubernetes.io/name=epinio-server --for=condition=ready --timeout=2m
 dist/epinio-* login -u admin -p password --trust-ca https://epinio.${EPINIO_SYSTEM_DOMAIN}
-
-# Wait a little before getting informations, otherwise we can have a 502 code
-sleep 20
 dist/epinio-* info
 
 # Go back to the previous directory
