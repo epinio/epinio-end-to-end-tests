@@ -371,11 +371,11 @@ Cypress.Commands.add('aboutPageFunction', ({ compareVersionVsMainPage, checkBina
   cy.get('table > tr > td:nth-child(2)').eq(0).invoke('text').then(version => {
     cy.log(`Epinio version in ABOUT PAGE is ${version}`);
 
-    // Slice version to 6 chars if more found (Epinio Server Versions)
-    if (version.length > 6) {
-      cy.log(`More than 6 chars found in ${version}`)
-      cy.log(`Slicing ${version} to ${version.slice(0, 6)}`)
-      version = version.slice(0, 6);
+    // Slice version to 7 chars if more found (Epinio Server Versions)
+    if (version.length > 7) {
+      cy.log(`More than 7 chars found in ${version}`)
+      cy.log(`Slicing ${version} to ${version.slice(0, 7)}`)
+      version = version.slice(0, 7);
     };
 
     if (compareVersionVsMainPage) {
@@ -384,7 +384,9 @@ Cypress.Commands.add('aboutPageFunction', ({ compareVersionVsMainPage, checkBina
       // Checks version displayed in about page is the same as in main page
       cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
         cy.log(`Epinio version in MAIN UI is ${version_main}`);
-        expect(version_main.trim()).to.eq(version);
+        // Chaning expect to "to.contain" instead of "to.eq"
+        // to avoid problems when dealing with `-rc` versions
+        expect(version_main.trim()).to.contain(version);
       })
     };
 
