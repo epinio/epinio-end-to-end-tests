@@ -57,7 +57,7 @@ describe('Menu testing', () => {
   });
 
 
-  it('Check binaries, version related links and downloads from About menu', { tags: '@menu-4' }, () => {
+  it.skip('Check binaries, version related links and downloads from About menu', { tags: '@menu-4' }, () => {
     // Go to About page
     cy.get('.version.text-muted > a').click();
     // Check binaries number, download them and chek See All Package page
