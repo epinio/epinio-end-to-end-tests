@@ -33,7 +33,7 @@ on:
           default: menu.spec.ts
         runner:
           description: Runner on which to execute tests
-          default: ui-e2e-2
+          default: ui-e2e-3
           required: true
           type: string
         docker_options:
