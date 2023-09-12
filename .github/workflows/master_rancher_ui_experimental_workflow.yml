@@ -45,7 +45,7 @@ on:
           description: Choose rancher version to deploy
           required: true
           type: string
-          default: '2.7.3'
+          default: '2.7.6'
 
 jobs:
   installation:
