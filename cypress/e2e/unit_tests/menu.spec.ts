@@ -51,9 +51,10 @@ describe('Menu testing', () => {
     
     cy.log('Reloading Page')
     cy.reload({ timeout: 20000} );
-    
-    
+    // Adding 'then' to execute only after previous command is completed
+    cy.then(() => {
     cy.checkElementVisibility('.back-link', 'Home')
+    })
   });
 
 
