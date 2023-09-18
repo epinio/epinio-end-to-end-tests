@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 3 * * *'
 
 jobs:
 # I keep the following tests commented out in case someone want to enable them later.
