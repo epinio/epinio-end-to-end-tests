@@ -43,18 +43,21 @@ describe('Menu testing', () => {
     // Check version between main and about page
     cy.aboutPageFunction({ compareVersionVsMainPage: true });
 
-    // Returns to about page, refresh and checks 'Back' turns into 'Home'
-    cy.checkLink('v', '/epinio/c/default/about', 'about', false)
-    // Adding wait because reloads may break severely rest of tests
-    // if executed before previous comand is completed
-    cy.wait(10000)
+    // TEMPORARY DISABLING REFRESH AND CHECK BACK DUE TO NS_ERROR_UNEXPECTED
+    // IT LEAVES CYPRESS IN A HANGING STATE BREAKING OTHER TESTS
+
+    // // Returns to about page, refresh and checks 'Back' turns into 'Home'
+    // cy.checkLink('v', '/epinio/c/default/about', 'about', false)
+    // // Adding wait because reloads may break severely rest of tests
+    // // if executed before previous comand is completed
+    // cy.wait(10000)
     
-    cy.log('Reloading Page')
-    cy.reload({ timeout: 20000} );
-    // Adding 'then' to execute only after previous command is completed
-    cy.then(() => {
-    cy.checkElementVisibility('.back-link', 'Home')
-    })
+    // cy.log('Reloading Page')
+    // cy.reload({ timeout: 20000} );
+    // // Adding 'then' to execute only after previous command is completed
+    // cy.then(() => {
+    // cy.checkElementVisibility('.back-link', 'Home')
+    // })
   });
 
 
