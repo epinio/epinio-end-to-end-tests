@@ -44,6 +44,8 @@ fi
 # Use specific Epinio version if called
 # If not, use latest Epinio version
 if [[ ! -z $EPINIO_VERSION  ]]; then
+helm repo add epinio https://epinio.github.io/helm-charts
+helm repo up
 ADD_EPINIO_VERSION="--version=${EPINIO_VERSION}"
   echo "using CHART=epinio/epinio"
   echo "using EPINIO_VERSION=${EPINIO_VERSION}"
