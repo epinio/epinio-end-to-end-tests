@@ -66,6 +66,10 @@ helm upgrade --debug --wait --install -n epinio --create-namespace epinio ${CHAR
 # Wait for Epinio deployment to be ready
 kubectl rollout status deployment epinio-server -n epinio --timeout=480s
 
+# WORKAROUND: should be removed once the image retention issue is fixed, ref https://github.com/epinio/epinio/issues/2583
+# Temporary fix for unavailable epinio-unpacker:v1.10.0-rc1 image
+kubectl patch configmap -n epinio epinio-stage-scripts -p '{"data":{"unpackImage":"ghcr.io/epinio/epinio-unpacker:latest"}}'
+
 # Patch Epinio pod if no targeting specific versions
 # mandatory to use the 'main' version!
 if [[ -z $EPINIO_VERSION ]]; then
