@@ -10,4 +10,6 @@ if [[ -z $EPINIO_VERSION  ]]; then
   kubectl wait pods -n epinio -l app.kubernetes.io/name=epinio-ui --for=condition=ready --timeout=2m
   kubectl patch deployment epinio-ui -n epinio -p '{"spec":{"template":{"spec":{"containers":[{"name":"epinio-ui", "imagePullPolicy":"Always"}]}}}}'
   kubectl wait pods -n epinio -l app.kubernetes.io/name=epinio-ui --for=condition=ready --timeout=2m
+else
+  echo "Skipping patching, using upstream chart $EPINIO_VERSION"
 fi

@@ -142,6 +142,7 @@ jobs:
       - name: Patch epinio-ui with latest QA image
         env:
           KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+          EPINIO_VERSION: ${{ inputs.epinio_version }}
         run: |
           make patch-epinio-ui
       
