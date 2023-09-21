@@ -69,7 +69,7 @@ helm upgrade --debug --wait --install -n epinio --create-namespace epinio ${CHAR
 kubectl rollout status deployment epinio-server -n epinio --timeout=480s
 
 # WORKAROUND: Uncomment following line if STD-UI tests are failing due to missing epinio-unpacker image as described in https://github.com/epinio/epinio/issues/2583
-# kubectl patch configmap -n epinio epinio-stage-scripts -p '{"data":{"unpackImage":"ghcr.io/epinio/epinio-unpacker:latest"}}'
+kubectl patch configmap -n epinio epinio-stage-scripts -p '{"data":{"unpackImage":"ghcr.io/epinio/epinio-unpacker:latest"}}'
 
 # Patch Epinio pod if no targeting specific versions
 # mandatory to use the 'main' version!
