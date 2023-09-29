@@ -126,7 +126,7 @@ Cypress.Commands.add('deleteAll', (label) => {
     if ($body.text().includes('Delete')) {
       cy.get('[width="30"] > .checkbox-outer-container.check').click();
       cy.get('.btn').contains('Delete').click({ctrlKey: true});
-      cy.get('#promptRemove', {timeout: 40000}).should('not.exist')
+      cy.get('#promptRemove', {timeout: 90000}).should('not.exist')
     };
   });
 });

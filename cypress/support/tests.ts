@@ -108,6 +108,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.findExtractCheck({appName: appName, exportType: 'Chart and Images'});
       break;
     case 'serviceBindSingleStep':
+      cy.deleteAll('Services')
       cy.createApp({ appName: appName, archiveName: archive, sourceType: 'Archive' });
   
       // Creates 3 services and bind app in 1 step
@@ -127,6 +128,7 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-rabbitmq-dev`, catalogType: 'rabbitmq-dev' });
       cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-mongodb`, catalogType: 'mongodb-dev' });
       cy.countAndVerifyElements({ locator: 'tbody > tr.main-row', numberRowsOrColumns: 4, text1: 'Deployed', text2: 'testapp' });
+      cy.deleteAll('Services')
       break;
   }
 
