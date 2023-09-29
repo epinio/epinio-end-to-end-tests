@@ -1172,6 +1172,49 @@ Cypress.Commands.add('bindServiceFromSevicesPage', ({ appName, serviceName, bind
   }
 });
 
+Cypress.Commands.add('createServiceAndBindOneStep', ({ serviceName, catalogType, appName }) => {
+  cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click()
+  cy.clickButton('Create');
+  cy.typeValue({ label: 'Name', value: serviceName });
+  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
+  cy.contains(catalogType).click()
+  // Verify selected catalog service is selected
+  cy.get('span.vs__selected').eq(1).should('contain', catalogType)
+  /// ----------------------------------------------------------------------------- ///
+
+  // Open "Bind to Applications" dropdown and bind service to app
+  // Try make this a function to be reusable
+  cy.get('.v-select.inline.vs--multiple').click();
+  cy.contains(appName).should('be.visible').click();
+  // Click on save button
+  cy.clickButton('Create');
+  cy.get('.icon.icon-lg.icon-spinner.icon-spin', { timeout: 60000 }).contains('Creating...').should('not.exist');
+  // Confirm bound application after main instance page redirection
+  cy.contains('tr.main-row', serviceName, { timeout: 45000 }).within(() => {
+    cy.get('td[data-testid]', { timeout: 45000 }).eq(4).contains(appName).should('be.visible')
+  });
+});
+
+Cypress.Commands.add('countAndVerifyElements', ({ locator, numberRowsOrColumns, text1, text2, arrayOfElements = false }) => {
+
+  cy.get(locator).each((item, index, list) => {
+    expect(list).to.have.length(numberRowsOrColumns)
+
+    // This is in case several elements are to be checked per index
+    // as text1[elem-1, elem-2, elem-3,...], text2[elem-a, elem-b, elem-c,...]
+    if (arrayOfElements) {
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text1[index]))
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text2[index]))
+    }
+    // Here the name of checked elements will be always the same
+    else {
+      cy.log('ENTERING ELSE')
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text1))
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text2))
+    }
+  })
+});
+
 // Delete a Service
 Cypress.Commands.add('deleteService', ({ serviceName }) => {
   cy.get('div.header').contains('Services').click({force: true});
