@@ -58,9 +58,14 @@ describe('Applications testing', () => {
     cy.runApplicationsTest('downloadChartsAndImages');
   });
 
+  it('Service bind in single step', { tags: '@appl-11' }, () => {
+    cy.runApplicationsTest('serviceBindSingleStep');
+  });
+
   // Remove skip when this is fixed: https://github.com/epinio/ui/issues/160
   it.skip('Push application with Github Source type and env vars and check it',  () => {
     cy.runApplicationsTest('gitHubAndEnvVar');
   });
+
 
 });

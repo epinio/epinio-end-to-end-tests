@@ -1173,25 +1173,22 @@ Cypress.Commands.add('bindServiceFromSevicesPage', ({ appName, serviceName, bind
 });
 
 Cypress.Commands.add('createServiceAndBindOneStep', ({ serviceName, catalogType, appName }) => {
-  cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click()
+  cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click();
   cy.clickButton('Create');
   cy.typeValue({ label: 'Name', value: serviceName });
-  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click()
-  cy.contains(catalogType).click()
+  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click();
+  cy.contains(catalogType).click();
   // Verify selected catalog service is selected
   cy.get('span.vs__selected').eq(1).should('contain', catalogType)
-  /// ----------------------------------------------------------------------------- ///
-
   // Open "Bind to Applications" dropdown and bind service to app
-  // Try make this a function to be reusable
   cy.get('.v-select.inline.vs--multiple').click();
   cy.contains(appName).should('be.visible').click();
-  // Click on save button
+  // Click on create button
   cy.clickButton('Create');
   cy.get('.icon.icon-lg.icon-spinner.icon-spin', { timeout: 60000 }).contains('Creating...').should('not.exist');
   // Confirm bound application after main instance page redirection
   cy.contains('tr.main-row', serviceName, { timeout: 45000 }).within(() => {
-    cy.get('td[data-testid]', { timeout: 45000 }).eq(4).contains(appName).should('be.visible')
+    cy.get('td[data-testid]', { timeout: 45000 }).eq(4).contains(appName).should('be.visible');
   });
 });
 

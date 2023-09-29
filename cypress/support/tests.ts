@@ -109,25 +109,24 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       break;
     case 'serviceBindSingleStep':
       cy.createApp({ appName: appName, archiveName: archive, sourceType: 'Archive' });
-      cy.checkApp({ appName: appName, checkIcon: 'file' });
-
+  
       // Creates 3 services and bind app in 1 step
-      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-redis-dev`, catalogType: 'redis-dev' })
-      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-mysql-dev`, catalogType: 'mysql-dev' })
-      cy.createServiceAndBindOneStep({ appName: appName, serviceName: 'svc-postgresql', catalogType: 'postgresql-dev' })
+      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-redis-dev`, catalogType: 'redis-dev' });
+      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-mysql-dev`, catalogType: 'mysql-dev' });
+      cy.createServiceAndBindOneStep({ appName: appName, serviceName: 'svc-postgresql', catalogType: 'postgresql-dev' });
 
       // Verifies number of deployed services and check status and app bound name
-      cy.countAndVerifyElements({ locator: 'tbody > tr.main-row', numberRowsOrColumns: 3, text1: 'Deployed', text2: 'testapp' })
+      cy.countAndVerifyElements({ locator: 'tbody > tr.main-row', numberRowsOrColumns: 3, text1: 'Deployed', text2: 'testapp' });
 
       // Deletes 1 service to see if after it can be binded again
       // Goes to service page as after deletion user is not taken there
-      cy.deleteService({ serviceName: 'svc-postgresql' })
-      cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click()
+      cy.deleteService({ serviceName: 'svc-postgresql' });
+      cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click();
 
       // Repeats binding in 1 step and check again
-      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-rabbitmq-dev`, catalogType: 'rabbitmq-dev' })
-      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-mongodb`, catalogType: 'mongodb-dev' })
-      cy.countAndVerifyElements({ locator: 'tbody > tr.main-row', numberRowsOrColumns: 4, text1: 'Deployed', text2: 'testapp' }) 
+      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-rabbitmq-dev`, catalogType: 'rabbitmq-dev' });
+      cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-mongodb`, catalogType: 'mongodb-dev' });
+      cy.countAndVerifyElements({ locator: 'tbody > tr.main-row', numberRowsOrColumns: 4, text1: 'Deployed', text2: 'testapp' });
       break;
   }
 
