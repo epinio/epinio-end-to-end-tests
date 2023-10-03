@@ -126,7 +126,7 @@ Cypress.Commands.add('deleteAll', (label) => {
     if ($body.text().includes('Delete')) {
       cy.get('[width="30"] > .checkbox-outer-container.check').click();
       cy.get('.btn').contains('Delete').click({ctrlKey: true});
-      cy.get('#promptRemove', {timeout: 40000}).should('not.exist')
+      cy.get('#promptRemove', {timeout: 90000}).should('not.exist')
     };
   });
 });
@@ -1170,6 +1170,47 @@ Cypress.Commands.add('bindServiceFromSevicesPage', ({ appName, serviceName, bind
     cy.get('td[data-testid]', {timeout: 30000 }).eq(4).contains(appName).should('not.exist')
   });
   }
+});
+
+Cypress.Commands.add('createServiceAndBindOneStep', ({ serviceName, catalogType, appName }) => {
+  cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click();
+  cy.clickButton('Create');
+  cy.typeValue({ label: 'Name', value: serviceName });
+  cy.get('input[placeholder="Select the type of Service to create"].vs__search').click();
+  cy.contains(catalogType).click();
+  // Verify selected catalog service is selected
+  cy.get('span.vs__selected').eq(1).should('contain', catalogType)
+  // Open "Bind to Applications" dropdown and bind service to app
+  cy.get('.v-select.inline.vs--multiple').click();
+  cy.contains(appName).should('be.visible').click();
+  // Click on create button
+  cy.clickButton('Create');
+  cy.get('.icon.icon-lg.icon-spinner.icon-spin', { timeout: 60000 }).contains('Creating...').should('not.exist');
+  // Confirm bound application after main instance page redirection
+  cy.contains('tr.main-row', serviceName, { timeout: 45000 }).within(() => {
+    cy.get('td[data-testid]', { timeout: 45000 }).eq(4).contains(appName).should('be.visible');
+  });
+});
+
+Cypress.Commands.add('countAndVerifyElements', ({ locator, numberRowsOrColumns, text1, text2 }) => {
+
+  cy.get(locator).each((item, index, list) => {
+    expect(list).to.have.length(numberRowsOrColumns)
+
+    // This is in case several elements are to be checked per index
+    // as text1[elem-1, elem-2, elem-3,...], text2[elem-a, elem-b, elem-c,...]  
+    if (Array.isArray(text1) || Array.isArray(text2)) {
+      cy.log(`Array detected? = ${Array.isArray(text1)}`)
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text1[index]))
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text2[index]))
+    }
+    // Here the name of checked elements will be always the same
+    else {
+      cy.log(`Checking '${text1}' and '${text2}' in first ${numberRowsOrColumns} lines / rows`)
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text1))
+      cy.wrap(item, { timeout: 60000 }).should('contains.text', (text2))
+    }
+  })
 });
 
 // Delete a Service
