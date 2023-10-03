@@ -54,7 +54,7 @@ declare global {
       createService(serviceName: string, catalogType: string): Chainable<Element>;
       bindServiceFromSevicesPage(appName: string, serviceName: string, bindingOption?: string): Chainable<Element>;
       createServiceAndBindOneStep(appName: string, serviceName: string[], catalogType: string[]): Chainable<Element>;
-      countAndVerifyElements(locator: string, numberRowsOrColumns: number, arrayOfElements?: boolean, text1?: string, text2?: string): Chainable<Element>;
+      countAndVerifyElements(locator: string, numberRowsOrColumns: number, text1?: string, text2?: string): Chainable<Element>;
       deleteService(serviceName: string): Chainable<Element>;
       epinioUninstall(): Chainable<Element>;
       checkEpinioInstallationRancher(): Chainable<Element>;

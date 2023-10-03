@@ -1192,20 +1192,21 @@ Cypress.Commands.add('createServiceAndBindOneStep', ({ serviceName, catalogType,
   });
 });
 
-Cypress.Commands.add('countAndVerifyElements', ({ locator, numberRowsOrColumns, text1, text2, arrayOfElements = false }) => {
+Cypress.Commands.add('countAndVerifyElements', ({ locator, numberRowsOrColumns, text1, text2 }) => {
 
   cy.get(locator).each((item, index, list) => {
     expect(list).to.have.length(numberRowsOrColumns)
 
     // This is in case several elements are to be checked per index
-    // as text1[elem-1, elem-2, elem-3,...], text2[elem-a, elem-b, elem-c,...]
-    if (arrayOfElements) {
+    // as text1[elem-1, elem-2, elem-3,...], text2[elem-a, elem-b, elem-c,...]  
+    if (Array.isArray(text1) || Array.isArray(text2)) {
+      cy.log(`Array detected? = ${Array.isArray(text1)}`)
       cy.wrap(item, { timeout: 60000 }).should('contains.text', (text1[index]))
       cy.wrap(item, { timeout: 60000 }).should('contains.text', (text2[index]))
     }
     // Here the name of checked elements will be always the same
     else {
-      cy.log('ENTERING ELSE')
+      cy.log(`Checking '${text1}' and '${text2}' in first ${numberRowsOrColumns} lines / rows`)
       cy.wrap(item, { timeout: 60000 }).should('contains.text', (text1))
       cy.wrap(item, { timeout: 60000 }).should('contains.text', (text2))
     }
