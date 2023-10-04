@@ -13,7 +13,7 @@ on:
           description: k3s version
           required: true
           type: string
-          default: v1.25.9+k3s1
+          default: v1.27.6+k3s1
         browser:
           description: Web browser to test
           required: true
@@ -45,7 +45,7 @@ on:
           description: Choose rancher version to deploy
           required: true
           type: string
-          default: '2.7.3'
+          default: 2.8-alpha2
 
 jobs:
   installation:

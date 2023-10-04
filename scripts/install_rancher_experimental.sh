@@ -3,7 +3,7 @@
 set -e
 
 # Add stable Rancher Helm chart repo
-helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
+helm repo add rancher-alpha https://releases.rancher.com/server-charts/alpha
 
 # Add stable CertManager Helm chart repo
 helm repo add jetstack https://charts.jetstack.io
@@ -37,17 +37,13 @@ else
 fi
 
 # Install Rancher
-helm upgrade --install rancher rancher-latest/rancher \
+helm upgrade --install rancher rancher-alpha/rancher \
   --namespace cattle-system \
   --create-namespace \
   --set global.cattle.psp.enabled=${PSP_ENABLED} \
   --set hostname=${MY_HOSTNAME} \
   --version ${RANCHER_VERSION} \
   --set bootstrapPassword=rancherpassword \
-  --set "extraEnv[0].name=CATTLE_UI_DASHBOARD_INDEX" \
-  --set "extraEnv[0].value=https://releases.rancher.com/dashboard/${DASHBOARD_VERSION}/index.html" \
-  --set "extraEnv[1].name=CATTLE_UI_OFFLINE_PREFERRED" \
-  --set "extraEnv[1].value=Remote" \
   --wait
 
 # Wait for rancher deployment to be ready
