@@ -45,7 +45,7 @@ on:
           description: Choose rancher version to deploy
           required: true
           type: string
-          default: 2.8-alpha2
+          default: 2.8.0-alpha2
 
 jobs:
   installation:
