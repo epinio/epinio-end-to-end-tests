@@ -108,41 +108,26 @@ describe('Menu testing', () => {
 // Note: this test needs to be adapted for Rancher Dashboard
 // Currently we are good if the custom user is unable to login when chart installed over Rancher
 // We'd need to apply values.yaml with the users first in Edit YAML
-
-describe('Login with special usernames / passwords', () => {
-  const userType = new Map([
-    ['user1', ['Hell@World', 'special']],
-    ['user2', ['Hell#@~%/=World', 'several special']],
-    ['user@test', ['Hell@World', 'standard']],
-    ['0123456789', ['password', 'standard']],
-  ]);
-
-  for (const [key, value] of userType.entries()) {
-
-    if (Cypress.env('ui') == null) {
-
-      it(`Username '${key}' & password with '${value[1]}' characters should log in`, () => {
-        cy.login(key, value[0])
-        cy.contains('Invalid username or password. Please try again.').should('not.exist')
-        cy.contains('Applications').should('be.visible')
-      })
-    }
-
-    // Login fails when installed from rancher
-    else if (Cypress.env('ui') == 'epinio-rancher' || Cypress.env('ui') == 'rancher') {
-      it(`Username '${key}' & password with '${value[1]}' characters should not log in unless values-users.yaml is applied (negative testing)`, () => {
-        cy.login(key, value[0])
-        cy.contains('Invalid username or password. Please try again.').should('exist')
-        cy.exec('echo "Negative testing for users. This user not allowed to log in unless values-users.yaml is applied."')
-      })
-    }
-
-    else {
-      throw new Error('ERROR: Variable "ui" is set to an unexpected value.')
-    }
-  };
+// For this reason we only test it in STD UI for the moment
+if (Cypress.env('ui') != 'epinio-rancher' || Cypress.env('ui') != 'rancher') {
+  describe('Login with special usernames / passwords', () => {
+    const userType = new Map([
+      ['user1', ['Hell@World', 'special']],
+      ['user2', ['Hell#@~%/=World', 'several special']],
+      ['user@test', ['Hell@World', 'standard']],
+      ['0123456789', ['password', 'standard']],
+    ]);
+  
+    for (const [key, value] of userType.entries()) {
+  
+        it(`Username '${key}' & password with '${value[1]}' characters should log in`, () => {
+          cy.login(key, value[0])
+          cy.contains('Invalid username or password. Please try again.').should('not.exist')
+          cy.contains('Applications').should('be.visible')
+        })
+    };
+  });
 }
-);
 
 describe('Login with wrong username / password is not allowed and correctly handled', () => {
   const userType = new Map([
