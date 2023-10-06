@@ -61,7 +61,7 @@ describe('Menu testing', () => {
   });
 
 
-  it.skip('Check binaries, version related links and downloads from About menu', { tags: '@menu-4' }, () => {
+  it('Check binaries, version related links and downloads from About menu', { tags: '@menu-4' }, () => {
     // Go to About page
     cy.get('.version.text-muted > a').click();
     // Check binaries number, download them and chek See All Package page
@@ -110,7 +110,7 @@ describe('Menu testing', () => {
 // We'd need to apply values.yaml with the users first in Edit YAML
 // For this reason we only test it in STD UI for the moment
 if (Cypress.env('ui') != 'epinio-rancher' && Cypress.env('ui') != 'rancher') {
-  describe('Login with special usernames / passwords', () => {
+  describe('Login with special usernames / passwords', { tags: ['@menu-7', '@smoke'] }, () => {
     const userType = new Map([
       ['user1', ['Hell@World', 'special']],
       ['user2', ['Hell#@~%/=World', 'several special']],
@@ -129,7 +129,7 @@ if (Cypress.env('ui') != 'epinio-rancher' && Cypress.env('ui') != 'rancher') {
   });
 }
 
-describe('Login with wrong username / password is not allowed and correctly handled', () => {
+describe('Login with wrong username / password is not allowed and correctly handled', { tags: ['@menu-8', '@smoke'] }, () => {
   const userType = new Map([
     ['admin', ['wrongpassword', 'standard']],
     ['baduser', ['password', 'standard']],
