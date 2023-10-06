@@ -144,6 +144,23 @@ describe('Login with special usernames / passwords', () => {
 }
 );
 
+describe('Login with wrong username / password is not allowed and correctly handled', () => {
+  const userType = new Map([
+    ['admin', ['wrongpassword', 'standard']],
+    ['baduser', ['password', 'standard']],
+  ]);
+
+  for (const [key, value] of userType.entries()) {
+
+    // Login fails and it is correctly handled
+    it(`Username '${key}' & password with '${value[1]}' characters should not log in`, () => {
+      cy.login(key, value[0])
+      cy.contains('Invalid username or password. Please try again.').should('exist')
+      }
+    )
+  }
+});
+
 describe('Dex testing', () => {
   it('Check Dex login works with granted access', { tags: '@dex-1' }, () => {
     cy.dexLogin('admin@epinio.io', 'password');
