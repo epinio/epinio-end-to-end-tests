@@ -109,7 +109,7 @@ describe('Menu testing', () => {
 // Currently we are good if the custom user is unable to login when chart installed over Rancher
 // We'd need to apply values.yaml with the users first in Edit YAML
 // For this reason we only test it in STD UI for the moment
-if (Cypress.env('ui') != 'epinio-rancher' && Cypress.env('ui') != 'rancher') {
+if (Cypress.env('ui') == null) {
   describe('Login with special usernames / passwords', { tags: ['@menu-7', '@smoke'] }, () => {
     const userType = new Map([
       ['user1', ['Hell@World', 'special']],
