@@ -517,7 +517,7 @@ Cypress.Commands.add('createApp', ({appName, archiveName, sourceType, customPake
     cy.wait(500)
     // Check the entered values
     cy.get('.key > input').eq(0).should('have.value', 'BP_PHP_VERSION');
-    cy.get('.no-resize').eq(0).should('have.value', '8.0.x');
+    cy.get('.no-resize').eq(0).should('have.value', '8.1.x');
     cy.get('.key > input').eq(1).should('have.value', 'BP_PHP_SERVER');
     cy.get('.no-resize').eq(1).should('have.value', 'nginx');
     cy.get('.key > input').eq(2).should('have.value', 'BP_PHP_WEB_DIR');
