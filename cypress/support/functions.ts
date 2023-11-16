@@ -1317,7 +1317,7 @@ Cypress.Commands.add('epinioInstall', ({ s3Storage, extRegistry, namespace = 'ep
   cy.typeValue({label: 'Domain', value: Cypress.env('system_domain')});
 
   // Configure cors setting
-  cy.typeValue({label: 'Access control allow origin', value: Cypress.env('cors')});
+  // cy.typeValue({label: 'Access control allow origin', value: Cypress.env('cors')});
 
   // Configure external registry
   if (extRegistry === true) {

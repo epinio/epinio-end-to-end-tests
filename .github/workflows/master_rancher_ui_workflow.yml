@@ -98,7 +98,7 @@ jobs:
       image: ${{ inputs.cypress_image }}
       env:
         CLUSTER_NAME: local
-        CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
+        # CORS: https://${{ needs.installation.outputs.MY_HOSTNAME }}
         EXT_REG_USER: ${{ secrets.EPINIO_DOCKER_USER }}
         EXT_REG_PASSWORD: ${{ secrets.EPINIO_DOCKER_PASSWORD }}
         RANCHER_USER: admin
