@@ -65,7 +65,9 @@ describe('Menu testing', () => {
     // Go to About page
     cy.get('.version.text-muted > a').click();
     // Check binaries number, download them and chek See All Package page
-    cy.aboutPageFunction({ checkBinariesNumberInAboutPage: true, downloadBinaries: true, checkSeeAllPackagePage: true })
+    // Turning to "false" options "downloadBinaries" and "checkSeeAllPackagePage" until version 1.11-rc is gone
+    // TO DO: turn back to "true" when final no rc is present
+    cy.aboutPageFunction({ checkBinariesNumberInAboutPage: true, downloadBinaries: false, checkSeeAllPackagePage: false })
   });
 
 
