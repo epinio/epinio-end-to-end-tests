@@ -124,6 +124,8 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.deleteService({ serviceName: 'svc-postgresql' });
       cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click();
 
+      // Adding some sleep to let thing settle a bit
+      cy.wait(10000)        
       // Repeats binding in 1 step and check again
       cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-rabbitmq-dev`, catalogType: 'rabbitmq-dev' });
       cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-mongodb`, catalogType: 'mongodb-dev' });
