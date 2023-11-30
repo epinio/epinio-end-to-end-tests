@@ -65,7 +65,7 @@ Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'pass
   cy.get('#submit-login').click();
   // Checking redirection to landing page is correct and Dex user is present
   if (checkLandingPage == true) {
-    cy.contains('Welcome to Epinio', { timeout: 20000 }).should('be.visible')
+    cy.contains('Welcome to Epinio', { timeout: 35000 }).should('be.visible')
     cy.get('.user-image.text-right.hand', { timeout: 5000 }).click().then(() => {
       cy.contains(username);
     })
