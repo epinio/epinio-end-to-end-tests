@@ -129,7 +129,7 @@ jobs:
         run: |
           mkdir -p mochawesome-report
           cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
+          # cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v3
@@ -140,13 +140,13 @@ jobs:
           retention-days: 7
 
       # Test run video was always captured, so this action uses "always()" condition
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-videos-install
-          path: cypress/videos
-          retention-days: 7
+      # - name: Upload Cypress videos
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: cypress-videos-install
+      #     path: cypress/videos
+      #     retention-days: 7
 
       - name: Upload Mochawesome report
         uses: actions/upload-artifact@v3
@@ -237,7 +237,7 @@ jobs:
         run: |
           mkdir -p mochawesome-report
           cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
+          # cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v3
@@ -248,13 +248,13 @@ jobs:
           retention-days: 7
 
       # Test run video was always captured, so this action uses "always()" condition
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-videos-tests
-          path: cypress/videos
-          retention-days: 7
+      # - name: Upload Cypress videos
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: cypress-videos-tests
+      #     path: cypress/videos
+      #     retention-days: 7
       
       - name: Upload Mochawesome report
         uses: actions/upload-artifact@v3
@@ -297,7 +297,7 @@ jobs:
         run: |
           mkdir -p mochawesome-report
           cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          cp -r cypress/videos mochawesome-report
+          # cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v3
@@ -308,13 +308,13 @@ jobs:
           retention-days: 7
 
       # Test run video was always captured, so this action uses "always()" condition
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-videos-uninstall
-          path: cypress/videos
-          retention-days: 7
+      # - name: Upload Cypress videos
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: cypress-videos-uninstall
+      #     path: cypress/videos
+      #     retention-days: 7
 
       - name: Upload Mochawesome report
         uses: actions/upload-artifact@v3
