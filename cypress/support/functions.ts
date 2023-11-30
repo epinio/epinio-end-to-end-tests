@@ -615,6 +615,7 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
     };
     // Take a screenshot and go back to previous page
     cy.screenshot()
+    cy.wait(5000)
     cy.go('back')
   }
 
@@ -1187,7 +1188,7 @@ Cypress.Commands.add('createServiceAndBindOneStep', ({ serviceName, catalogType,
   cy.clickButton('Create');
   cy.get('.icon.icon-lg.icon-spinner.icon-spin', { timeout: 60000 }).contains('Creating...').should('not.exist');
   // Confirm bound application after main instance page redirection
-  cy.contains('tr.main-row', serviceName, { timeout: 45000 }).within(() => {
+  cy.contains('tr.main-row', serviceName, { timeout: 60000 }).within(() => {
     cy.get('td[data-testid]', { timeout: 45000 }).eq(4).contains(appName).should('be.visible');
   });
 });
