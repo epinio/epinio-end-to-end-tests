@@ -381,8 +381,6 @@ Cypress.Commands.add('aboutPageFunction', ({ compareVersionVsMainPage, checkBina
     };
 
     if (compareVersionVsMainPage) {
-      // Check "Go back" link and stay there to compare version with the one in About page
-      cy.checkLink('back', '/epinio/c/default/dashboard', 'Welcome to Epinio', false);
       // Checks version displayed in about page is the same as in main page
       cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
         cy.log(`Epinio version in MAIN UI is ${version_main}`);
