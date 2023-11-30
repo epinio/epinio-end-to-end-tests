@@ -84,7 +84,9 @@ jobs:
 
       - name: Add Tools to PATH
         run: |
+          echo $PATH
           echo "`pwd`/output/bin" >> $GITHUB_PATH
+          export PATH=$PATH:/usr/local/bin
 
       - name: Install K3s / Helm / Epinio
         id: installation
