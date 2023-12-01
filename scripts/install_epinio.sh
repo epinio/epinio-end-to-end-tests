@@ -82,7 +82,7 @@ fi
 kubectl wait pods -n epinio -l app.kubernetes.io/name=epinio-server --for=condition=ready --timeout=2m
 # Let the components settle a bit longer to prevent "error verifying credentials: error while connecting to the Epinio server: empty"
 sleep 10
-dist/epinio-* login -u admin -p password --trust-ca https://epinio.${EPINIO_SYSTEM_DOMAIN} --verbosity=1 --trace-level=13
+dist/epinio-* login -u admin -p password --trust-ca https://epinio.${EPINIO_SYSTEM_DOMAIN}
 dist/epinio-* info
 
 # Go back to the previous directory
