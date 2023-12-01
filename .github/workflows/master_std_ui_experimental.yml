@@ -55,7 +55,7 @@ on:
 
 jobs:
   E2E-Cypress:
-    runs-on: self-hosted
+    runs-on: ui-e2e
     steps:
       - name: Checkout
         uses: actions/checkout@v3
