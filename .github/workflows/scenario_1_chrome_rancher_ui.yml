@@ -16,7 +16,7 @@ jobs:
       cypress_install_test: installation.spec.ts
       # cypress_test: with_default_options.spec.ts
       cypress_test: menu.spec.ts
-      runner: self-hosted, ui-e2e
+      runner: ui-e2e
     secrets: inherit
 
   rancher-chrome-s3gw:
