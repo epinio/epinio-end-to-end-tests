@@ -19,6 +19,6 @@ jobs:
       # Due to security reason, Firefox can't be started as root
       # https://github.com/cypress-io/github-action#firefox
       docker_options: '--user 1000'
-      runner: [self-hosted, ui-e2e]
+      runner: ui-e2e
       # ext_reg: '1'
     secrets: inherit
