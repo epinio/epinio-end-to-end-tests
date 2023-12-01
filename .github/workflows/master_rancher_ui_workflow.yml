@@ -46,8 +46,7 @@ on:
 
 jobs:
   installation:
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e]
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -60,9 +59,7 @@ jobs:
 
       - name: Add Tools to PATH
         run: |
-          echo $PATH
           echo "`pwd`/output/bin" >> $GITHUB_PATH
-          export PATH=$PATH:/usr/local/bin
 
       - name: Install K3s / Helm / Rancher
         id: installation
@@ -96,8 +93,7 @@ jobs:
   cypress-epinio-installation:
     needs:
       - installation
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e]
+    runs-on: ${{ inputs.runner }}
     container:
       image: ${{ inputs.cypress_image }}
       env:
@@ -165,8 +161,7 @@ jobs:
   epinio-patching:
     needs:
       - cypress-epinio-installation
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e]
+    runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout Epinio repository
         uses: actions/checkout@v3
@@ -184,9 +179,7 @@ jobs:
 
       - name: Add Tools to PATH
         run: |
-          echo $PATH
           echo "`pwd`/output/bin" >> $GITHUB_PATH
-          export PATH=$PATH:/usr/local/bin
 
       - name: Setup Go
         uses: actions/setup-go@v4
@@ -216,8 +209,7 @@ jobs:
       - installation
       - cypress-epinio-installation
       - epinio-patching
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e]
+    runs-on: ${{ inputs.runner }}
     container:
       image: ${{ inputs.cypress_image }}
       env:
@@ -278,8 +270,7 @@ jobs:
       - cypress-epinio-installation
       - epinio-patching
       - cypress-epinio-tests
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e]
+    runs-on: ${{ inputs.runner }}
     container:
       image: ${{ inputs.cypress_image }}
       env:
@@ -336,8 +327,7 @@ jobs:
   delete-cluster:
     if: always()
     needs: [installation, cypress-epinio-installation, epinio-patching, cypress-epinio-tests, cypress-epinio-uninstall]
-    # runs-on: ${{ inputs.runner }}
-    runs-on: [self-hosted, ui-e2e]
+    runs-on: ${{ inputs.runner }}
     steps:
 
       - name: Delete k3s cluster
