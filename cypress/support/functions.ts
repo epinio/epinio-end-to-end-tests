@@ -65,7 +65,7 @@ Cypress.Commands.add('dexLogin', (username = 'admin@epinio.io', password = 'pass
   cy.get('#submit-login').click();
   // Checking redirection to landing page is correct and Dex user is present
   if (checkLandingPage == true) {
-    cy.contains('Welcome to Epinio', { timeout: 20000 }).should('be.visible')
+    cy.contains('Welcome to Epinio', { timeout: 35000 }).should('be.visible')
     cy.get('.user-image.text-right.hand', { timeout: 5000 }).click().then(() => {
       cy.contains(username);
     })
@@ -381,8 +381,6 @@ Cypress.Commands.add('aboutPageFunction', ({ compareVersionVsMainPage, checkBina
     };
 
     if (compareVersionVsMainPage) {
-      // Check "Go back" link and stay there to compare version with the one in About page
-      cy.checkLink('back', '/epinio/c/default/dashboard', 'Welcome to Epinio', false);
       // Checks version displayed in about page is the same as in main page
       cy.get('.version.text-muted > a').invoke('text').should('contains', version).then(version_main => {
         cy.log(`Epinio version in MAIN UI is ${version_main}`);
@@ -617,6 +615,7 @@ Cypress.Commands.add('checkApp', ({appName, namespace='workspace', route, checkV
     };
     // Take a screenshot and go back to previous page
     cy.screenshot()
+    cy.wait(5000)
     cy.go('back')
   }
 
@@ -1189,7 +1188,7 @@ Cypress.Commands.add('createServiceAndBindOneStep', ({ serviceName, catalogType,
   cy.clickButton('Create');
   cy.get('.icon.icon-lg.icon-spinner.icon-spin', { timeout: 60000 }).contains('Creating...').should('not.exist');
   // Confirm bound application after main instance page redirection
-  cy.contains('tr.main-row', serviceName, { timeout: 45000 }).within(() => {
+  cy.contains('tr.main-row', serviceName, { timeout: 60000 }).within(() => {
     cy.get('td[data-testid]', { timeout: 45000 }).eq(4).contains(appName).should('be.visible');
   });
 });

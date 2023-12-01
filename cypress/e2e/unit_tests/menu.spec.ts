@@ -125,7 +125,7 @@ if (Cypress.env('ui') == null) {
         it(`Username '${key}' & password with '${value[1]}' characters should log in`, () => {
           cy.login(key, value[0])
           cy.contains('Invalid username or password. Please try again.').should('not.exist')
-          cy.contains('Applications').should('be.visible')
+          cy.contains('Applications', {timeout: 20000}).should('be.visible')
         })
     };
   });

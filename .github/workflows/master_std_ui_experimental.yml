@@ -55,7 +55,7 @@ on:
 
 jobs:
   E2E-Cypress:
-    runs-on: self-hosted
+    runs-on: ui-e2e
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -173,7 +173,7 @@ jobs:
         run: |
           sudo mkdir -p mochawesome-report
           sudo cp -r cypress/screenshots mochawesome-report || echo "No screenshots found in this run, probably all tests were OK"     
-          sudo cp -r cypress/videos mochawesome-report
+          # sudo cp -r cypress/videos mochawesome-report
 
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v3
@@ -184,13 +184,13 @@ jobs:
           retention-days: 7
 
       # Test run video was always captured, so this action uses "always()" condition
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-videos
-          path: cypress/videos
-          retention-days: 7
+      # - name: Upload Cypress videos
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: cypress-videos
+      #     path: cypress/videos
+      #     retention-days: 7
  
       - name: Upload Mochawesome report
         uses: actions/upload-artifact@v3

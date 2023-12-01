@@ -125,6 +125,8 @@ Cypress.Commands.add('runApplicationsTest', (testName: string) => {
       cy.get('.accordion.package.depth-0.has-children', { timeout: 20000 }).contains('Services').click();
 
       // Repeats binding in 1 step and check again
+      // Adding some sleep to let thing settle a bit
+      cy.wait(10000)  
       cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-rabbitmq-dev`, catalogType: 'rabbitmq-dev' });
       cy.createServiceAndBindOneStep({ appName: appName, serviceName: `svc-mongodb`, catalogType: 'mongodb-dev' });
       cy.countAndVerifyElements({ locator: 'tbody > tr.main-row', numberRowsOrColumns: 4, text1: 'Deployed', text2: 'testapp' });
