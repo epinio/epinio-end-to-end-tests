@@ -30,5 +30,6 @@ jobs:
       cypress_test: applications.spec.ts
       grep_test_by_tag: '@appl-1'
       s3_store_type: s3gw
-      runner: [self-hosted, ui-e2e]
+      # Commented out. Hardcoded in main ci to use 2 labels
+      # runner: self-hosted, ui-e2eS
     secrets: inherit
